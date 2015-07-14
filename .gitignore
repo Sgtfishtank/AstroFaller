@@ -19,3 +19,19 @@
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+#Unity build settings - to be removed later
+ProjectSettings/EditorBuildSettings.asset
+
+#Unity scenes
+*.unity
+*.unity.meta
+Assets/_Scenes
+Assets/_Scenes/*
+
+#Folder for materials used in local testing, ie resources, prefabs etc
+Assets/Testing/*
+Assets/Testing.meta
+
+Assets/Resources/Graphics/Testing/*
+Assets/Resources/Graphics/Testing.meta
