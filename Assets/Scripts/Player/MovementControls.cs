@@ -23,7 +23,7 @@ public class MovementControls
 	
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
-		if (Input.GetButtonDown("Jump"))//checks if the player wants to jump/hover
+		if (Input.GetButtonDown("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
 
 			if(mAirAmount > 0)//hoverfunction
@@ -32,7 +32,7 @@ public class MovementControls
 				if(mRb.velocity.y < 0)//slows down the player to hover
 				{
 				}
-				//mAirAmount -= Time.deltaTime * mPlayer.mAirDrain * mPlayer.getCurrentTalisman().getAirDrain();
+				mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
 			}
 			else
 			{
@@ -52,20 +52,12 @@ public class MovementControls
 		}
 		else//refill air and reset funktionality
 		{
-			/*if(mAirAmount < mPlayer.mAirMax && mPlayer.mAirReg)
+			if(mAirAmount < mPlayer.mAirMax && mPlayer.mAirReg)
 			{
-				if(!mOnGround)
-				{
-					mAirAmount += Time.deltaTime * mPlayer.mAirRegFalling * mPlayer.getCurrentTalisman().getAirMultiplier();
-				}
-				else
-				{
-					mAirAmount += Time.deltaTime * mPlayer.mAirRegGround * mPlayer.getCurrentTalisman().getAirMultiplier();
-				}
-
+				mAirAmount += Time.deltaTime * mPlayer.mAirRegFalling;
 				// clamp to max air
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
-			}*/
+			}
 
 			mHoverActive = false;
 		}
@@ -73,8 +65,7 @@ public class MovementControls
 
 		return mAirAmount;
 	}
-	
-	// Thism2 created 2015-05-12 : do physics hover action
+
 	public void Hover(Rigidbody mRb, float airamount)
 	{
 		if (mHoverActive)
@@ -82,7 +73,7 @@ public class MovementControls
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
 				// revese the polarity of the gravity sigularity cap'n!
-				mRb.AddForce (new Vector2 (0, -mRb.mass * Physics2D.gravity.y * 1f));
+				mRb.AddForce (new Vector2 (0, -mRb.mass * Physics.gravity.y * 1f));
 
 				// slow down the fall speed
 				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y) / Time.fixedDeltaTime);
@@ -97,8 +88,7 @@ public class MovementControls
 			}
 		}
 	}
-
-	// Sgtfishtank, Thism2 created 2015-04-23 : move player
+	
 	public void Move(Rigidbody rb, bool speedHack)
 	{
 		//Quaternion degrees = Quaternion.Euler(0, CalculateRotation(onGround), 0);
@@ -107,27 +97,21 @@ public class MovementControls
 		//check if the speed is in between the set interval
 		if(true)
 		{
-			if (speedHack)
+			if (rb.velocity.x < mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == 1) 
 			{
-				if (rb.velocity.x < (mPlayer.mHorizontalMaxSpeedAir * 10) && Input.GetAxisRaw("Horizontal") == 1) 
-				{
-					rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime) * 10, 0));
-				}
-				if (rb.velocity.x > (-mPlayer.mHorizontalMaxSpeedAir * 10) && Input.GetAxisRaw("Horizontal") == -1)
-				{
-					rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime) * 10, 0));
-				}
+				rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
 			}
-			else
+			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == -1)
 			{
-				if (rb.velocity.x < mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == 1) 
-				{
-					rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-				}
-				if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == -1)
-				{
-					rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-				}
+				rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
+			}
+			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x < 0)
+			{
+				rb.AddForce (new Vector2((Input.acceleration.x * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
+			}
+			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x > 0)
+			{
+				rb.AddForce (new Vector2((Input.acceleration.x * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
 			}
 		}
 
@@ -135,14 +119,10 @@ public class MovementControls
 		{
 			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxFallSpeed);
 		}
-		/*if(Input.GetAxisRaw("Horizontal") == 0 && !onGround)//stops player movment on key release
+		if(Input.GetAxisRaw("Horizontal") == 0)//stops player movment on key release
 		{
 			rb.AddForce( new Vector2(-rb.velocity.x * 60 * Time.deltaTime, 0));
 		}
-		else if(Input.GetAxisRaw("Horizontal") == 0 && onGround)
-		{
-			rb.velocity = new Vector2(0,rb.velocity.y);
-		}*/
 	}
 
 	public bool isHovering ()

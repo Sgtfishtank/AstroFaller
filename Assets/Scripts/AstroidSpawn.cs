@@ -7,7 +7,7 @@ public class AstroidSpawn : MonoBehaviour {
 	public GameObject mAstroid;
 	public int mMaxAstroids = 5;
 	public GameObject[] mAstroids;
-	public int mCd = 5;
+	public float mCd = 5;
 	public float mXspawn = 10;
 	public float mRotationSpeed;
 
@@ -26,7 +26,6 @@ public class AstroidSpawn : MonoBehaviour {
 		{
 			mLastSpawn = Time.time +mCd;
 			int x = UnityEngine.Random.Range(0,2)*2-1;
-			print (x);
 			int y = UnityEngine.Random.Range(-5,5);
 			float angel = UnityEngine.Random.Range(0,360);
 			mAstroids[index] = Instantiate(mAstroid,
