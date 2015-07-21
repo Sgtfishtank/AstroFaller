@@ -59,6 +59,10 @@ public class Player : MonoBehaviour
 		//mNextMul = GameManager.Instance().mPlayerStartPosition.transform.position;
 		mNextMul.y -= mMapParts;
 	}
+	public void Hover()
+	{
+		mMovementControls.Hover(mRb,10);
+	}
 	
 	void FixedUpdate()
 	{
@@ -76,10 +80,6 @@ public class Player : MonoBehaviour
 
 		// jump and hover player
 		mAirAmount = mMovementControls.JumpAndHover(mRb, 0);
-		if(Input.GetButtonDown("Fire1"))
-		{
-			mRb.velocity = new Vector3(mRb.velocity.x, mRb.velocity.y + mSwipeSpeed);//TODO byt tecken
-		}
 
 		// move player
 		mMovementControls.Move(mRb, mSpeedHack);

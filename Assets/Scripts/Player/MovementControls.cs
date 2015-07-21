@@ -13,17 +13,29 @@ public class MovementControls
 	private int defaultRotation = 180;
 	private float currentRotation = 180f;
 	private int rotationVelocity = 2000;*/
+	public float AccelerometerUpdateInterval = 1.0f / 60.0f;
+	public float LowPassKernelWidthInSeconds = 1.0f;
 	
+	private float LowPassFilterFactor; // tweakable
+	private float lowPassValue = 0;
+
 	public MovementControls (Animator ani, Transform mesh, Player player)
 	{
 		mPlayer = player;
+		LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
 		//mAni = ani;
 		//mMesh = mesh;
 	}
+
 	
+	private float LowPassFilterAccelerometer()
+	{
+		lowPassValue = Mathf.Lerp(lowPassValue, Input.acceleration.x, LowPassFilterFactor);
+		return lowPassValue;
+	}
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
-		if (Input.GetButtonDown("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
+		if (Input.GetButtonDown("Jump"))// || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
 
 			if(mAirAmount > 0)//hoverfunction
@@ -107,11 +119,11 @@ public class MovementControls
 			}
 			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x < 0)
 			{
-				rb.AddForce (new Vector2((Input.acceleration.x * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
+				rb.AddForce (new Vector2((LowPassFilterAccelerometer() * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
 			}
 			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x > 0)
 			{
-				rb.AddForce (new Vector2((Input.acceleration.x * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
+				rb.AddForce (new Vector2((LowPassFilterAccelerometer() * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
 			}
 		}
 

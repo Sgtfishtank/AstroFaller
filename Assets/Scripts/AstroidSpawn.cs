@@ -12,11 +12,13 @@ public class AstroidSpawn : MonoBehaviour {
 	public float mRotationSpeed;
 
 	private int index;
+	private GameObject mPlayerObj;
 	public float mLastSpawn = 0;
 
 	void Start ()
 	{
 		mAstroids = new GameObject[mMaxAstroids];
+		mPlayerObj = GameObject.Find ("Player");
 	}
 	
 	// Update is called once per frame
@@ -29,10 +31,10 @@ public class AstroidSpawn : MonoBehaviour {
 			int y = UnityEngine.Random.Range(-5,5);
 			float angel = UnityEngine.Random.Range(0,360);
 			mAstroids[index] = Instantiate(mAstroid,
-			                              new Vector3(mXspawn * x, y, 0),
+			                              new Vector3(mXspawn * x, mPlayerObj.transform.position.y 	 +y , 0),
 			                              Quaternion.Euler(Vector3.one*angel)) as GameObject;
 			mAstroids[index].GetComponent<Rigidbody>().velocity = new Vector3(
-				UnityEngine.Random.Range(1,5)*-x, UnityEngine.Random.Range(1,2)* -Mathf.Sign(y), 0);
+				UnityEngine.Random.Range(1,5)*-x, UnityEngine.Random.Range(1,10)* -Mathf.Sign(y), 0);
 			mAstroids[index].GetComponent<Rigidbody>().AddTorque(
 				new Vector3(UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed), UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed), UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed)));
 			if(mMaxAstroids-1 > index)
