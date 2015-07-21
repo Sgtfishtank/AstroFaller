@@ -4,7 +4,7 @@ using System.Collections;
 public class AstroidSpawn : MonoBehaviour {
 
 	// Use this for initialization
-	public GameObject mAstroid;
+	public GameObject[] mAstroidTypes;
 	public int mMaxAstroids = 5;
 	public GameObject[] mAstroids;
 	public float mCd = 5;
@@ -30,7 +30,7 @@ public class AstroidSpawn : MonoBehaviour {
 			int x = UnityEngine.Random.Range(0,2)*2-1;
 			int y = UnityEngine.Random.Range(-5,5);
 			float angel = UnityEngine.Random.Range(0,360);
-			mAstroids[index] = Instantiate(mAstroid,
+			mAstroids[index] = Instantiate(mAstroidTypes[1],
 			                              new Vector3(mXspawn * x, mPlayerObj.transform.position.y 	 +y , 0),
 			                              Quaternion.Euler(Vector3.one*angel)) as GameObject;
 			mAstroids[index].GetComponent<Rigidbody>().velocity = new Vector3(
