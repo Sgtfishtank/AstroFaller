@@ -13,12 +13,14 @@ public class AstroidSpawn : MonoBehaviour {
 
 	private int index;
 	private GameObject mPlayerObj;
+	private Rigidbody mPlRigid;
 	public float mLastSpawn = 0;
 
 	void Start ()
 	{
 		mAstroids = new GameObject[mMaxAstroids];
 		mPlayerObj = GameObject.Find ("Player");
+		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -28,13 +30,14 @@ public class AstroidSpawn : MonoBehaviour {
 		{
 			mLastSpawn = Time.time +mCd;
 			int x = UnityEngine.Random.Range(0,2)*2-1;
-			int y = UnityEngine.Random.Range(-5,5);
+			int y = UnityEngine.Random.Range(-1,5);
+			int astroid = UnityEngine.Random.Range(0,3);
 			float angel = UnityEngine.Random.Range(0,360);
-			mAstroids[index] = Instantiate(mAstroidTypes[1],
+			mAstroids[index] = Instantiate(mAstroidTypes[astroid],
 			                              new Vector3(mXspawn * x, mPlayerObj.transform.position.y 	 +y , 0),
 			                              Quaternion.Euler(Vector3.one*angel)) as GameObject;
 			mAstroids[index].GetComponent<Rigidbody>().velocity = new Vector3(
-				UnityEngine.Random.Range(1,5)*-x, UnityEngine.Random.Range(1,10)* -Mathf.Sign(y), 0);
+				UnityEngine.Random.Range(1,5)*-x, mPlRigid.velocity.y-y, 0);
 			mAstroids[index].GetComponent<Rigidbody>().AddTorque(
 				new Vector3(UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed), UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed), UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed)));
 			if(mMaxAstroids-1 > index)

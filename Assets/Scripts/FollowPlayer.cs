@@ -5,6 +5,7 @@ public class FollowPlayer : MonoBehaviour {
 
 	// Use this for initialization
 	GameObject mplayer;
+	public int dist;
 	void Start ()
 	{
 		mplayer = GameObject.Find("Player");
@@ -14,7 +15,7 @@ public class FollowPlayer : MonoBehaviour {
 	void Update ()
 	{
 		Vector3 pos = mplayer.transform.position;
-		pos.z += -20;
+		pos.z += -dist;
 		transform.position = pos;
 	}
 }

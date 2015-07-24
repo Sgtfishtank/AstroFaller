@@ -7,8 +7,9 @@ using System.Collections.Generic;
 public class MovementControls
 {
 	private bool mHoverActive = false;
-	//private Animator mAni;
+	private Animator mAni;
 	private Player mPlayer;
+	private SkinnedMeshRenderer[] skinnedMeshRenderer;
 	/*private Transform mMesh;
 	private int defaultRotation = 180;
 	private float currentRotation = 180f;
@@ -16,15 +17,22 @@ public class MovementControls
 	public float AccelerometerUpdateInterval = 1.0f / 60.0f;
 	public float LowPassKernelWidthInSeconds = 1.0f;
 	
-	private float LowPassFilterFactor; // tweakable
-	private float lowPassValue = 0;
+	private float LowPassFilterFactor;
+	int blendSpeed = 2;
 
-	public MovementControls (Animator ani, Transform mesh, Player player)
+	int blendOne = 0;
+
+ // tweakable
+	private float lowPassValue = 0;
+	public bool temp = false;
+
+	public MovementControls (Animator ani, Transform mesh, Player player, SkinnedMeshRenderer[] skinmesh)
 	{
 		mPlayer = player;
 		LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
-		//mAni = ani;
+		mAni = ani;
 		//mMesh = mesh;
+		skinnedMeshRenderer = skinmesh;
 	}
 
 	
@@ -35,24 +43,35 @@ public class MovementControls
 	}
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
-		if (Input.GetButtonDown("Jump"))// || Input.touchCount >= 1)//checks if the player wants to jump/hover
+		if (Input.GetButton("Jump"))// || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
-
+			for(int i = 0; i < skinnedMeshRenderer.Length; i++)
+			{
+				Debug.Log(Time.time);
+				if (blendOne < 100.1f)
+				{
+					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
+					blendOne += blendSpeed;
+				}
+			}
+			mAni.SetBool("Hover",true);
+			mAni.playbackTime = UnityEngine.Random.Range(0f,5f);
 			if(mAirAmount > 0)//hoverfunction
 			{
+
 				mHoverActive = true;
 				if(mRb.velocity.y < 0)//slows down the player to hover
 				{
 				}
 				mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
 			}
-			else
+			/*else
 			{
 				float x =UnityEngine.Random.Range(-10f,10f);
 				float y = UnityEngine.Random.Range(-10f,10f);
 				mRb.velocity = new Vector3(mRb.velocity.x + x, mRb.velocity.y + y ,0);
 				Debug.Log("x " + x + " y " + y);
-			}
+			}*/
 
 			// clamp to min air
 			mAirAmount = Mathf.Max(mAirAmount, 0);
@@ -69,6 +88,17 @@ public class MovementControls
 				mAirAmount += Time.deltaTime * mPlayer.mAirRegFalling;
 				// clamp to max air
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
+			}
+			mAni.SetBool("Hover", false);
+
+			for(int i = 0; i< skinnedMeshRenderer.Length;i++)
+			{
+				Debug.Log("2 " + Time.time);
+				if (blendOne > -0.1f)
+				{
+					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
+					blendOne -= blendSpeed;
+				}
 			}
 
 			mHoverActive = false;

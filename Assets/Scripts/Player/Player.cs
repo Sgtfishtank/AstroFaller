@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 	public bool mAirReg = true;
 	public bool mInvulnerable = false;
 	public bool mSpeedHack = false;
-	//public Animator ani;
+	public Animator ani;
 	//public Transform mMeshTrans;
 	public int mAirRegFalling;
 	public int mMapParts = 100;
@@ -28,20 +28,20 @@ public class Player : MonoBehaviour
 	private Rigidbody mRb;
 	private bool mIsDead = false;
 	private MovementControls mMovementControls;
+	public SkinnedMeshRenderer[] skinnedMeshRenderer;
 
 	
 	// Use this for initialization
 	void Start()
 	{
-
-		// keep player along levels
+			// keep player along levels
 		DontDestroyOnLoad(transform.gameObject);
 		
 		// init compoments
 		mRb = GetComponent<Rigidbody>();
 		
 		// init internal scrips
-		mMovementControls = new MovementControls(null, null, this);
+		mMovementControls = new MovementControls(ani, null, this, skinnedMeshRenderer);
 
 		// finally extra init
 		safeInit();
