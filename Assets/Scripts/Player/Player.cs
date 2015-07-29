@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 	public bool levelEnd=false;
 	public int mMultiplier = 1;
 	public Vector2 mNextMul;
+	public GameObject mAS;
 
 	public float mSwipeSpeed =1;
 
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
 
 		// finally extra init
 		safeInit();
+		mAS = GameObject.Find("AstroidSpawn");
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -77,9 +79,8 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
-
 		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, 0);
+		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
 
 		// move player
 		mMovementControls.Move(mRb, mSpeedHack);
@@ -89,6 +90,8 @@ public class Player : MonoBehaviour
 			mMultiplier++;
 			mNextMul.y -= mMapParts;
 		}
+		mMovementControls.Hover(mRb,10);
+
 	}
 
 	public int collectedFire()
@@ -121,6 +124,20 @@ public class Player : MonoBehaviour
 
 			mRb.velocity = new Vector2(0, 0);
 			gameObject.SetActive(false);
+		}
+	}
+	void OnTriggerEnter(Collider col)
+	{
+		if(col.name == "SpawnAstroid")
+		{
+			mAS.SetActive(true);
+		}
+	}
+	void OnTriggerExit(Collider col)
+	{
+		if(col.name == "SpawnAstroid")
+		{
+			mAS.SetActive(false);
 		}
 	}
 
