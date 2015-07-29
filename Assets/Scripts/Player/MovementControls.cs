@@ -43,11 +43,10 @@ public class MovementControls
 	}
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
-		if (Input.GetButton("Jump"))// || Input.touchCount >= 1)//checks if the player wants to jump/hover
+		if (Input.GetButton("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
 			for(int i = 0; i < skinnedMeshRenderer.Length; i++)
 			{
-				Debug.Log(Time.time);
 				if (blendOne < 100.1f)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
@@ -55,7 +54,6 @@ public class MovementControls
 				}
 			}
 			mAni.SetBool("Hover",true);
-			mAni.playbackTime = UnityEngine.Random.Range(0f,5f);
 			if(mAirAmount > 0)//hoverfunction
 			{
 
@@ -63,7 +61,7 @@ public class MovementControls
 				if(mRb.velocity.y < 0)//slows down the player to hover
 				{
 				}
-				mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
+				//mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
 			}
 			/*else
 			{
@@ -90,10 +88,8 @@ public class MovementControls
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
 			}
 			mAni.SetBool("Hover", false);
-
 			for(int i = 0; i< skinnedMeshRenderer.Length;i++)
 			{
-				Debug.Log("2 " + Time.time);
 				if (blendOne > -0.1f)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
@@ -112,6 +108,7 @@ public class MovementControls
 	{
 		if (mHoverActive)
 		{
+			Debug.Log("hej");
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
 				// revese the polarity of the gravity sigularity cap'n!

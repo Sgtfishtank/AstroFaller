@@ -6,6 +6,7 @@ public class FollowPlayer : MonoBehaviour {
 	// Use this for initialization
 	GameObject mplayer;
 	public int dist;
+	public int ydist;
 	void Start ()
 	{
 		mplayer = GameObject.Find("Player");
@@ -14,8 +15,9 @@ public class FollowPlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		Vector3 pos = mplayer.transform.position;
-		pos.z += -dist;
+		Vector3 pos = transform.position;
+		pos.z = -dist;
+		pos.y = mplayer.transform.position.y-ydist;
 		transform.position = pos;
 	}
 }
