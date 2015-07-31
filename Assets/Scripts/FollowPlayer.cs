@@ -5,7 +5,7 @@ public class FollowPlayer : MonoBehaviour {
 
 	// Use this for initialization
 	GameObject mplayer;
-	public int dist;
+	public float dist;
 	public int ydist;
 	void Start ()
 	{

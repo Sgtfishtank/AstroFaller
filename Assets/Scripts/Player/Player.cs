@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
 		// finally extra init
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
+		mAS.SetActive (false);
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -128,14 +129,14 @@ public class Player : MonoBehaviour
 	}
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.name == "SpawnAstroid")
+		if(col.tag == "SpawnAstroid")
 		{
 			mAS.SetActive(true);
 		}
 	}
 	void OnTriggerExit(Collider col)
 	{
-		if(col.name == "SpawnAstroid")
+		if(col.tag == "SpawnAstroid")
 		{
 			mAS.SetActive(false);
 		}
