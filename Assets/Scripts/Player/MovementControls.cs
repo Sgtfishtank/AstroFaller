@@ -155,7 +155,7 @@ public class MovementControls
 		{
 			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxFallSpeed);
 		}
-		if(Input.GetAxisRaw("Horizontal") == 0)//stops player movment on key release
+		if(Input.GetAxisRaw("Horizontal") == 0 || LowPassFilterAccelerometer() == 0)//stops player movment on key release
 		{
 			rb.AddForce( new Vector3(-rb.velocity.x * 60 * Time.deltaTime, 0, 0));
 		}
