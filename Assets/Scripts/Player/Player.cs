@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
 
 	}
 
-	public int collectedFire()
+	public int colectedBolts()
 	{
 		return 0;
 	}

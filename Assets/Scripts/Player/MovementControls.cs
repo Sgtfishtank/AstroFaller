@@ -85,7 +85,6 @@ public class MovementControls
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
 			}
 			mAni.SetBool("Hover", false);
-
 			while(blendOne>-0.1f)
 			{
 				for(int i = 0; i< skinnedMeshRenderer.Length;i++)
