@@ -10,15 +10,11 @@ public class MovementControls
 	private Animator mAni;
 	private Player mPlayer;
 	private SkinnedMeshRenderer[] skinnedMeshRenderer;
-	/*private Transform mMesh;
-	private int defaultRotation = 180;
-	private float currentRotation = 180f;
-	private int rotationVelocity = 2000;*/
 	public float AccelerometerUpdateInterval = 1.0f / 60.0f;
 	public float LowPassKernelWidthInSeconds = 1.0f;
 	
 	private float LowPassFilterFactor;
-	int blendSpeed = 2;
+	int blendSpeed = 5;
 
 	int blendOne = 0;
 
@@ -45,13 +41,14 @@ public class MovementControls
 	{
 		if (Input.GetButton("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
-			for(int i = 0; i < skinnedMeshRenderer.Length; i++)
+			while (blendOne < 100.1f)
 			{
-				if (blendOne < 100.1f)
+				for(int i = 0; i < skinnedMeshRenderer.Length; i++)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
-					blendOne += blendSpeed;
+
 				}
+				blendOne += blendSpeed;
 			}
 			mAni.SetBool("Hover",true);
 			if(mAirAmount > 0)//hoverfunction
@@ -88,13 +85,14 @@ public class MovementControls
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
 			}
 			mAni.SetBool("Hover", false);
-			for(int i = 0; i< skinnedMeshRenderer.Length;i++)
+
+			while(blendOne>-0.1f)
 			{
-				if (blendOne > -0.1f)
+				for(int i = 0; i< skinnedMeshRenderer.Length;i++)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
-					blendOne -= blendSpeed;
 				}
+				blendOne -= blendSpeed;
 			}
 
 			mHoverActive = false;
@@ -108,7 +106,6 @@ public class MovementControls
 	{
 		if (mHoverActive)
 		{
-			Debug.Log("hej");
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
 				// revese the polarity of the gravity sigularity cap'n!
@@ -158,9 +155,9 @@ public class MovementControls
 		{
 			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxFallSpeed);
 		}
-		if(Input.GetAxisRaw("Horizontal") == 0)//stops player movment on key release
+		if(Input.GetAxisRaw("Horizontal") == 0 || LowPassFilterAccelerometer() == 0)//stops player movment on key release
 		{
-			rb.AddForce( new Vector2(-rb.velocity.x * 60 * Time.deltaTime, 0));
+			rb.AddForce( new Vector3(-rb.velocity.x * 60 * Time.deltaTime, 0, 0));
 		}
 	}
 
@@ -168,60 +165,5 @@ public class MovementControls
 	{
 		return mHoverActive;
 	}
-	
-/*	private float CalculateRotation(bool onGround)
-	{
-		int speed = 25;
-		int rotationOffset = 15;
 
-		if(currentRotation<=270 && currentRotation >= 90 && onGround)// on ground rotation
-		{
-			currentRotation -= Input.GetAxisRaw("Horizontal") * speed;
-		}
-
-		if(currentRotation <= 195 && currentRotation >= 165 && !onGround && Input.GetAxisRaw("Horizontal") != 0)//in air rotation
-		{
-			currentRotation -= Input.GetAxisRaw("Horizontal") * (speed-22);
-		}
-		//rotates the player to a semi defalut position in air
-		else if(currentRotation > 195  && !onGround && Input.GetAxisRaw("Horizontal") == -1)
-		{
-			currentRotation -=speed-22;
-		}
-		//rotates the player to a semi defalut position in air
-		else if(currentRotation < 165  && !onGround && Input.GetAxisRaw("Horizontal") == -1)
-		{
-			currentRotation +=speed-22;
-		}
-		//rotate player to deafalut position unless one of the animations are playing
-		else if(!onGround && currentRotation != defaultRotation && !(mAni.GetCurrentAnimatorStateInfo(0).IsName("Jump1")
-		   || mAni.GetCurrentAnimatorStateInfo(0).IsName("Jump2") || mAni.GetCurrentAnimatorStateInfo(0).IsName("StartFalling")
-		   || mAni.GetCurrentAnimatorStateInfo(0).IsName("Landing")|| mAni.GetCurrentAnimatorStateInfo(0).IsName("Idel")
-		   || mAni.GetCurrentAnimatorStateInfo(0).IsName("Running")) && Input.GetAxisRaw("Horizontal") == 0)
-		{
-			if (currentRotation > (180 - rotationOffset) && currentRotation < (180 + rotationOffset))
-			{
-				// do nothing
-			}
-			else if(currentRotation>defaultRotation)
-			{
-				currentRotation -= speed-22;
-			}
-			else
-			{
-				currentRotation += speed-22;
-			}
-		}
-
-		if(currentRotation >270)
-		{
-			currentRotation = 270;
-		}
-		else if(currentRotation <90)
-		{
-			currentRotation = 90;
-		}
-
-		return currentRotation;
-	}*/
 }

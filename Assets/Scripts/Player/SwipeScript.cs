@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SwipeScript : MonoBehaviour {
-	
-	public GameObject[] mSegments;
+public class SwipeScript : MonoBehaviour
+{
 	private float fingerStartTime  = 0.0f;
 	private Vector2 fingerStartPos = Vector2.zero;
 	
@@ -14,12 +13,11 @@ public class SwipeScript : MonoBehaviour {
 	
 	void Start()
 	{
-		mSegments = Resources.LoadAll<GameObject>("Level1") as GameObject[];
 		mPlayer = GameObject.Find("Player").GetComponent<Player>();
 	}
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+	{	
 		if (Input.touchCount > 0)
 		{			
 			foreach (Touch touch in Input.touches)
@@ -64,11 +62,9 @@ public class SwipeScript : MonoBehaviour {
 							if(swipeType.x > 0.0f)
 							{
 								// MOVE RIGHT
-								Instantiate(mSegments[0], new Vector3(0,0,0), Quaternion.identity);
 							}
 							else
 							{
-								Instantiate(mSegments[1], new Vector3(0,0,0), Quaternion.identity);
 								// MOVE LEFT
 							}
 						}
@@ -77,13 +73,12 @@ public class SwipeScript : MonoBehaviour {
 						{
 							if(swipeType.y > 0.0f)
 							{
-								Instantiate(mSegments[2], new Vector3(0,0,0), Quaternion.identity);
 								// MOVE UP
 							}
 							else
 							{
-								Instantiate(mSegments[3], new Vector3(0,0,0), Quaternion.identity);
 								// MOVE DOWN
+								mPlayer.Dash();
 							}
 						}
 						

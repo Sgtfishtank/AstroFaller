@@ -66,6 +66,10 @@ public class Player : MonoBehaviour
 	{
 		mMovementControls.Hover(mRb,10);
 	}
+	public void Dash()
+	{
+		mRb.AddForce(0,-mSwipeSpeed,0);
+	}
 	
 	void FixedUpdate()
 	{
