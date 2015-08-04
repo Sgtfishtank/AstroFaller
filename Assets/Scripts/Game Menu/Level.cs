@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Level : MonoBehaviour {
-
+public class Level : MonoBehaviour 
+{
 	public enum LevelType
 	{
 		Tutorial,
 		Level,
 		BonusReward
 	}
-	public LevelType mLevelType;
+	public LevelType mType;
 	public string mLevelName;
 	public int mTotalDistance;
 
@@ -22,13 +22,17 @@ public class Level : MonoBehaviour {
 	{
 		mUnlocked = false;
 
-		mTitleText = transform.Find ("Title").GetComponent<TextMesh> ();
-		mTotalDistanceText = transform.Find ("Dsitance").GetComponent<TextMesh> ();
+		// TODO fix
+		//mTitleText = transform.Find ("Title").GetComponent<TextMesh> ();
+		//mTotalDistanceText = transform.Find ("Distance").GetComponent<TextMesh> ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		// TODO fix
+		//mTitleText.text = mLevelName;
+		//mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
 	}
 
 	public bool Unlock()
@@ -39,7 +43,6 @@ public class Level : MonoBehaviour {
 			return true;
 		}
 
-		mUnlocked = true;
 		return false;
 	}
 
@@ -55,8 +58,7 @@ public class Level : MonoBehaviour {
 			mUnlocked = false;
 			return true;
 		}
-		
-		mUnlocked = true;
+
 		return false;
 	}
 }
