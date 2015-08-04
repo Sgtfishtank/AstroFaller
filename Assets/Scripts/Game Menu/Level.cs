@@ -22,17 +22,21 @@ public class Level : MonoBehaviour
 	{
 		mUnlocked = false;
 
-		// TODO fix
-		//mTitleText = transform.Find ("Title").GetComponent<TextMesh> ();
-		//mTotalDistanceText = transform.Find ("Distance").GetComponent<TextMesh> ();
+		mTitleText = transform.Find ("level/level name text").GetComponent<TextMesh> ();
+		mTotalDistanceText = transform.Find ("level/top distance text").GetComponent<TextMesh> ();
+
+		// add default
+		if (mLevelName.Length < 1)
+		{
+			mLevelName = gameObject.name;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		// TODO fix
-		//mTitleText.text = mLevelName;
-		//mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
+		mTitleText.text = mLevelName;
+		mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
 	}
 
 	public bool Unlock()
