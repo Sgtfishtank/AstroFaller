@@ -1,43 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Perk : MonoBehaviour 
+public class BurstPerk : Perk 
 {
-	public enum PerkType
-	{
-		Air,
-		Life,
-		Burst
-	}
-	
-	public enum PerkPart
-	{
-		Main,
-		Left,
-		Right
-	}
-
-	public PerkType mType;
 	public string mPerkName;
-
+	
 	private bool mMainUnlocked;
 	private bool mLeftUnlocked;
 	private bool mRightUnlocked;
 	private	TextMesh mTitleText;
-
+	
 	// Use this for initialization
 	void Start () 
 	{
+		
+	}
 	
+	public override void Init()
+	{
+		if (mPerkName.Length < 1)
+		{
+			mPerkName = gameObject.name;
+		}
+		
+		mTitleText = transform.Find ("Burst/Burst+ text").GetComponent<TextMesh> ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-	
+		mTitleText.text = mPerkName;
 	}
 
-	public bool UnlockPart(PerkPart perkPart)
+	public override bool UnlockPart(PerkPart perkPart)
 	{
 		switch (perkPart) 
 		{
@@ -66,11 +61,11 @@ public class Perk : MonoBehaviour
 			print("Error part in UnlockPart: " + perkPart);
 			break;
 		}
-
+		
 		return false;
 	}
-
-	public bool IsPartUnlocked(PerkPart perkPart)
+	
+	public override bool IsPartUnlocked(PerkPart perkPart)
 	{
 		switch (perkPart) 
 		{
@@ -84,8 +79,7 @@ public class Perk : MonoBehaviour
 			print("Error part in IsPartUnlocked: " + perkPart);
 			break;
 		}
-
+		
 		return false;
 	}
-
 }
