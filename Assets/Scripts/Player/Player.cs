@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 		// finally extra init
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
-		mAS.SetActive (false);
+		//mAS.SetActive (false);
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
