@@ -3,9 +3,9 @@ using System.Collections;
 
 public class UnlockCriteria : MonoBehaviour 
 {
-	public Level mLevel;
-	public int mTotalDistance;
-	public int mTotalBolts;
+	public Level mCriteriaLevel;
+
+	private Level mLevel;
 
 	// Use this for initialization
 	void Start () 
@@ -19,6 +19,11 @@ public class UnlockCriteria : MonoBehaviour
 
 	public bool CriteriaMet()
 	{
-		return (mLevel.TotalBolts() >= mTotalBolts) && (mLevel.TotalDistance() >= mTotalDistance);
+		int bolts = GlobalVariables.Instance.BoltsCritera("Bonus 1");
+		int Distance = GlobalVariables.Instance.DistanceCritera("Bonus 1");
+
+		return (mCriteriaLevel.TotalBolts() >= bolts) && (mCriteriaLevel.TotalDistance() >= Distance);
 	}
+
+
 }

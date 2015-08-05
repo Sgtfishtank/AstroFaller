@@ -45,10 +45,10 @@ public class BonusRewardLevel : LevelBase
 		switch (mRewardType)
 		{
 		case RewardType.Bolts:
-			mRewardText.text = mRewardAmount + " bolts";
+			mRewardText.text = GlobalVariables.Instance.BonusRewardBolts("Bonus 1") + " bolts";
 			break;
 		case RewardType.Crystals:
-			mRewardText.text = mRewardAmount + " crystals";
+			mRewardText.text = "" + " crystals";
 			break;
 		default:
 			print("Error RewardType in Update" + mRewardType);
