@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldMapMenu : MonoBehaviour 
+public class WorldMapMenu : GameMenu 
 {
 	public LevelBase[] mLevels;
 
 	private float mScrollValue;
 	private int mCurrentLevelFocusIndex;
 	private GameObject mLevelsScroller;
+	private bool mFocused;
 
 	// Use this for initialization
 	void Start () 
 	{
 	}
 
-	public void Init() 
+	public override void Init() 
 	{
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
@@ -34,6 +35,21 @@ public class WorldMapMenu : MonoBehaviour
 		}
 
 		CheckLevels();
+		
+		mFocused = false;
+		enabled = false;
+	}
+	
+	public override void Focus()
+	{
+		mFocused = true;
+		enabled = true;
+	}
+	
+	public override void Unfocus()
+	{
+		mFocused = false;
+		enabled = false;
 	}
 
 	void CheckLevels ()

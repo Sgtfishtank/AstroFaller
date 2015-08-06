@@ -95,4 +95,68 @@ public class BurstPerk : Perk
 		
 		return false;
 	}
+	
+	public override bool CanUnlockPart(Perk.PerkPart perkPart)
+	{
+		switch (perkPart) 
+		{
+		case PerkPart.Main:
+			return (!mMainUnlocked);
+		case PerkPart.Left:
+			return mMainUnlocked && (!mLeftUnlocked);
+		case PerkPart.Right:
+			return mMainUnlocked && (!mRightUnlocked);
+		default:
+			print("Error part in CanUnlockPart: " + perkPart);
+			break;
+		}
+		
+		return false;
+	}
+	
+	public override int BuyCost(PerkPart perkPart, PlayerData.CashType cashType)
+	{
+		if ((perkPart == PerkPart.Main) && (cashType == PlayerData.CashType.Crystals))
+		{
+			return GlobalVariables.Instance.BURST_PERK_MAIN_COST_CRYSTALS;
+		}
+		else if ((perkPart == PerkPart.Main) && (cashType == PlayerData.CashType.Bolts))
+		{
+			return GlobalVariables.Instance.BURST_PERK_MAIN_COST_BOLTS;
+		}
+		else if ((perkPart == PerkPart.Left) && (cashType == PlayerData.CashType.Crystals))
+		{
+			return GlobalVariables.Instance.BURST_PERK_LEFT_COST_CRYSTALS;
+		}
+		else if ((perkPart == PerkPart.Left) && (cashType == PlayerData.CashType.Bolts))
+		{
+			return GlobalVariables.Instance.BURST_PERK_LEFT_COST_BOLTS;
+		}
+		else if ((perkPart == PerkPart.Right) && (cashType == PlayerData.CashType.Crystals))
+		{
+			return GlobalVariables.Instance.BURST_PERK_RIGHT_COST_CRYSTALS;
+		}
+		else if ((perkPart == PerkPart.Right) && (cashType == PlayerData.CashType.Bolts))
+		{
+			return GlobalVariables.Instance.BURST_PERK_RIGHT_COST_BOLTS;
+		}
+		
+		print ("Error in BuyCost " + perkPart + " and " + cashType);
+		return -1;
+	}
+
+	public override string BuyDescription(PerkPart perkPart)
+	{
+		return "---";
+	}
+	
+	public override string BuyCurrent(PerkPart perkPart)
+	{
+		return "---";
+	}
+	
+	public override string BuyNext(PerkPart perkPart)
+	{
+		return "---";
+	}
 }

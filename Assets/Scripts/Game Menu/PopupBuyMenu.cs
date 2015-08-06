@@ -3,8 +3,7 @@ using System.Collections;
 
 public class PopupBuyMenu : MonoBehaviour 
 {
-	//private Buyable mBuyable;
-
+	private bool mOpen;
 	private TextMesh mDescriptionText;
 	private TextMesh mCurrentText;
 	private TextMesh mNextText;
@@ -12,7 +11,11 @@ public class PopupBuyMenu : MonoBehaviour
 	private TextMesh mCostCrystalsText;
 
 	// Use this for initialization
-	void Start () 
+	void Start()
+	{
+	}
+
+	public void Init() 
 	{
 		mDescriptionText = transform.Find ("name ext").GetComponent<TextMesh> ();
 		mCurrentText = transform.Find ("info text 1").GetComponent<TextMesh> ();
@@ -24,17 +27,32 @@ public class PopupBuyMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//if (mReferance)
-		{
-			//mBuyable
-		}
-
-		/*mDescriptionText = GlobalVariables.Instance.BuyDescription();
-		mCurrentText = "CURRENT: " + GlobalVariables.Instance.BuyCurrent();
-		mNextText = "NEXT: " + GlobalVariables.Instance.BuyNext();
-		mCostBoltsText = GlobalVariables.Instance.BuyCostBolts() + " B";
-		mCostCrystalsText = GlobalVariables.Instance.BuyCostCrystals() + " C";*/
 	}
 
+	public void Open(Vector3 position)
+	{
+		transform.position = position;
+		mOpen = true;
+		gameObject.SetActive(true);
+	}
 
+	public void Close()
+	{
+		mOpen = false;
+		gameObject.SetActive(false);
+	}
+
+	public bool IsOpen ()
+	{
+		return mOpen;
+	}
+
+	public void updateData (string description, string current, string next, int costBolts, int nextCrystals)
+	{
+		mDescriptionText.text = description;
+		mCurrentText.text = "CURRENT: " + current;
+		mNextText.text = "NEXT: " + next;
+		mCostBoltsText.text = costBolts + " B";
+		mCostCrystalsText.text = nextCrystals + " C";
+	}
 }

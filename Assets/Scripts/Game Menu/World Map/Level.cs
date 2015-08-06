@@ -41,7 +41,6 @@ public class Level : LevelBase
 	{
 		mTitleText.text = mLevelName;
 		mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
-
 	}
 	
 	public override string LevelName ()

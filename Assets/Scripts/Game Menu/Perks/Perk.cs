@@ -15,4 +15,14 @@ public abstract class Perk : MonoBehaviour
 	public abstract bool UnlockPart (PerkPart perkPart);
 
 	public abstract bool IsPartUnlocked (PerkPart perkPart);
+	
+	public abstract string BuyDescription (PerkPart perkPart);
+	
+	public abstract string BuyCurrent (PerkPart perkPart);
+	
+	public abstract string BuyNext (PerkPart perkPart);
+	
+	public abstract int BuyCost(PerkPart perkPart, PlayerData.CashType cashType);
+
+	public abstract bool CanUnlockPart(Perk.PerkPart perkPart);
 }

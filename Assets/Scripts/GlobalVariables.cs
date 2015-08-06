@@ -5,12 +5,8 @@ public class GlobalVariables : MonoBehaviour
 {
 	// sigleton
 	private static GameObject _thisObject;
-	//public GameObject THISOBJECT;
 
 	// GLOBAL VARIABLES START HERE
-	public int ASTEROID_BONUS_1_CRITERA_DISTANCE = 1000;
-	public int ASTEROID_BONUS_1_CRITERA_BOLTS = 0;
-	public int ASTEROID_BONUS_1_REWARD_BOLTS = 1000;
 
 
 	/*----------------------------------------AstroidSpawn----------------------------------*/
@@ -36,6 +32,45 @@ public class GlobalVariables : MonoBehaviour
 	public float WORLD_MAP_LEVELS_SNAP_SPEED = 4;
 	public float WORLD_MAP_LEVELS_SCROLL_SPEED = 180;
 
+	// LEVELS
+
+	// TUTORIAL
+
+	// astreoid level
+	public int ASTEROID_BONUS_1_CRITERA_DISTANCE = 1000;
+	public int ASTEROID_BONUS_1_REWARD_BOLTS = 1000;
+
+	// cosmic storm level
+	public int COSMIC_LEVEL_CRITERA_DISTANCE = 1000;
+	public int COSMIC_BONUS_1_CRITERA_DISTANCE = 1000;
+	public int COSMIC_BONUS_1_REWARD_BOLTS = 1000;
+
+
+	// PERKS
+
+	// Air Perk
+	public int AIR_PERK_MAIN_COST_CRYSTALS = 1;
+	public int AIR_PERK_MAIN_COST_BOLTS = 2;
+	public int AIR_PERK_LEFT_COST_CRYSTALS = 4;
+	public int AIR_PERK_LEFT_COST_BOLTS = 8;
+	public int AIR_PERK_RIGHT_COST_CRYSTALS = 16;
+	public int AIR_PERK_RIGHT_COST_BOLTS = 32;
+	
+	// Life Perk
+	public int LIFE_PERK_MAIN_COST_CRYSTALS = 1;
+	public int LIFE_PERK_MAIN_COST_BOLTS = 2;
+	public int LIFE_PERK_LEFT_COST_CRYSTALS = 4;
+	public int LIFE_PERK_LEFT_COST_BOLTS = 8;
+	public int LIFE_PERK_RIGHT_COST_CRYSTALS = 16;
+	public int LIFE_PERK_RIGHT_COST_BOLTS = 32;
+	
+	// Burst Perk
+	public int BURST_PERK_MAIN_COST_CRYSTALS = 1;
+	public int BURST_PERK_MAIN_COST_BOLTS = 2;
+	public int BURST_PERK_LEFT_COST_CRYSTALS = 4;
+	public int BURST_PERK_LEFT_COST_BOLTS = 8;
+	public int BURST_PERK_RIGHT_COST_CRYSTALS = 16;
+	public int BURST_PERK_RIGHT_COST_BOLTS = 32;
 
 
 	// Use this for initialization
@@ -67,21 +102,6 @@ public class GlobalVariables : MonoBehaviour
 			}
 			return instance;
 		}
-	}
-
-	public int BoltsCritera (string levelName)
-	{
-		switch (levelName) 
-		{
-		case "bonus 1": case "bonus 2": case "bonus 3": 
-		case "bonus 4": case "bonus 5": case "bonus 6":
-			return ASTEROID_BONUS_1_CRITERA_BOLTS;
-		default:
-			print("Error in BoltsCritera " + levelName);
-			break;
-		}
-
-		return 0;
 	}
 
 	public int DistanceCritera (string levelName)
