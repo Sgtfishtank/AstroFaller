@@ -5,6 +5,8 @@ public abstract class LevelBase : MonoBehaviour
 {
 	public abstract void Init();
 
+	public abstract string LevelName ();
+
 	public abstract bool UnlockLevel ();
 	
 	public abstract bool IsUnlocked ();

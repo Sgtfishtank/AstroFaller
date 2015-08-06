@@ -31,9 +31,9 @@ public class AirPerk : Perk
 		mLeft4 = transform.Find ("Air/perks_air 4").gameObject;
 		mMain5 = transform.Find ("Air/perks_air 5").gameObject;
 		
-		mRight3.SetActive (true);
-		mLeft4.SetActive (true);
-		mMain5.SetActive (true);
+		mRight3.SetActive (false);
+		mLeft4.SetActive (false);
+		mMain5.SetActive (false);
 	}
 
 	// Update is called once per frame

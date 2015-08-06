@@ -44,6 +44,11 @@ public class Level : LevelBase
 
 	}
 	
+	public override string LevelName ()
+	{
+		return mLevelName;
+	}
+
 	public override bool UnlockLevel()
 	{
 		if (!mUnlocked)
@@ -78,6 +83,12 @@ public class Level : LevelBase
 		mFrame.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
 		mFrame2.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
+
+		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
+		for (int i = 0; i < textMeshes.Length; i++) 
+		{
+			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+		}
 	}
 
 	public int TotalDistance ()

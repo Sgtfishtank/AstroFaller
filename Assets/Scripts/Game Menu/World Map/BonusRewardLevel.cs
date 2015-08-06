@@ -10,7 +10,6 @@ public class BonusRewardLevel : LevelBase
 	}
 	public string mLevelName;
 	public RewardType mRewardType;
-	public int mRewardAmount;
 	
 	private TextMesh mTitleText;
 	private TextMesh mRewardText;
@@ -45,10 +44,10 @@ public class BonusRewardLevel : LevelBase
 		switch (mRewardType)
 		{
 		case RewardType.Bolts:
-			mRewardText.text = GlobalVariables.Instance.BonusRewardBolts("Bonus 1") + " bolts";
+			mRewardText.text = GlobalVariables.Instance.BonusRewardBolts(mLevelName) + " bolts";
 			break;
 		case RewardType.Crystals:
-			mRewardText.text = "" + " crystals";
+			mRewardText.text = GlobalVariables.Instance.BonusRewardCrystals(mLevelName) + " crystals";
 			break;
 		default:
 			print("Error RewardType in Update" + mRewardType);
@@ -56,6 +55,11 @@ public class BonusRewardLevel : LevelBase
 		}
 	}
 	
+	public override string LevelName ()
+	{
+		return mLevelName;
+	}
+
 	public override bool UnlockLevel()
 	{
 		if (!mUnlocked)
@@ -89,5 +93,11 @@ public class BonusRewardLevel : LevelBase
 	{
 		mFrame.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
+
+		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
+		for (int i = 0; i < textMeshes.Length; i++) 
+		{
+			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+		}
 	}
 }

@@ -4,27 +4,33 @@ using System.Collections;
 public class WorldMapMenu : MonoBehaviour 
 {
 	public LevelBase[] mLevels;
-	public float mScrollOffset;
-	public float mLevelSize;
-	public float mLevelSnapSpeed;
-	public float mLevelScrollSpeed;
 
-	public float mScrollValue;
-	public int mCurrentLevelFocusIndex;
+	private float mScrollValue;
+	private int mCurrentLevelFocusIndex;
 	private GameObject mLevelsScroller;
 
 	// Use this for initialization
+	void Start () 
+	{
+	}
+
 	public void Init() 
 	{
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
 		mCurrentLevelFocusIndex = 0;
 		
-		setScrollerLevel(mScrollOffset);
+		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 
 		for (int i = 0; i < mLevels.Length; i++) 
 		{
 			mLevels[i].Init();
+
+			UnlockCriteria[] criterias = mLevels[i].GetComponents<UnlockCriteria>();
+			for (int j = 0; j < criterias.Length; j++) 
+			{
+				criterias[j].Init();
+			}
 		}
 
 		CheckLevels();
@@ -69,14 +75,14 @@ public class WorldMapMenu : MonoBehaviour
 		mScrollValue += scrollAmount;
 		if (mScrollValue < 0) 
 		{
-			mScrollValue = Mathf.Lerp (mScrollValue, mCurrentLevelFocusIndex * mLevelSize, mLevelSnapSpeed * Time.deltaTime);
+			mScrollValue = Mathf.Lerp (mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
 		}
-		else if (mScrollValue > ((mLevels.Length - 1) * mLevelSize)) 
+		else if (mScrollValue > ((mLevels.Length - 1) * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE)) 
 		{
-			mScrollValue = Mathf.Lerp (mScrollValue, mCurrentLevelFocusIndex * mLevelSize, mLevelSnapSpeed * Time.deltaTime);
+			mScrollValue = Mathf.Lerp (mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
 		}
 
-		mCurrentLevelFocusIndex = Mathf.RoundToInt (mScrollValue / mLevelSize);
+		mCurrentLevelFocusIndex = Mathf.RoundToInt (mScrollValue / GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE);
 		mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
 	}
 	
@@ -90,15 +96,15 @@ public class WorldMapMenu : MonoBehaviour
 		}
 		else if (Input.GetKey(KeyCode.UpArrow))
 		{
-			ScrollLevels(mLevelScrollSpeed * Time.deltaTime);
+			ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.DownArrow))
 		{
-			ScrollLevels(-mLevelScrollSpeed * Time.deltaTime);
+			ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
 		}
-		else
+		else 
 		{
-			mScrollValue = Mathf.Lerp(mScrollValue, mCurrentLevelFocusIndex * mLevelSize, mLevelSnapSpeed * Time.deltaTime);
+			mScrollValue = Mathf.Lerp(mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
 		}
 
 		if (Input.GetKeyDown(KeyCode.U))
@@ -117,11 +123,11 @@ public class WorldMapMenu : MonoBehaviour
 			Application.LoadLevel("Level" + mCurrentLevelFocusIndex);
 		}
 
-		setScrollerLevel(mScrollOffset + mScrollValue);
+		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
 
 		for (int i = 0; i < mLevels.Length; i++) 
 		{
-			float diff = Mathf.Abs((i * mLevelSize) - mScrollValue) / mLevelSize;
+			float diff = Mathf.Abs((i * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE) - mScrollValue) / GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE;
 			if (diff < 1)
 			{
 				mLevels[i].setFocusLevel(1 - diff);
@@ -130,7 +136,6 @@ public class WorldMapMenu : MonoBehaviour
 			{
 				mLevels[i].setFocusLevel(0);
 			}
-
 		}
 	}
 
