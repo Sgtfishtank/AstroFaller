@@ -1,0 +1,117 @@
+fileFormatVersion: 2
+guid: b10ff8dab775bbe4bb739ea824bd2340
+timeCreated: 1438860618
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: pop_up_craftingmenu_base
+    100004: pop_up_craftingmenu_button1
+    100006: pop_up_craftingmenu_button1_frame
+    100008: pop_up_craftingmenu_button2
+    100010: pop_up_craftingmenu_button2_frame
+    100012: pop_up_craftingmenu_button3
+    100014: pop_up_craftingmenu_button3_frame
+    100016: pop_up_craftingmenu_frame
+    100018: pop_up_craftingmenu_name_base
+    100020: pop_up_craftingmenu_name_frame
+    400000: //RootNode
+    400002: pop_up_craftingmenu_base
+    400004: pop_up_craftingmenu_button1
+    400006: pop_up_craftingmenu_button1_frame
+    400008: pop_up_craftingmenu_button2
+    400010: pop_up_craftingmenu_button2_frame
+    400012: pop_up_craftingmenu_button3
+    400014: pop_up_craftingmenu_button3_frame
+    400016: pop_up_craftingmenu_frame
+    400018: pop_up_craftingmenu_name_base
+    400020: pop_up_craftingmenu_name_frame
+    2300000: pop_up_craftingmenu_base
+    2300002: pop_up_craftingmenu_button1
+    2300004: pop_up_craftingmenu_button1_frame
+    2300006: pop_up_craftingmenu_button2
+    2300008: pop_up_craftingmenu_button2_frame
+    2300010: pop_up_craftingmenu_button3
+    2300012: pop_up_craftingmenu_button3_frame
+    2300014: pop_up_craftingmenu_frame
+    2300016: pop_up_craftingmenu_name_base
+    2300018: pop_up_craftingmenu_name_frame
+    3300000: pop_up_craftingmenu_base
+    3300002: pop_up_craftingmenu_button1
+    3300004: pop_up_craftingmenu_button1_frame
+    3300006: pop_up_craftingmenu_button2
+    3300008: pop_up_craftingmenu_button2_frame
+    3300010: pop_up_craftingmenu_button3
+    3300012: pop_up_craftingmenu_button3_frame
+    3300014: pop_up_craftingmenu_frame
+    3300016: pop_up_craftingmenu_name_base
+    3300018: pop_up_craftingmenu_name_frame
+    4300000: pop_up_craftingmenu_base
+    4300002: pop_up_craftingmenu_button1
+    4300004: pop_up_craftingmenu_button1_frame
+    4300006: pop_up_craftingmenu_button2
+    4300008: pop_up_craftingmenu_button2_frame
+    4300010: pop_up_craftingmenu_button3
+    4300012: pop_up_craftingmenu_button3_frame
+    4300014: pop_up_craftingmenu_frame
+    4300016: pop_up_craftingmenu_name_base
+    4300018: pop_up_craftingmenu_name_frame
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
