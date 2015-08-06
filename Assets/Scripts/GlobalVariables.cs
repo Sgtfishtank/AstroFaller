@@ -12,7 +12,11 @@ public class GlobalVariables : MonoBehaviour
 	public int ASTEROID_BONUS_1_CRITERA_BOLTS = 0;
 	public int ASTEROID_BONUS_1_REWARD_BOLTS = 1000;
 
-
+	/*----------------------------------------AstroidSpawn----------------------------------*/
+	public float ASTROID_SPAWN_SPAWNRATE 		 = 5f;
+	public float ASTROID_SPAWN_XOFFSET			 = 10f;
+	public float ASTROID_SPAWN_ROTATION_SPEED 	 = 10f;
+	public int   ASTROID_SPAWN_MAX_ASTROIDS		 = 5;
 
 	// Use this for initialization
 	void Start ()

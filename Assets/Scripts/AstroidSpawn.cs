@@ -6,16 +6,16 @@ public class AstroidSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	public GameObject[] mAstroidTypes;
-	public int mMaxAstroids = 5;
 	public static List<GameObject> mAstroids;
-	public float mCd = 5;
-	public float mXspawn = 10;
-	public float mRotationSpeed;
+
+	private int mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
+	private float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
+	private float mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 
 	private int index;
 	private GameObject mPlayerObj;
 	private Rigidbody mPlRigid;
-	public float mLastSpawn = 0;
+	private float mLastSpawn = 0;
 
 	void Start ()
 	{
@@ -34,14 +34,15 @@ public class AstroidSpawn : MonoBehaviour {
 			int y = UnityEngine.Random.Range(-12,5);
 			int astroid = UnityEngine.Random.Range(0,3);
 			Quaternion angel = UnityEngine.Random.rotation;
-			//Spawn astroid
 
+			//Spawn astroid
 			GameObject instace = Instantiate(mAstroidTypes[astroid],
-			                                 new Vector3(mXspawn * x, mPlayerObj.transform.position.y +y , 0),
+			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayerObj.transform.position.y +y , 0),
 			                                 angel) as GameObject;
 			//add velocity
 			instace.GetComponent<Rigidbody>().velocity = new Vector3(
-				UnityEngine.Random.Range(2,5)*-x, mPlRigid.velocity.y-y, 0);
+				UnityEngine.Random.Range(2,5)*(-x), mPlRigid.velocity.y-y, 0);
+
 			//add torque
 			instace.GetComponent<Rigidbody>().AddTorque(
 				new Vector3(UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
