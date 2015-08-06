@@ -5,31 +5,23 @@ using System;
 
 public class Player : MonoBehaviour
 {
-	public int mAccelerationSpeedHorizontal = 10;
-	public float mHoverForce = 15;
-	public float mHorizontalMaxSpeedAir = 10;
 	public int mAirMax;
 	public int mAirDrain;
 	public float mMaxFallSpeed = 10;
+	public float mMaxCurrentFallSpeed = 10;
 	public bool mAirReg = true;
 	public bool mInvulnerable = false;
-	public bool mSpeedHack = false;
 	public Animator ani;
-	//public Transform mMeshTrans;
+	public Transform mMeshTrans;
 	public int mAirRegFalling;
-	public int mMapParts = 100;
-	public bool levelEnd=false;
-	public int mMultiplier = 1;
-	public Vector2 mNextMul;
 	public GameObject mAS;
-
-	public float mSwipeSpeed =1;
 
 	private float mAirAmount;
 	private Rigidbody mRb;
 	private bool mIsDead = false;
 	private MovementControls mMovementControls;
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
+	private float mDashTime;
 
 	
 	// Use this for initialization
@@ -47,7 +39,7 @@ public class Player : MonoBehaviour
 		// finally extra init
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
-		//mAS.SetActive (false);
+		mAS.SetActive (false);
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -60,7 +52,6 @@ public class Player : MonoBehaviour
 		//transform.position = GameManager.Instance().mPlayerStartPosition.transform.position;
 		mIsDead = false;
 		//mNextMul = GameManager.Instance().mPlayerStartPosition.transform.position;
-		mNextMul.y -= mMapParts;
 	}
 	public void Hover()
 	{
@@ -68,7 +59,10 @@ public class Player : MonoBehaviour
 	}
 	public void Dash()
 	{
-		mRb.AddForce(0,-mSwipeSpeed,0);
+
+		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
+		mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
+		mRb.AddForce(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
 	}
 	
 	void FixedUpdate()
@@ -79,23 +73,31 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.E))
+		{
+			Dash();
+		}
+		//transform.RotateAround(mMeshTrans.position, new Vector3(1,0,0), transform.rotation.z + 80 * Time.deltaTime);
+		//transform.RotateAround(mMeshTrans.position, new Vector3(0,1,0), transform.rotation.z + 100 * Time.deltaTime);
+		//transform.RotateAround(mMeshTrans.position, new Vector3(0,0,1), transform.rotation.z + 75 * Time.deltaTime);
+
 		// do nothing if dead
 		if(mIsDead)
 		{
 			return;
 		}
+
+
 		// jump and hover player
 		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
 
 		// move player
-		mMovementControls.Move(mRb, mSpeedHack);
-
-		if(transform.position.y < mNextMul.y)
-		{
-			mMultiplier++;
-			mNextMul.y -= mMapParts;
-		}
+		mMovementControls.Move(mRb);
 		mMovementControls.Hover(mRb,10);
+		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
+		{
+			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;
+		}
 
 	}
 
@@ -104,11 +106,11 @@ public class Player : MonoBehaviour
 		return 0;
 	}
 
-	public int fallMultiplier ()
+	public int disance()
 	{
-		return mMultiplier;
+		return (int)Mathf.Abs(transform.position.y);
 	}
-	
+
 	public float airAmount()
 	{
 		return mAirAmount;
@@ -124,8 +126,6 @@ public class Player : MonoBehaviour
 		if(!mInvulnerable && !mIsDead)
 		{
 			mIsDead = true;
-
-			mMultiplier = 1;
 
 			mRb.velocity = new Vector2(0, 0);
 			gameObject.SetActive(false);

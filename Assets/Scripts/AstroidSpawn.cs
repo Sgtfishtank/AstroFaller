@@ -6,7 +6,7 @@ public class AstroidSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	public GameObject[] mAstroidTypes;
-	public static List<GameObject> mAstroids;
+	public  List<GameObject> mAstroids;
 
 	private int mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
 	private float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
@@ -51,8 +51,10 @@ public class AstroidSpawn : MonoBehaviour {
 			mAstroids.Add(instace);
 		}
 	}
-	public static void RemoveAstroid(GameObject g)
+	public void RemoveAstroid(GameObject g)
 	{
+		GameObject t = mAstroids.Find(x => x.gameObject == g);
 		mAstroids.Remove(g);
+		Destroy(t);
 	}
 }

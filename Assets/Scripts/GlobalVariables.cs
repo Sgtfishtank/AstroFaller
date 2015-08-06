@@ -14,10 +14,21 @@ public class GlobalVariables : MonoBehaviour
 
 
 	/*----------------------------------------AstroidSpawn----------------------------------*/
-	public float ASTROID_SPAWN_SPAWNRATE 		 = 5f;
-	public float ASTROID_SPAWN_XOFFSET			 = 10f;
-	public float ASTROID_SPAWN_ROTATION_SPEED 	 = 10f;
-	public int   ASTROID_SPAWN_MAX_ASTROIDS		 = 5;
+	public float ASTROID_SPAWN_SPAWNRATE 				 = 5f   ;
+	public float ASTROID_SPAWN_XOFFSET					 = 10f  ; 
+	public float ASTROID_SPAWN_ROTATION_SPEED 			 = 10f  ;
+	public int   ASTROID_SPAWN_MAX_ASTROIDS				 = 5    ;
+
+	/*----------------------------------------Player----------------------------------------*/
+	public float PLAYER_HORIZONTAL_MOVESPEED			 = 1000f;
+	public float PLAYER_HORIZONTAL_MOVESPEED_KEYBORD	 = 1000f;
+	public float PLAYER_VERTICAL_SPEED_FALLOF			 = 0.1f ;
+	public float PLAYER_DASH_SPEED_DELAY				 = 2f   ;
+	public float PLAYER_DASH_SPEED						 = 20f  ;
+	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	 = 10f  ;
+	public float PLAYER_HOVER_FORCE						 = 15f	;
+
+
 
 	// WORLD_MAP_MENU
 	public float WORLD_MAP_SCROLL_OFFSET = 60;
@@ -31,6 +42,7 @@ public class GlobalVariables : MonoBehaviour
 	void Start ()
 	{
 		DontDestroyOnLoad(this.gameObject);
+		_thisObject = GameObject.Find("GlobalVaribels");
 	}
 	
 	// Update is called once per frame
@@ -45,7 +57,7 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				_thisObject = GameObject.Find("GlobalVaribels");
+
 				if (_thisObject ==  null)
 				{
 					return new GlobalVariables();

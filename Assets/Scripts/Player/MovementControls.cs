@@ -17,6 +17,7 @@ public class MovementControls
 	int blendSpeed = 5;
 
 	int blendOne = 0;
+	bool first;
 
  // tweakable
 	private float lowPassValue = 0;
@@ -51,13 +52,11 @@ public class MovementControls
 				blendOne += blendSpeed;
 			}
 			mAni.SetBool("Hover",true);
+			first = true;
 			if(mAirAmount > 0)//hoverfunction
 			{
 
 				mHoverActive = true;
-				if(mRb.velocity.y < 0)//slows down the player to hover
-				{
-				}
 				//mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
 			}
 			/*else
@@ -84,7 +83,14 @@ public class MovementControls
 				// clamp to max air
 				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
 			}
-			mAni.SetBool("Hover", false);
+			if(first)
+			{
+				float tamp =  UnityEngine.Random.Range(0f,1f);
+				Debug.Log (tamp);
+				mAni.CrossFade("Chubby_Tumblin",0,0,tamp);
+				mAni.SetBool("Hover", false);
+				first= false;
+			}
 			while(blendOne>-0.1f)
 			{
 				for(int i = 0; i< skinnedMeshRenderer.Length;i++)
@@ -96,7 +102,6 @@ public class MovementControls
 
 			mHoverActive = false;
 		}
-//		mAni.SetBool("Hovering", mHoverActive);
 
 		return mAirAmount;
 	}
@@ -113,7 +118,7 @@ public class MovementControls
 				// slow down the fall speed
 				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y) / Time.fixedDeltaTime);
 
-				mRb.AddForce (new Vector2 (0, Mathf.Clamp(force * 1f, 0, mPlayer.mHoverForce)));
+				mRb.AddForce (new Vector2 (0, Mathf.Clamp(force * 1f, 0, GlobalVariables.Instance.PLAYER_HOVER_FORCE)));
 
 				// stop at alomst standstill
 				if(mRb.velocity.y > -0.5f)
@@ -124,35 +129,30 @@ public class MovementControls
 		}
 	}
 	
-	public void Move(Rigidbody rb, bool speedHack)
+	public void Move(Rigidbody rb)
 	{
-		//Quaternion degrees = Quaternion.Euler(0, CalculateRotation(onGround), 0);
-		//mMesh.localRotation = Quaternion.Slerp(mMesh.localRotation, degrees, rotationVelocity * Time.deltaTime);
 
 		//check if the speed is in between the set interval
-		if(true)
+		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == 1) 
 		{
-			if (rb.velocity.x < mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == 1) 
-			{
-				rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-			}
-			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.GetAxisRaw("Horizontal") == -1)
-			{
-				rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-			}
-			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x < 0)
-			{
-				rb.AddForce (new Vector2((LowPassFilterAccelerometer() * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-			}
-			if (rb.velocity.x > -mPlayer.mHorizontalMaxSpeedAir && Input.acceleration.x > 0)
-			{
-				rb.AddForce (new Vector2((LowPassFilterAccelerometer() * mPlayer.mAccelerationSpeedHorizontal * Time.deltaTime), 0));
-			}
+			rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0));
+		}
+		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == -1)
+		{
+			rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0));
+		}
+		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x < 0)
+		{
+			rb.AddForce (new Vector2((LowPassFilterAccelerometer() * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0));
+		}
+		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x > 0)
+		{
+			rb.AddForce (new Vector2((LowPassFilterAccelerometer() * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0));
 		}
 
-		if(rb.velocity.y <= -mPlayer.mMaxFallSpeed)//max fall speed
+		if(rb.velocity.y <= -mPlayer.mMaxCurrentFallSpeed)//max fall speed
 		{
-			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxFallSpeed);
+			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxCurrentFallSpeed);
 		}
 		if(Input.GetAxisRaw("Horizontal") == 0 || LowPassFilterAccelerometer() == 0)//stops player movment on key release
 		{
