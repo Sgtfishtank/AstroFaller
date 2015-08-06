@@ -142,14 +142,17 @@ public class PerksMenu : GameMenu
 			{
 				CloseBuyPerkMenu();
 			}
+		}
 
-			string description = mCurrentPerk.BuyDescription(mCurrentPerkPart);
-			string current = mCurrentPerk.BuyCurrent(mCurrentPerkPart);
-			string next = mCurrentPerk.BuyNext(mCurrentPerkPart);
-			int costBolts = mCurrentPerk.BuyCost(mCurrentPerkPart, PlayerData.CashType.Bolts);
-			int nextCrystals = mCurrentPerk.BuyCost(mCurrentPerkPart, PlayerData.CashType.Crystals);
+		if (mPopupBuyMenu.IsOpen ()) 
+		{
+			string description = mCurrentPerk.BuyDescription (mCurrentPerkPart);
+			string current = mCurrentPerk.BuyCurrent (mCurrentPerkPart);
+			string next = mCurrentPerk.BuyNext (mCurrentPerkPart);
+			int costBolts = mCurrentPerk.BuyCost (mCurrentPerkPart, PlayerData.CashType.Bolts);
+			int nextCrystals = mCurrentPerk.BuyCost (mCurrentPerkPart, PlayerData.CashType.Crystals);
 
-			mPopupBuyMenu.updateData(description, current, next, costBolts, nextCrystals);
+			mPopupBuyMenu.updateData (description, current, next, costBolts, nextCrystals);
 		}
 	}
 	
