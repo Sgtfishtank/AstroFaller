@@ -20,6 +20,7 @@ public class GameMenu : MonoBehaviour
 		mMenuCamera.transform.position = mStartMenuPosition.transform.position;
 
 		transform.Find ("World Map 0x y0 230z").GetComponent<WorldMapMenu> ().Init();
+		transform.Find ("Perks -3300x").GetComponent<PerksMenu> ().Init();
 	}
 	
 	// Update is called once per frame

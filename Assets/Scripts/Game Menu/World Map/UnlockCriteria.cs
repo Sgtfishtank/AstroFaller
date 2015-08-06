@@ -5,13 +5,18 @@ public class UnlockCriteria : MonoBehaviour
 {
 	public Level mCriteriaLevel;
 
-	private Level mLevel;
+	private LevelBase mLevel;
 
 	// Use this for initialization
 	void Start () 
 	{
 	}
-	
+
+	public void Init()
+	{
+		mLevel = GetComponent<LevelBase> ();
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -19,8 +24,8 @@ public class UnlockCriteria : MonoBehaviour
 
 	public bool CriteriaMet()
 	{
-		int bolts = GlobalVariables.Instance.BoltsCritera("Bonus 1");
-		int Distance = GlobalVariables.Instance.DistanceCritera("Bonus 1");
+		int bolts = GlobalVariables.Instance.BoltsCritera(mLevel.LevelName());
+		int Distance = GlobalVariables.Instance.DistanceCritera(mLevel.LevelName());
 
 		return (mCriteriaLevel.TotalBolts() >= bolts) && (mCriteriaLevel.TotalDistance() >= Distance);
 	}

@@ -9,6 +9,9 @@ public class BurstPerk : Perk
 	private bool mLeftUnlocked;
 	private bool mRightUnlocked;
 	private	TextMesh mTitleText;
+	private	GameObject mRight3;
+	private	GameObject mLeft4;
+	private	GameObject mMain5;
 	
 	// Use this for initialization
 	void Start () 
@@ -24,6 +27,13 @@ public class BurstPerk : Perk
 		}
 		
 		mTitleText = transform.Find ("Burst/Burst+ text").GetComponent<TextMesh> ();
+		mRight3 = transform.Find ("Burst/perks_air 3").gameObject;
+		mLeft4 = transform.Find ("Burst/perks_air 4").gameObject;
+		mMain5 = transform.Find ("Burst/perks_air 5").gameObject;
+		
+		mRight3.SetActive (false);
+		mLeft4.SetActive (false);
+		mMain5.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -40,6 +50,7 @@ public class BurstPerk : Perk
 			if (!mMainUnlocked)
 			{
 				mMainUnlocked = true;
+				mMain5.SetActive(true);
 				return true;
 			}
 			break;
@@ -47,6 +58,7 @@ public class BurstPerk : Perk
 			if (mMainUnlocked && (!mLeftUnlocked))
 			{
 				mLeftUnlocked = true;
+				mLeft4.SetActive(true);
 				return true;
 			}
 			break;
@@ -54,6 +66,7 @@ public class BurstPerk : Perk
 			if (mMainUnlocked && (!mRightUnlocked))
 			{
 				mRightUnlocked = true;
+				mRight3.SetActive(true);
 				return true;
 			}
 			break;
