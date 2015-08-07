@@ -1,68 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Item : MonoBehaviour 
+public abstract class Item : MonoBehaviour 
 {
-	public enum ItemType
-	{
-		UnlimitedAir,
-		Shockwave,
-		BoltMagnet,
-		ForceField,
-		BoltMutliplier,
-		RocketThrust
-	}
+	public abstract void Init();
 
-	public ItemType mType;
-	public string mItemName;
-	public int mMaxItemLevel;
-	public int mStartItemLevel;
+	public abstract bool UnlockItem ();
 	
-	private	TextMesh mTitleText;
-	private bool mUnlocked;
-	private int mItemLevel;
+	public abstract bool IsUnlocked ();
 
-	// Use this for initialization
-	void Start () 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
+	public abstract int ItemLevelUnlocked ();
 
-	public bool UnlockItem()
-	{
-		if (!mUnlocked)
-		{
-			mUnlocked = true;
-			mItemLevel = Mathf.Min(mStartItemLevel, mMaxItemLevel);
-			return true;
-		}
-		else if (mItemLevel < mMaxItemLevel)
-		{
-			mItemLevel++;
-			return true;
-		}
-		
-		return false;	
-	}
+	public abstract bool CanUnlockItem ();
+
+	public abstract int BuyCostBolts ();
+
+	public abstract int BuyCostCrystals ();
 	
-	public bool IsUnlocked()
-	{
-		return mUnlocked;
-	}
-
-	public int ItemLevelUnlocked()
-	{
-		if (!mUnlocked)
-		{
-			return -1;
-		}
-
-		return mItemLevel;
-	}
+	public abstract string BuyDescription ();
+	
+	public abstract string BuyCurrent ();
+	
+	public abstract string BuyNext ();
 }

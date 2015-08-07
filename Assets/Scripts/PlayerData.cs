@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerData : MonoBehaviour 
 {
-	public enum CashType
+	private enum CashType
 	{
 		Bolts,
 		Crystals
@@ -47,59 +47,61 @@ public class PlayerData : MonoBehaviour
 	
 	}
 
-	public bool withdraw(int amount, CashType buyType)
+	public bool withdrawCrystals (int amount)
 	{
 		if (amount < 0)
 		{
-			print("Error amount in withdraw " + amount);
+			print("Error amount in withdrawCrystals " + amount);
 			return false;
 		}
 
-		switch (buyType) 
+		if (mCrystals >= amount)
 		{
-		case CashType.Bolts:
-			if (mBolts >= amount)
-			{
-				mBolts -= amount;
-				return true;
-			}
-			break;
-		case CashType.Crystals:
-			if (mCrystals >= amount)
-			{
-				mCrystals -= amount;
-				return true;
-			}
-			break;
-		default:
-			print("error in withdraw " + buyType);
-			break;
+			mCrystals -= amount;
+			return true;
+		}
+
+		return false;
+	}
+
+	public bool withdrawBolts(int amount)
+	{
+		if (amount < 0)
+		{
+			print("Error amount in withdrawBolts " + amount);
+			return false;
+		}
+
+		if (mBolts >= amount)
+		{
+			mBolts -= amount;
+			return true;
 		}
 
 		return false;
 	}
 	
-	public bool deposit(int amount, CashType buyType)
+	public bool depositBolts(int amount)
 	{
 		if (amount < 0)
 		{
-			print("Error amount in deposit " + amount);
+			print("Error amount in depositBolts " + amount);
 			return false;
 		}
 
-		switch (buyType) 
+		mBolts += amount;
+		return true;
+	}
+
+	public bool depositCrystals(int amount)
+	{
+		if (amount < 0)
 		{
-		case CashType.Bolts:
-			mBolts += amount;
-			return true;
-		case CashType.Crystals:
-			mCrystals += amount;
-			return true;
-		default:
-			print("error in deposit " + buyType);
-			break;
+			print("Error amount in depositCrystals " + amount);
+			return false;
 		}
-		
-		return false;
+
+		mCrystals += amount;
+		return true;
 	}
 }

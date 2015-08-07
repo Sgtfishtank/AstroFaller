@@ -27,6 +27,11 @@ public class CrystalShopMenu : GameMenu
 		enabled = false;
 	}
 
+	public override bool IsFocused ()
+	{
+		return mFocused;
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{

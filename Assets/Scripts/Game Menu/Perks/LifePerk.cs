@@ -114,34 +114,39 @@ public class LifePerk : Perk
 		return false;
 	}
 	
-	public override int BuyCost(PerkPart perkPart, PlayerData.CashType cashType)
+	public override int BuyCostBolts(PerkPart perkPart)
 	{
-		if ((perkPart == PerkPart.Main) && (cashType == PlayerData.CashType.Crystals))
+		switch (perkPart) 
 		{
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_COST_CRYSTALS;
-		}
-		else if ((perkPart == PerkPart.Main) && (cashType == PlayerData.CashType.Bolts))
-		{
+		case PerkPart.Main:
 			return GlobalVariables.Instance.LIFE_PERK_MAIN_COST_BOLTS;
-		}
-		else if ((perkPart == PerkPart.Left) && (cashType == PlayerData.CashType.Crystals))
-		{
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_COST_CRYSTALS;
-		}
-		else if ((perkPart == PerkPart.Left) && (cashType == PlayerData.CashType.Bolts))
-		{
+		case PerkPart.Left:
 			return GlobalVariables.Instance.LIFE_PERK_LEFT_COST_BOLTS;
-		}
-		else if ((perkPart == PerkPart.Right) && (cashType == PlayerData.CashType.Crystals))
-		{
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_COST_CRYSTALS;
-		}
-		else if ((perkPart == PerkPart.Right) && (cashType == PlayerData.CashType.Bolts))
-		{
+		case PerkPart.Right:
 			return GlobalVariables.Instance.LIFE_PERK_RIGHT_COST_BOLTS;
+		default:
+			print ("Error perkPart in BuyCost " + perkPart);
+			break;
 		}
 		
-		print ("Error in BuyCost " + perkPart + " and " + cashType);
+		return -1;
+	}
+
+	public override int BuyCostCrystals(PerkPart perkPart)
+	{
+		switch (perkPart) 
+		{
+		case PerkPart.Main:
+			return GlobalVariables.Instance.LIFE_PERK_MAIN_COST_CRYSTALS;
+		case PerkPart.Left:
+			return GlobalVariables.Instance.LIFE_PERK_LEFT_COST_CRYSTALS;
+		case PerkPart.Right:
+			return GlobalVariables.Instance.LIFE_PERK_RIGHT_COST_CRYSTALS;
+		default:
+			print ("Error perkPart in BuyCost " + perkPart);
+			break;
+		}
+
 		return -1;
 	}
 

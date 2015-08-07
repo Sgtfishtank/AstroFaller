@@ -51,6 +51,11 @@ public class WorldMapMenu : GameMenu
 		mFocused = false;
 		enabled = false;
 	}
+	
+	public override bool IsFocused ()
+	{
+		return mFocused;
+	}
 
 	void CheckLevels ()
 	{

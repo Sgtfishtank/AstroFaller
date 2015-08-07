@@ -72,12 +72,15 @@ public class GlobalVariables : MonoBehaviour
 	public int BURST_PERK_RIGHT_COST_CRYSTALS = 16;
 	public int BURST_PERK_RIGHT_COST_BOLTS = 32;
 
+	// ITEMS
+	public int ITEMS_START_LEVEL = 1;
+	public int ITEMS_MAX_LEVEL = 1;
 
 	// Use this for initialization
 	void Start ()
 	{
 		DontDestroyOnLoad(this.gameObject);
-		_thisObject = GameObject.Find("GlobalVaribels");
+		_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 	}
 	
 	// Update is called once per frame
@@ -95,7 +98,7 @@ public class GlobalVariables : MonoBehaviour
 
 				if (_thisObject ==  null)
 				{
-					return new GlobalVariables();
+					_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				}
 
 				instance = _thisObject.GetComponent<GlobalVariables>();

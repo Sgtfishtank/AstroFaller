@@ -8,4 +8,6 @@ public abstract class GameMenu : MonoBehaviour
 	public abstract void Focus();
 
 	public abstract void Unfocus();
+
+	public abstract bool IsFocused();
 }

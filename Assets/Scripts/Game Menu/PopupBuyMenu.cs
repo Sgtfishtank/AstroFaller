@@ -17,11 +17,11 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Init() 
 	{
-		mDescriptionText = transform.Find ("name ext").GetComponent<TextMesh> ();
-		mCurrentText = transform.Find ("info text 1").GetComponent<TextMesh> ();
-		mNextText = transform.Find ("info text 2").GetComponent<TextMesh> ();
-		mCostBoltsText = transform.Find ("buy text 1").GetComponent<TextMesh> ();
-		mCostCrystalsText = transform.Find ("buy text 2").GetComponent<TextMesh> ();
+		mDescriptionText = transform.Find ("Pop-up buy menu/name ext").GetComponent<TextMesh> ();
+		mCurrentText = transform.Find ("Pop-up buy menu/info text 1").GetComponent<TextMesh> ();
+		mNextText = transform.Find ("Pop-up buy menu/info text 2").GetComponent<TextMesh> ();
+		mCostBoltsText = transform.Find ("Pop-up buy menu/buy text 1").GetComponent<TextMesh> ();
+		mCostCrystalsText = transform.Find ("Pop-up buy menu/buy text 2").GetComponent<TextMesh> ();
 	}
 	
 	// Update is called once per frame
