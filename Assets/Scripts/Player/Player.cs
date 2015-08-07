@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 	public int mAirRegFalling;
 	public GameObject mAS;
 
+	private FollowPlayer mfp;
 	private float mAirAmount;
 	private Rigidbody mRb;
 	private bool mIsDead = false;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
 		mAS.SetActive (false);
+		mfp = GameObject.Find("Main Camera").GetComponent<FollowPlayer>();
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -51,7 +53,6 @@ public class Player : MonoBehaviour
 		// put at level start position, if any
 		//transform.position = GameManager.Instance().mPlayerStartPosition.transform.position;
 		mIsDead = false;
-		//mNextMul = GameManager.Instance().mPlayerStartPosition.transform.position;
 	}
 	public void Hover()
 	{
@@ -59,10 +60,10 @@ public class Player : MonoBehaviour
 	}
 	public void Dash()
 	{
-
+		mfp.Dash();
 		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
 		mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
-		mRb.AddForce(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
+		mRb.velocity = new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
 	}
 	
 	void FixedUpdate()
@@ -96,8 +97,10 @@ public class Player : MonoBehaviour
 		mMovementControls.Hover(mRb,10);
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
+			print ("mört");
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;
 		}
+		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
 	}
 

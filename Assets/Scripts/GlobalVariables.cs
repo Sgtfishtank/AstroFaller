@@ -18,7 +18,7 @@ public class GlobalVariables : MonoBehaviour
 	/*----------------------------------------Player----------------------------------------*/
 	public float PLAYER_HORIZONTAL_MOVESPEED			 = 1000f;
 	public float PLAYER_HORIZONTAL_MOVESPEED_KEYBORD	 = 1000f;
-	public float PLAYER_VERTICAL_SPEED_FALLOF			 = 0.1f ;
+	public float PLAYER_VERTICAL_SPEED_FALLOF			 = 2f ;
 	public float PLAYER_DASH_SPEED_DELAY				 = 2f   ;
 	public float PLAYER_DASH_SPEED						 = 20f  ;
 	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	 = 10f  ;
