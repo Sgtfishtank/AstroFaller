@@ -152,16 +152,55 @@ public class BurstPerk : Perk
 
 	public override string BuyDescription(PerkPart perkPart)
 	{
+		switch (perkPart) 
+		{
+		case PerkPart.Main:
+			return GlobalVariables.Instance.BURST_PERK_MAIN_DESCRIPTION;
+		case PerkPart.Left:
+			return GlobalVariables.Instance.BURST_PERK_LEFT_DESCRIPTION;
+		case PerkPart.Right:
+			return GlobalVariables.Instance.BURST_PERK_RIGHT_DESCRIPTION;
+		default:
+			print ("Error perkPart in BuyDescription " + perkPart);
+			break;
+		}
+		
 		return "---";
 	}
 	
 	public override string BuyCurrent(PerkPart perkPart)
 	{
+		switch (perkPart) 
+		{
+		case PerkPart.Main:
+			return GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS[0] + GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS_UNIT;
+		case PerkPart.Left:
+			return GlobalVariables.Instance.BURST_PERK_LEFT_LEVELS[0] + GlobalVariables.Instance.BURST_PERK_LEFT_LEVELS_UNIT;
+		case PerkPart.Right:
+			return GlobalVariables.Instance.BURST_PERK_RIGHT_LEVELS[0] + GlobalVariables.Instance.BURST_PERK_RIGHT_LEVELS_UNIT;
+		default:
+			print ("Error perkPart in BuyCurrent " + perkPart);
+			break;
+		}
+		
 		return "---";
 	}
 	
 	public override string BuyNext(PerkPart perkPart)
 	{
+		switch (perkPart) 
+		{
+		case PerkPart.Main:
+			return GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS[1] + GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS_UNIT;
+		case PerkPart.Left:
+			return GlobalVariables.Instance.BURST_PERK_LEFT_LEVELS[1] + GlobalVariables.Instance.BURST_PERK_LEFT_LEVELS_UNIT;
+		case PerkPart.Right:
+			return GlobalVariables.Instance.BURST_PERK_RIGHT_LEVELS[1] + GlobalVariables.Instance.BURST_PERK_RIGHT_LEVELS_UNIT;
+		default:
+			print ("Error perkPart in BuyNext " + perkPart);
+			break;
+		}
+		
 		return "---";
 	}
 }
