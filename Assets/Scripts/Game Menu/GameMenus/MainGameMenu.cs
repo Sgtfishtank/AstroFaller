@@ -129,6 +129,26 @@ public class MainGameMenu : MonoBehaviour
 		return mPopupBuyMenu;
 	}
 
+	public void ButtonA()
+	{
+		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject").transform.position;
+	}
+	
+	public void ButtonB()
+	{
+		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 1").transform.position;
+	}
+	
+	public void ButtonC()
+	{
+		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 2").transform.position;
+	}
+	
+	public void ButtonD()
+	{
+		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 3").transform.position;
+	}
+
 	void PressButton (string buttonName)
 	{
 		switch (buttonName) 

@@ -137,10 +137,11 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
 			{
-
+				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
+				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				if (_thisObject ==  null)
 				{
-					_thisObject = GameObject.Find("GlobalVaribelsPrefab");
+					//_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				}
 
 				instance = _thisObject.GetComponent<GlobalVariables>();

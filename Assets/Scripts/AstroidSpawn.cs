@@ -8,9 +8,9 @@ public class AstroidSpawn : MonoBehaviour {
 	public GameObject[] mAstroidTypes;
 	public  List<GameObject> mAstroids;
 
-	private int mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
-	private float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
-	private float mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
+	private int mMaxAstroids;
+	private float mCd;
+	private float mRotationSpeed;
 
 	private int index;
 	private GameObject mPlayerObj;
@@ -19,6 +19,9 @@ public class AstroidSpawn : MonoBehaviour {
 
 	void Start ()
 	{
+		mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
+		mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
+		mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 		mAstroids = new List<GameObject>();
 		mPlayerObj = GameObject.Find ("Player");
 		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
