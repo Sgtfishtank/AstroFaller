@@ -63,8 +63,8 @@ public class MainGameMenu : MonoBehaviour
 		}
 		
 		mWorldMapMenu.SetActive (false);
-		mStartMenu.Focus ();
-		HideAllMenus ();
+		mStartMenu.Focus();
+		HideAllMenus();
 
 		if (mGameMenus[WORLD_MAP_MENU_INDEX].IsFocused())
 		{
@@ -87,23 +87,18 @@ public class MainGameMenu : MonoBehaviour
 			RaycastHit[] hits = Physics.RaycastAll(ray.origin, ray.direction, Mathf.Infinity, mask);
 			for (int i = 0; i < hits.Length; i++) 
 			{
-				print(hits[i].collider.name);
+				//print(hits[i].collider.name);
 			}
 
 			RaycastHit hit;
 			if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, mask))
 			{
-				PressButton(hit.collider.name);
+				//PressButton(hit.collider.name);
 			}
 			else
 			{
-				HideAllMenus();
+				//HideAllMenus();
 			}
-		}
-
-		if (Input.touchCount > 0) 
-		{
-
 		}
 		
 		if (Input.GetKeyDown (KeyCode.Alpha1)) 
@@ -151,6 +146,7 @@ public class MainGameMenu : MonoBehaviour
 
 	void PressButton (string buttonName)
 	{
+		/*
 		switch (buttonName) 
 		{
 		case "WorldMapButton":
@@ -197,6 +193,7 @@ public class MainGameMenu : MonoBehaviour
 			print("Error button " + buttonName);
 			break;
 		}
+		*/
 	}
 
 	void HideAllMenus ()
@@ -258,11 +255,13 @@ public class MainGameMenu : MonoBehaviour
 	
 	void HideBackButton ()
 	{
+		//mCanvas.HideBackButton ();
 		mWorldMapMenu.SetActive (false);
 	}
 	
 	void ShowBackButton ()
 	{
+		//mCanvas.ShowBackButton ();
 		mWorldMapMenu.SetActive (true);
 	}
 }

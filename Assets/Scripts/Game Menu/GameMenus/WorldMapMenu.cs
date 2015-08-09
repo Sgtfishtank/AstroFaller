@@ -110,6 +110,34 @@ public class WorldMapMenu : GameMenu
 	// Update is called once per frame
 	void Update () 
 	{
+		if (Input.touchCount > 0)
+		{
+			foreach (Touch touch in Input.touches)
+			{
+				switch (touch.phase)
+				{
+				case TouchPhase.Began:
+					break;
+				case TouchPhase.Moved:
+					if (touch.deltaPosition.y > 0.1f)
+					{
+						ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+						print("+");
+					}
+					else if (touch.deltaPosition.y < 0.1f)
+					{
+						print("-");
+						ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+					}
+					break;
+				case TouchPhase.Canceled:
+					break;
+				case TouchPhase.Ended:
+					break;
+				}
+			}
+		}
+
 		if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
 		{
 			mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
