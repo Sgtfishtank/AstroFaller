@@ -89,12 +89,12 @@ public class ItemMenu : GameMenu
 		{
 			if (Input.GetKey(KeyCode.KeypadEnter))
 			{
-				BuyItemsBolts();
+				BuyWithBolts();
 				CloseBuyItemMenu();
 			}
 			else if (Input.GetKey(KeyCode.KeypadPlus))
 			{
-				BuyItemsCrystals();
+				BuyWithCrystals();
 				CloseBuyItemMenu();
 			}
 			else if (Input.GetKey(KeyCode.Keypad0))
@@ -137,7 +137,37 @@ public class ItemMenu : GameMenu
 		
 		mPopupBuyMenu.Open(transform.position);
 	}
+
+	public void BuyUlimitedAirItem()
+	{
+		OpenBuyItemMenu(UNLIMITED_AIR_INDEX);
+	}
 	
+	public void BuyChockWaveItem()
+	{
+		OpenBuyItemMenu(SHOCKWAVE_INDEX);
+	}
+	
+	public void BuyMagnetsItem()
+	{
+		OpenBuyItemMenu(BOLTS_MAGNETS_INDEX);
+	}
+	
+	public void BuyForceFieldItem()
+	{
+		OpenBuyItemMenu(FORCE_FIELD_INDEX);
+	}
+	
+	public void BuyMultiplierItem()
+	{
+		OpenBuyItemMenu(BOLTS_MULTIPLIER_INDEX);
+	}
+	
+	public void BuyRocketThrustItem()
+	{
+		OpenBuyItemMenu(ROCKET_THRUST_INDEX);
+	}
+
 	void CloseBuyItemMenu()
 	{
 		mCurrentItem = null;
@@ -154,7 +184,7 @@ public class ItemMenu : GameMenu
 		mPopupBuyMenu.Close();
 	}
 	
-	public void BuyItemsBolts()
+	public override void BuyWithBolts()
 	{
 		if (mCurrentItem == null)
 		{
@@ -169,7 +199,7 @@ public class ItemMenu : GameMenu
 		}
 	}
 	
-	public void BuyItemsCrystals()
+	public override void BuyWithCrystals()
 	{
 		if (mCurrentItem == null)
 		{

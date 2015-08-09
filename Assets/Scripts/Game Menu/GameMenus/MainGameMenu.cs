@@ -19,8 +19,8 @@ public class MainGameMenu : MonoBehaviour
 	}
 
 	private int WORLD_MAP_MENU_INDEX = 0;
-	private int ITEMS_MENU_INDEX = 1;
-	private int PERKS_MENU_INDEX = 2;
+	private int ITEMS_MENU_INDEX = 2;
+	private int PERKS_MENU_INDEX = 1;
 	private int CRYSTAL_STORE_MENU_INDEX = 3;
 
 	public GameMenu mStartMenu;
@@ -28,6 +28,7 @@ public class MainGameMenu : MonoBehaviour
 
 	private GameMenu[] mGameMenus;
 	private MenuCamera mMenuCamera;
+	private GUICanvas mCanvas;
 	private PopupBuyMenu mPopupBuyMenu;
 	private GameObject mPopupCraftingMenu;
 	private GameObject mPopupAchievementsMenu;
@@ -38,6 +39,7 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		mCanvas = GameObject.Find("Canvas").GetComponent<GUICanvas>();
 		mPopupBuyMenu = GameObject.Find("Menu Camera/PopupBuyMenu").GetComponent<PopupBuyMenu>();
 		mPopupBuyMenu.Init ();
 
@@ -103,97 +105,67 @@ public class MainGameMenu : MonoBehaviour
 		
 		if (Input.GetKeyDown (KeyCode.Alpha1)) 
 		{
-			ChangeGameMenu(0);
+			ChangeToWorldMapMenu();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha2)) 
 		{
-			ChangeGameMenu(1);
+			ChangeToItemsMenu();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha3)) 
 		{
-			ChangeGameMenu(2);
+			ChangeToPerksMenu();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha4)) 
 		{
-			ChangeGameMenu(3);
+			ChangeToChrystalShopMenu();
 		}
+	}
+
+	public void ChangeToWorldMapMenu()
+	{
+		HideAllMenus();
+		ChangeGameMenu(WORLD_MAP_MENU_INDEX);
+		mCanvas.HidePerkButtons();
+		mCanvas.HideItemButtons();
+	}
+	
+	public void ChangeToPerksMenu()
+	{
+		HideAllMenus();
+		ChangeGameMenu(PERKS_MENU_INDEX);
+		mCanvas.ShowPerkButtons();
+		mCanvas.HideItemButtons();
+	}
+	
+	public void ChangeToItemsMenu()
+	{
+		HideAllMenus();
+		ChangeGameMenu(ITEMS_MENU_INDEX);
+		mCanvas.HidePerkButtons();
+		mCanvas.ShowItemButtons();
+	}
+	
+	public void ChangeToChrystalShopMenu()
+	{
+		HideAllMenus();
+		ChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
+		mCanvas.HidePerkButtons();
+		mCanvas.HideItemButtons();
+	}
+
+	public PerksMenu PerksMenu ()
+	{
+		return (PerksMenu)mGameMenus [PERKS_MENU_INDEX];
+	}
+	
+	public ItemMenu ItemsMenu ()
+	{
+		return (ItemMenu)mGameMenus[ITEMS_MENU_INDEX];
 	}
 
 	public PopupBuyMenu PopupBuyMenu ()
 	{
 		return mPopupBuyMenu;
-	}
-
-	public void ButtonA()
-	{
-		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject").transform.position;
-	}
-	
-	public void ButtonB()
-	{
-		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 1").transform.position;
-	}
-	
-	public void ButtonC()
-	{
-		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 2").transform.position;
-	}
-	
-	public void ButtonD()
-	{
-		//GameObject.Find ("Main Camera").transform.position = GameObject.Find ("Canvas/GameObject 3").transform.position;
-	}
-
-	void PressButton (string buttonName)
-	{
-		/*
-		switch (buttonName) 
-		{
-		case "WorldMapButton":
-			ChangeGameMenu(WORLD_MAP_MENU_INDEX);
-			break;
-		case "CraftingButton":
-			ToggleCraftingMenu();
-			break;
-		case "AchievementsButton":
-			ToggleAchievementsMenu();
-			break;
-		case "OptionsButton":
-			ToggleOptions();
-			break;
-		case "HelpButton":
-			ToggleHelp();
-			break;
-		case "QuestsButton":
-			HideAllMenus();
-			break;
-		case "StatsButton":
-			HideAllMenus();
-			break;
-		case "KimJongUnBoardsButton":
-			HideAllMenus();
-			break;
-		case "ItemsButton":
-			ChangeGameMenu(ITEMS_MENU_INDEX);
-			HideAllMenus();
-			break;
-		case "PerksButton":
-			ChangeGameMenu(PERKS_MENU_INDEX);
-			HideAllMenus();
-			break;
-		case "CrystalStoreButton":
-			ChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
-			HideAllMenus();
-			break;
-		case "BackButton":
-			ChangeGameMenu(WORLD_MAP_MENU_INDEX);
-			HideAllMenus();
-			break;
-		default:
-			print("Error button " + buttonName);
-			break;
-		}
-		*/
 	}
 
 	void HideAllMenus ()
@@ -203,34 +175,74 @@ public class MainGameMenu : MonoBehaviour
 		mOptionsMenu.SetActive(false);
 		mPopupCraftingMenu.SetActive(false);
 		mPopupAchievementsMenu.SetActive(false);
+		mCanvas.HidePopupCraftingButton();
+		mCanvas.HidePopupAchievementsButton();
 	}
 
-	void ToggleOptions ()
+	public void ToggleOptions ()
 	{
 		bool active = mHelpMenu.activeSelf;
 		HideAllMenus();
 		mHelpMenu.SetActive (!active);
 	}
 
-	void ToggleHelp ()
+	public void ToggleHelp ()
 	{
 		bool active = mOptionsMenu.activeSelf;
 		HideAllMenus();
 		mOptionsMenu.SetActive(!active);
 	}
 
-	void ToggleCraftingMenu ()
+	public void ToggleCraftingMenu ()
 	{
 		bool active = mPopupCraftingMenu.activeSelf;
 		HideAllMenus();
 		mPopupCraftingMenu.SetActive(!active);
+		if (!active) 
+		{
+			mCanvas.ShowPopupCraftingButton();
+		}
+		else 
+		{
+			mCanvas.HidePopupCraftingButton();
+		}
 	}
 
-	void ToggleAchievementsMenu ()
+	public void ToggleAchievementsMenu ()
 	{
 		bool active = mPopupAchievementsMenu.activeSelf;
 		HideAllMenus();
 		mPopupAchievementsMenu.SetActive(!active);
+		if (!active)
+		{
+			mCanvas.ShowPopupAchievementsButton();
+		}
+		else 
+		{
+			mCanvas.HidePopupAchievementsButton();
+		}
+	}
+	
+	public void BuyWithBolts()
+	{
+		for (int i = 0; i < mGameMenus.Length; i++) 
+		{
+			if (mGameMenus[i].IsFocused())
+			{
+				mGameMenus[i].BuyWithBolts();
+			}
+		}
+	}
+	
+	public void BuyWithCrystals()
+	{
+		for (int i = 0; i < mGameMenus.Length; i++) 
+		{
+			if (mGameMenus[i].IsFocused())
+			{
+				mGameMenus[i].BuyWithCrystals();
+			}
+		}
 	}
 
 	void ChangeGameMenu (int index)
@@ -255,13 +267,13 @@ public class MainGameMenu : MonoBehaviour
 	
 	void HideBackButton ()
 	{
-		//mCanvas.HideBackButton ();
+		mCanvas.HideBackButton ();
 		mWorldMapMenu.SetActive (false);
 	}
 	
 	void ShowBackButton ()
 	{
-		//mCanvas.ShowBackButton ();
+		mCanvas.ShowBackButton ();
 		mWorldMapMenu.SetActive (true);
 	}
 }

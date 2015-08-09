@@ -31,6 +31,7 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Open(Vector3 position)
 	{
+		GameObject.Find ("Canvas").GetComponent<GUICanvas> ().ShowPopupBuyButton();
 		transform.position = position;
 		mOpen = true;
 		gameObject.SetActive(true);
@@ -38,6 +39,7 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Close()
 	{
+		GameObject.Find ("Canvas").GetComponent<GUICanvas> ().HidePopupBuyButton();
 		mOpen = false;
 		gameObject.SetActive(false);
 	}

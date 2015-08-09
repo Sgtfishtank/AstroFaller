@@ -5,9 +5,9 @@ public abstract class Perk : MonoBehaviour
 {
 	public enum PerkPart
 	{
-		Main,
-		Left,
-		Right
+		Main = 0,
+		Left = 1,
+		Right = 2
 	}
 	
 	public abstract void Init();

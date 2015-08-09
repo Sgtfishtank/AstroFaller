@@ -37,4 +37,12 @@ public class CrystalShopMenu : GameMenu
 	{
 	
 	}
+	
+	public override void BuyWithBolts()
+	{
+	}
+	
+	public override void BuyWithCrystals()
+	{
+	}
 }

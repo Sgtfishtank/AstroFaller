@@ -138,13 +138,11 @@ public class PerksMenu : GameMenu
 		{
 			if (Input.GetKey(KeyCode.KeypadEnter))
 			{
-				BuyPerksBolts();
-				CloseBuyPerkMenu();
+				BuyWithBolts();
 			}
 			else if (Input.GetKey(KeyCode.KeypadPlus))
 			{
-				BuyPerksCrystals();
-				CloseBuyPerkMenu();
+				BuyWithCrystals();
 			}
 			else if (Input.GetKey(KeyCode.Keypad0))
 			{
@@ -163,12 +161,28 @@ public class PerksMenu : GameMenu
 			mPopupBuyMenu.updateData (description, current, next, costBolts, nextCrystals);
 		}
 	}
+
+	public void BuyAirPerk (Perk.PerkPart pp)
+	{
+		OpenBuyPerkMenu(AIR_PERK_INDEX, pp);
+	}
 	
-	public void BuyPerksBolts()
+	public void BuyLifePerk (Perk.PerkPart pp)
+	{
+		OpenBuyPerkMenu(LIFE_PERK_INDEX, pp);
+	}
+	
+	public void BuyBurstPerk (Perk.PerkPart pp)
+	{
+		OpenBuyPerkMenu(BURST_PERK_INDEX, pp);
+	}
+
+	public override void BuyWithBolts()
 	{
 		if (mCurrentPerk == null)
 		{
 			print("Error popup buying nothing!");
+			CloseBuyPerkMenu();
 			return;
 		}
 		
@@ -177,13 +191,15 @@ public class PerksMenu : GameMenu
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
 		}
+		CloseBuyPerkMenu();
 	}
 	
-	public void BuyPerksCrystals()
+	public override void BuyWithCrystals()
 	{
 		if (mCurrentPerk == null)
 		{
 			print("Error popup buying nothing!");
+			CloseBuyPerkMenu();
 			return;
 		}
 		
@@ -192,5 +208,6 @@ public class PerksMenu : GameMenu
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
 		}
+		CloseBuyPerkMenu();
 	}
 }

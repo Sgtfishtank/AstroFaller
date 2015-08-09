@@ -187,6 +187,14 @@ public class WorldMapMenu : GameMenu
 			}
 		}
 	}
+	
+	public override void BuyWithBolts()
+	{
+	}
+	
+	public override void BuyWithCrystals()
+	{
+	}
 
 	void setScrollerLevel (float scrollLevel)
 	{
