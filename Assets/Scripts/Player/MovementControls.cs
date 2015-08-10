@@ -10,13 +10,13 @@ public class MovementControls
 	private Animator mAni;
 	private Player mPlayer;
 	private SkinnedMeshRenderer[] skinnedMeshRenderer;
-	public float AccelerometerUpdateInterval = 1.0f / 60.0f;
+	public float AccelerometerUpdateInterval = 0.25f;
 	public float LowPassKernelWidthInSeconds = 1.0f;
 	
 	private float LowPassFilterFactor;
-	int blendSpeed = 5;
+	float blendSpeed = 400f;
 
-	int blendOne = 0;
+	float blendOne = 0;
 	bool first;
 
  // tweakable
@@ -33,23 +33,24 @@ public class MovementControls
 	}
 
 	
-	private float LowPassFilterAccelerometer()
+	private void LowPassFilterAccelerometer()
 	{
 		lowPassValue = Mathf.Lerp(lowPassValue, Input.acceleration.x, LowPassFilterFactor);
-		return lowPassValue;
+
 	}
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
 		if (Input.GetButton("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
-			while (blendOne < 100.1f)
+			if (blendOne < 100.1f)
 			{
+				blendOne =Mathf.Clamp(blendOne+blendSpeed * Time.deltaTime,0,100);
 				for(int i = 0; i < skinnedMeshRenderer.Length; i++)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
 
 				}
-				blendOne += blendSpeed;
+
 			}
 			mAni.SetBool("Hover",true);
 			first = true;
@@ -87,17 +88,18 @@ public class MovementControls
 			{
 				float tamp =  UnityEngine.Random.Range(0f,1f);
 				Debug.Log (tamp);
-				mAni.CrossFade("Chubby_Tumblin",0,0,tamp);
+				mAni.CrossFade("Chubby_Tumblin",0.1f,0,tamp);
 				mAni.SetBool("Hover", false);
 				first= false;
 			}
-			while(blendOne>-0.1f)
+			if(blendOne>-0.1f)
 			{
+				blendOne =Mathf.Clamp(blendOne-blendSpeed * Time.deltaTime,0,100);
 				for(int i = 0; i< skinnedMeshRenderer.Length;i++)
 				{
 					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
 				}
-				blendOne -= blendSpeed;
+
 			}
 
 			mHoverActive = false;
@@ -110,53 +112,77 @@ public class MovementControls
 	{
 		if (mHoverActive)
 		{
+			// revese the polarity of the gravity sigularity cap'n!
+			mRb.AddForce(new Vector3(0, -mRb.mass * Physics.gravity.y * GlobalVariables.Instance.PLAYER_HOVER, 0), ForceMode.Force);
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
-				// revese the polarity of the gravity sigularity cap'n!
-				mRb.AddForce (new Vector2 (0, -mRb.mass * Physics.gravity.y * 1f));
 
 				// slow down the fall speed
 				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y) / Time.fixedDeltaTime);
 
-				mRb.AddForce (new Vector2 (0, Mathf.Clamp(force * 1f, 0, GlobalVariables.Instance.PLAYER_HOVER_FORCE)));
+				//if(mRb.velocity.y <= -0.5f)
+				{
+					mRb.AddForce(new Vector3(0, force * GlobalVariables.Instance.PLAYER_HOVER_FORCE, 0));
+				}
 
 				// stop at alomst standstill
 				if(mRb.velocity.y > -0.5f)
 				{
-					mRb.velocity = new Vector2(mRb.velocity.x, 0);
+					//mRb.velocity = new Vector2(mRb.velocity.x, 0);
 				}
 			}
+			Debug.Log(mRb.velocity.y);
 		}
 	}
 	
 	public void Move(Rigidbody rb)
 	{
-
+		LowPassFilterAccelerometer ();
 		//check if the speed is in between the set interval
 		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == 1) 
 		{
-			rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0));
+			if(rb.velocity.x < 0)
+			{
+				rb.velocity += (new Vector3((Input.GetAxisRaw("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime- rb.velocity.x *.10f), 0,0));
+			}
+			else 
+			rb.velocity += (new Vector3((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0,0));
 		}
 		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == -1)
 		{
-			rb.AddForce (new Vector2((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0));
+			if(rb.velocity.x > 0)
+			{
+				rb.velocity += (new Vector3((Input.GetAxisRaw("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime- rb.velocity.x *.10f), 0,0));
+			}
+			else 
+			rb.velocity += (new Vector3((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0,0));
 		}
 		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x < 0)
 		{
-			rb.AddForce (new Vector2((LowPassFilterAccelerometer() * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0));
+			if(rb.velocity.x > 0)
+			{
+				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime- rb.velocity.x *.10f), 0,0));
+			}
+			else 
+				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0,0));
 		}
 		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x > 0)
 		{
-			rb.AddForce (new Vector2((LowPassFilterAccelerometer() * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0));
+			if(rb.velocity.x < 0)
+			{
+				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime- rb.velocity.x *.10f), 0,0));
+			}
+			else 
+				rb.velocity +=  (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0,0));
 		}
 
 		if(rb.velocity.y <= -mPlayer.mMaxCurrentFallSpeed)//max fall speed
 		{
 			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxCurrentFallSpeed);
 		}
-		if(Input.GetAxisRaw("Horizontal") == 0 || LowPassFilterAccelerometer() == 0)//stops player movment on key release
+		if(Input.GetAxisRaw("Horizontal") == 0 || Input.acceleration.x == 0)//stops player movment on key release
 		{
-			rb.AddForce( new Vector3(-rb.velocity.x * 60 * Time.deltaTime, 0, 0));
+			rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
 		}
 	}
 

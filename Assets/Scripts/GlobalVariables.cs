@@ -23,6 +23,7 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_DASH_SPEED						 = 20f  ;
 	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	 = 10f  ;
 	public float PLAYER_HOVER_FORCE						 = 15f	;
+	public float PLAYER_HOVER							 = 1f   ;
 
 
 
