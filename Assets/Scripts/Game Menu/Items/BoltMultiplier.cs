@@ -61,40 +61,26 @@ public class BoltMultiplier : Item
 	
 	public override int BuyCostBolts()
 	{
-		switch (mItemLevel) 
-		{
-		default:
-			print ("Error perkPart in BuyCostBolts " + mItemLevel);
-			break;
-		}
-		
-		return -1;
+		return GlobalVariables.Instance.BOLT_MULTIPLIER_COST_BOLTS[mItemLevel];
 	}
 	
 	public override int BuyCostCrystals()
 	{
-		switch (mItemLevel) 
-		{
-		default:
-			print ("Error perkPart in BuyCostCrystals " + mItemLevel);
-			break;
-		}
-		
-		return -1;
+		return GlobalVariables.Instance.BOLT_MULTIPLIER_COST_CRYSTALS[mItemLevel];
 	}
 	
 	public override string BuyDescription()
 	{
-		return "---";
+		return GlobalVariables.Instance.BOLT_MULTIPLIER_DESCRIPTION;
 	}
 	
 	public override string BuyCurrent()
 	{
-		return "---";
+		return GlobalVariables.Instance.BOLT_MULTIPLIER_LEVELS[mItemLevel] + GlobalVariables.Instance.BOLT_MULTIPLIER_LEVELS_UNIT;
 	}
 	
 	public override string BuyNext()
 	{
-		return "---";
+		return GlobalVariables.Instance.BOLT_MULTIPLIER_LEVELS[mItemLevel + 1] + GlobalVariables.Instance.BOLT_MULTIPLIER_LEVELS_UNIT;
 	}
 }

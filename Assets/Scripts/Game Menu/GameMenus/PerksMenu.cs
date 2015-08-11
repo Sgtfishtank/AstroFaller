@@ -3,12 +3,11 @@ using System.Collections;
 
 public class PerksMenu : GameMenu 
 {
-	private int AIR_PERK_INDEX = 0;
+	private int AIR_PERK_INDEX = 2;
 	private int LIFE_PERK_INDEX = 1;
-	private int BURST_PERK_INDEX = 2;
+	private int BURST_PERK_INDEX = 0;
 
 	private Perk[] mPerks;
-	private PopupBuyMenu mPopupBuyMenu;
 	private Perk mCurrentPerk;
 	private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
@@ -20,8 +19,6 @@ public class PerksMenu : GameMenu
 
 	public override void Init() 
 	{
-		mPopupBuyMenu = MainGameMenu.Instance.PopupBuyMenu();
-
 		mPerks = GetComponentsInChildren<Perk> ();
 		for (int i = 0; i < mPerks.Length; i++) 
 		{
@@ -62,95 +59,20 @@ public class PerksMenu : GameMenu
 			mCurrentPerk = null;
 			return;
 		}
-		
-		for (int i = 0; i < mPerks.Length; i++) 
-		{
-			TextMesh[] textMeshes = mPerks[i].GetComponentsInChildren<TextMesh> ();
-			for (int j = 0; j < textMeshes.Length; j++) 
-			{
-				textMeshes[j].gameObject.SetActive(false);
-			}
-		}
 
-		mPopupBuyMenu.Open(transform.position);
+		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
 	}
 	
 	void CloseBuyPerkMenu()
 	{
 		mCurrentPerk = null;
-
-		for (int i = 0; i < mPerks.Length; i++) 
-		{
-			TextMesh[] textMeshes = mPerks[i].GetComponentsInChildren<TextMesh>(true);
-			for (int j = 0; j < textMeshes.Length; j++) 
-			{
-				textMeshes[j].gameObject.SetActive(true);
-			}
-		}
-
-		mPopupBuyMenu.Close();
+		MenuCamera.Instance.PopupBuyMenu().Close();
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		if (!mPopupBuyMenu.IsOpen()) 
-		{
-			if (Input.GetKey(KeyCode.Keypad7))
-			{
-				OpenBuyPerkMenu(AIR_PERK_INDEX, Perk.PerkPart.Left);
-			}
-			else if (Input.GetKey(KeyCode.Keypad8))
-			{
-				OpenBuyPerkMenu(AIR_PERK_INDEX, Perk.PerkPart.Main);
-			}
-			else if (Input.GetKey(KeyCode.Keypad9))
-			{
-				OpenBuyPerkMenu(AIR_PERK_INDEX, Perk.PerkPart.Right);
-			}
-
-			if (Input.GetKey(KeyCode.Keypad4))
-			{
-				OpenBuyPerkMenu(LIFE_PERK_INDEX, Perk.PerkPart.Left);
-			}
-			else if (Input.GetKey(KeyCode.Keypad5))
-			{
-				OpenBuyPerkMenu(LIFE_PERK_INDEX, Perk.PerkPart.Main);
-			}
-			else if (Input.GetKey(KeyCode.Keypad6))
-			{
-				OpenBuyPerkMenu(LIFE_PERK_INDEX, Perk.PerkPart.Right);
-			}
-			if (Input.GetKey(KeyCode.Keypad1))
-			{
-				OpenBuyPerkMenu(BURST_PERK_INDEX, Perk.PerkPart.Left);
-			}
-			else if (Input.GetKey(KeyCode.Keypad2))
-			{
-				OpenBuyPerkMenu(BURST_PERK_INDEX, Perk.PerkPart.Main);
-			}
-			else if (Input.GetKey(KeyCode.Keypad3))
-			{
-				OpenBuyPerkMenu(BURST_PERK_INDEX, Perk.PerkPart.Right);
-			}
-		}
-		else
-		{
-			if (Input.GetKey(KeyCode.KeypadEnter))
-			{
-				BuyWithBolts();
-			}
-			else if (Input.GetKey(KeyCode.KeypadPlus))
-			{
-				BuyWithCrystals();
-			}
-			else if (Input.GetKey(KeyCode.Keypad0))
-			{
-				CloseBuyPerkMenu();
-			}
-		}
-
-		if (mPopupBuyMenu.IsOpen ()) 
+		if (MenuCamera.Instance.PopupBuyMenu().IsOpen ()) 
 		{
 			string description = mCurrentPerk.BuyDescription (mCurrentPerkPart);
 			string current = mCurrentPerk.BuyCurrent (mCurrentPerkPart);
@@ -158,22 +80,25 @@ public class PerksMenu : GameMenu
 			int costBolts = mCurrentPerk.BuyCostBolts(mCurrentPerkPart);
 			int nextCrystals = mCurrentPerk.BuyCostCrystals(mCurrentPerkPart);
 
-			mPopupBuyMenu.updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
 		}
 	}
 
 	public void BuyAirPerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(AIR_PERK_INDEX, pp);
 	}
 	
 	public void BuyLifePerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(LIFE_PERK_INDEX, pp);
 	}
 	
 	public void BuyBurstPerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(BURST_PERK_INDEX, pp);
 	}
 
@@ -190,8 +115,8 @@ public class PerksMenu : GameMenu
 		if (PlayerData.Instance.withdrawBolts(cost))
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
+			CloseBuyPerkMenu();
 		}
-		CloseBuyPerkMenu();
 	}
 	
 	public override void BuyWithCrystals()
@@ -207,7 +132,7 @@ public class PerksMenu : GameMenu
 		if (PlayerData.Instance.withdrawCrystals(cost))
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
+			CloseBuyPerkMenu();
 		}
-		CloseBuyPerkMenu();
 	}
 }

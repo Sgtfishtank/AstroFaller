@@ -12,7 +12,6 @@ public class ItemMenu : GameMenu
 
 	private Item[] mItems;
 	private bool mFocused;
-	private PopupBuyMenu mPopupBuyMenu;
 	private Item mCurrentItem;
 
 	// Use this for initialization
@@ -22,8 +21,6 @@ public class ItemMenu : GameMenu
 
 	public override void Init() 
 	{
-		mPopupBuyMenu = MainGameMenu.Instance.PopupBuyMenu();
-
 		mItems = GetComponentsInChildren<Item> ();
 		for (int i = 0; i < mItems.Length; i++) 
 		{
@@ -54,56 +51,7 @@ public class ItemMenu : GameMenu
 	// Update is called once per frame
 	void Update () 
 	{
-		if (!mPopupBuyMenu.IsOpen()) 
-		{
-			if (Input.GetKey(KeyCode.Keypad7))
-			{
-				OpenBuyItemMenu(UNLIMITED_AIR_INDEX);
-			}
-
-			else if (Input.GetKey(KeyCode.Keypad9))
-			{
-				OpenBuyItemMenu(SHOCKWAVE_INDEX);
-			}
-			
-			if (Input.GetKey(KeyCode.Keypad4))
-			{
-				OpenBuyItemMenu(BOLTS_MAGNETS_INDEX);
-			}
-
-			else if (Input.GetKey(KeyCode.Keypad6))
-			{
-				OpenBuyItemMenu(FORCE_FIELD_INDEX);
-			}
-			if (Input.GetKey(KeyCode.Keypad1))
-			{
-				OpenBuyItemMenu(BOLTS_MULTIPLIER_INDEX);
-			}
-
-			else if (Input.GetKey(KeyCode.Keypad3))
-			{
-				OpenBuyItemMenu(ROCKET_THRUST_INDEX);
-			}
-		}
-		else
-		{
-			if (Input.GetKey(KeyCode.KeypadEnter))
-			{
-				BuyWithBolts();
-				CloseBuyItemMenu();
-			}
-			else if (Input.GetKey(KeyCode.KeypadPlus))
-			{
-				BuyWithCrystals();
-				CloseBuyItemMenu();
-			}
-			else if (Input.GetKey(KeyCode.Keypad0))
-			{
-				CloseBuyItemMenu();
-			}
-		}
-		
-		if (mPopupBuyMenu.IsOpen ()) 
+		if (MenuCamera.Instance.PopupBuyMenu().IsOpen ()) 
 		{
 			string description = mCurrentItem.BuyDescription ();
 			string current = mCurrentItem.BuyCurrent ();
@@ -111,7 +59,7 @@ public class ItemMenu : GameMenu
 			int costBolts = mCurrentItem.BuyCostBolts();
 			int nextCrystals = mCurrentItem.BuyCostCrystals();
 			
-			mPopupBuyMenu.updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
 		}
 	}
 	
@@ -125,65 +73,55 @@ public class ItemMenu : GameMenu
 			mCurrentItem = null;
 			return;
 		}
-		
-		for (int i = 0; i < mItems.Length; i++) 
-		{
-			TextMesh[] textMeshes = mItems[i].GetComponentsInChildren<TextMesh> ();
-			for (int j = 0; j < textMeshes.Length; j++) 
-			{
-				textMeshes[j].gameObject.SetActive(false);
-			}
-		}
-		
-		mPopupBuyMenu.Open(transform.position);
+
+		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
+		GUICanvas.Instance.HideItemButtons();
+	}
+	
+	void CloseBuyItemMenu()
+	{
+		mCurrentItem = null;
+
+		MenuCamera.Instance.PopupBuyMenu().Close();
+		GUICanvas.Instance.ShowItemButtons();
 	}
 
 	public void BuyUlimitedAirItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(UNLIMITED_AIR_INDEX);
 	}
 	
-	public void BuyChockWaveItem()
+	public void BuyShockwaveItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(SHOCKWAVE_INDEX);
 	}
 	
-	public void BuyMagnetsItem()
+	public void BuyBoltMagnetItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(BOLTS_MAGNETS_INDEX);
 	}
 	
 	public void BuyForceFieldItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(FORCE_FIELD_INDEX);
 	}
 	
-	public void BuyMultiplierItem()
+	public void BuyBoltMultiplierItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(BOLTS_MULTIPLIER_INDEX);
 	}
 	
 	public void BuyRocketThrustItem()
 	{
+		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(ROCKET_THRUST_INDEX);
 	}
 
-	void CloseBuyItemMenu()
-	{
-		mCurrentItem = null;
-		
-		for (int i = 0; i < mItems.Length; i++) 
-		{
-			TextMesh[] textMeshes = mItems[i].GetComponentsInChildren<TextMesh>(true);
-			for (int j = 0; j < textMeshes.Length; j++) 
-			{
-				textMeshes[j].gameObject.SetActive(true);
-			}
-		}
-		
-		mPopupBuyMenu.Close();
-	}
-	
 	public override void BuyWithBolts()
 	{
 		if (mCurrentItem == null)
@@ -196,6 +134,7 @@ public class ItemMenu : GameMenu
 		if (PlayerData.Instance.withdrawBolts(cost))
 		{
 			mCurrentItem.UnlockItem();
+			CloseBuyItemMenu ();
 		}
 	}
 	
@@ -211,6 +150,7 @@ public class ItemMenu : GameMenu
 		if (PlayerData.Instance.withdrawCrystals(cost))
 		{
 			mCurrentItem.UnlockItem();
+			CloseBuyItemMenu ();
 		}
 	}
 }

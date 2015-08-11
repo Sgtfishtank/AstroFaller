@@ -61,40 +61,26 @@ public class UnlimitedAirItem : Item
 	
 	public override int BuyCostBolts()
 	{
-		switch (mItemLevel) 
-		{
-		default:
-			print ("Error perkPart in BuyCostBolts " + mItemLevel);
-			break;
-		}
-		
-		return -1;
+		return GlobalVariables.Instance.UNLIMITED_AIR_COST_BOLTS[mItemLevel];
 	}
 	
 	public override int BuyCostCrystals()
 	{
-		switch (mItemLevel) 
-		{
-		default:
-			print ("Error perkPart in BuyCostCrystals " + mItemLevel);
-			break;
-		}
-		
-		return -1;
+		return GlobalVariables.Instance.UNLIMITED_AIR_COST_CRYSTALS[mItemLevel];
 	}
 	
 	public override string BuyDescription()
 	{
-		return "---";
+		return GlobalVariables.Instance.UNLIMITED_AIR_DESCRIPTION;
 	}
 	
 	public override string BuyCurrent()
 	{
-		return "---";
+		return GlobalVariables.Instance.UNLIMITED_AIR_LEVELS[mItemLevel] + GlobalVariables.Instance.UNLIMITED_AIR_LEVELS_UNIT;
 	}
 	
 	public override string BuyNext()
 	{
-		return "---";
+		return GlobalVariables.Instance.UNLIMITED_AIR_LEVELS[mItemLevel + 1] + GlobalVariables.Instance.UNLIMITED_AIR_LEVELS_UNIT;
 	}
 }

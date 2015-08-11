@@ -25,7 +25,8 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_HOVER_FORCE						 = 15f	;
 	public float PLAYER_HOVER							 = 1f   ;
 
-
+	// MAIN MENU CAMERA
+	public float MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR = 1f;
 
 	// WORLD_MAP_MENU
 	public float WORLD_MAP_SCROLL_OFFSET = 60;
@@ -34,6 +35,7 @@ public class GlobalVariables : MonoBehaviour
 	public float WORLD_MAP_LEVELS_SCROLL_SPEED = 180;
 
 	// LEVELS
+	public float LEVELS_FOCUS_ZOOM = 100;
 
 	// tutorial level
 
@@ -113,11 +115,46 @@ public class GlobalVariables : MonoBehaviour
 	private const int ITEMS_ARRAY_SIZE = 4;
 
 	// Ulimited air
-	public int[] ULIMITED_AIR_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] ULIMITED_AIR_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] ULIMITED_AIR_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
-	public string ULIMITED_AIR_DESCRIPTION = "---";
-	public string ULIMITED_AIR_LEVELS_UNIT = "---";
+	public int[] UNLIMITED_AIR_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] UNLIMITED_AIR_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] UNLIMITED_AIR_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string UNLIMITED_AIR_DESCRIPTION = "---";
+	public string UNLIMITED_AIR_LEVELS_UNIT = "---";
+	
+	// Ulimited air
+	public int[] BOLT_MAGNET_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] BOLT_MAGNET_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] BOLT_MAGNET_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string BOLT_MAGNET_DESCRIPTION = "---";
+	public string BOLT_MAGNET_LEVELS_UNIT = "---";
+	
+	// Ulimited air
+	public int[] BOLT_MULTIPLIER_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] BOLT_MULTIPLIER_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] BOLT_MULTIPLIER_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string BOLT_MULTIPLIER_DESCRIPTION = "---";
+	public string BOLT_MULTIPLIER_LEVELS_UNIT = "---";
+	
+	// Ulimited air
+	public int[] FORCE_FIELD_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] FORCE_FIELD_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] FORCE_FIELD_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string FORCE_FIELD_DESCRIPTION = "---";
+	public string FORCE_FIELD_LEVELS_UNIT = "---";
+	
+	// Ulimited air
+	public int[] ROCKET_THRUST_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] ROCKET_THRUST_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] ROCKET_THRUST_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string ROCKET_THRUST_DESCRIPTION = "---";
+	public string ROCKET_THRUST_LEVELS_UNIT = "---";
+	
+	// Ulimited air
+	public int[] SHOCKWAVE_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] SHOCKWAVE_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
+	public int[] SHOCKWAVE_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public string SHOCKWAVE_DESCRIPTION = "---";
+	public string SHOCKWAVE_LEVELS_UNIT = "---";
 
 	// Use this for initialization
 	void Start ()
@@ -138,7 +175,6 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				if (_thisObject ==  null)
 				{

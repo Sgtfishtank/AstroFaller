@@ -22,6 +22,9 @@ public class PopupBuyMenu : MonoBehaviour
 		mNextText = transform.Find ("Pop-up buy menu/info text 2").GetComponent<TextMesh> ();
 		mCostBoltsText = transform.Find ("Pop-up buy menu/buy text 1").GetComponent<TextMesh> ();
 		mCostCrystalsText = transform.Find ("Pop-up buy menu/buy text 2").GetComponent<TextMesh> ();
+
+		mOpen = false;
+		gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -31,7 +34,8 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Open(Vector3 position)
 	{
-		GameObject.Find ("Canvas").GetComponent<GUICanvas> ().ShowPopupBuyButton();
+		GUICanvas.Instance.ShowPopupBuyButton();
+		MainGameMenu.Instance.HideBuyButtons();
 		transform.position = position;
 		mOpen = true;
 		gameObject.SetActive(true);
@@ -39,7 +43,8 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Close()
 	{
-		GameObject.Find ("Canvas").GetComponent<GUICanvas> ().HidePopupBuyButton();
+		GUICanvas.Instance.HidePopupBuyButton();
+		MainGameMenu.Instance.ShowBuyButtons();
 		mOpen = false;
 		gameObject.SetActive(false);
 	}

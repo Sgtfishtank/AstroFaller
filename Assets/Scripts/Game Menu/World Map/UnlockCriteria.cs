@@ -24,9 +24,8 @@ public class UnlockCriteria : MonoBehaviour
 
 	public bool CriteriaMet()
 	{
-		//int bolts = GlobalVariables.Instance.BoltsCritera(mLevel.LevelName());
 		int Distance = GlobalVariables.Instance.DistanceCritera(mLevel.LevelName());
 
-		return /*(mCriteriaLevel.TotalBolts() >= bolts) && */ (mCriteriaLevel.TotalDistance() >= Distance);
+		return (mCriteriaLevel.TotalDistance() >= Distance);
 	}
 }

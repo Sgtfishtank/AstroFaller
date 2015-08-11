@@ -3,11 +3,44 @@ using System.Collections;
 
 public class GUICanvas : MonoBehaviour 
 {
+	// snigleton
+	private static GUICanvas instance = null;
+	public static GUICanvas Instance
+	{
+		get
+		{
+			if (instance == null)
+			{
+				GameObject thisObject = GameObject.Find("Canvas");
+				instance = thisObject.GetComponent<GUICanvas>();
+			}
+			return instance;
+		}
+	}
+
+	private GameObject mWorldMapButton;
+	private GameObject mPopupBuyMenu;
+	private GameObject mPopupCraftingMenu;
+	private GameObject mPopupAchievementsMenu;
+	private GameObject mItemButtons;
+	private GameObject mPerkButtons;
 
 	// Use this for initialization
 	void Start () 
 	{
-	
+		mWorldMapButton = transform.Find ("WorldMapButton").gameObject;
+		mPopupBuyMenu = transform.Find ("PopupBuyMenu").gameObject;
+		mPopupCraftingMenu = transform.Find ("PopupCraftingMenu").gameObject;
+		mPopupAchievementsMenu = transform.Find ("PopupAchievementsMenu").gameObject;
+		mItemButtons = transform.Find ("Items").gameObject;
+		mPerkButtons = transform.Find ("Perks").gameObject;
+
+		HideBackButton();
+		HidePopupBuyButton();
+		HidePopupCraftingButton();
+		HidePopupAchievementsButton();
+		HideItemButtons();
+		HidePerkButtons();
 	}
 	
 	// Update is called once per frame
@@ -16,37 +49,36 @@ public class GUICanvas : MonoBehaviour
 	
 	}
 
+	// buy perks
 	public void BuyAirPerk(int partperk)
 	{
-		Perk.PerkPart pp = (Perk.PerkPart)partperk;
-		MainGameMenu.Instance.PerksMenu().BuyAirPerk(pp);
+		MainGameMenu.Instance.PerksMenu().BuyAirPerk((Perk.PerkPart)partperk);
 	}
 	
 	public void BuyBurstPerk(int partperk)
 	{
-		Perk.PerkPart pp = (Perk.PerkPart)partperk;
-		MainGameMenu.Instance.PerksMenu().BuyBurstPerk(pp);
+		MainGameMenu.Instance.PerksMenu().BuyBurstPerk((Perk.PerkPart)partperk);
 	}
 	
 	public void BuyLifePerk(int partperk)
 	{
-		Perk.PerkPart pp = (Perk.PerkPart)partperk;
-		MainGameMenu.Instance.PerksMenu().BuyLifePerk(pp);
+		MainGameMenu.Instance.PerksMenu().BuyLifePerk((Perk.PerkPart)partperk);
 	}
-
+	
+	// buy items
 	public void BuyUlimitedAirItem()
 	{
 		MainGameMenu.Instance.ItemsMenu().BuyUlimitedAirItem();
 	}
 	
-	public void BuyChockWaveItem()
+	public void BuyShockwaveItem()
 	{
-		MainGameMenu.Instance.ItemsMenu().BuyChockWaveItem();
+		MainGameMenu.Instance.ItemsMenu().BuyShockwaveItem();
 	}
 	
 	public void BuyMagnetsItem()
 	{
-		MainGameMenu.Instance.ItemsMenu().BuyMagnetsItem();
+		MainGameMenu.Instance.ItemsMenu().BuyBoltMagnetItem();
 	}
 	
 	public void BuyForceFieldItem()
@@ -56,7 +88,7 @@ public class GUICanvas : MonoBehaviour
 	
 	public void BuyMultiplierItem()
 	{
-		MainGameMenu.Instance.ItemsMenu().BuyMultiplierItem();
+		MainGameMenu.Instance.ItemsMenu().BuyBoltMultiplierItem();
 	}
 	
 	public void BuyRocketThrustItem()
@@ -64,6 +96,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.ItemsMenu().BuyRocketThrustItem();
 	}
 
+	// change world menus
 	public void ChangeToWorldMapMenu()
 	{
 		MainGameMenu.Instance.ChangeToWorldMapMenu();
@@ -84,6 +117,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.ChangeToChrystalShopMenu();
 	}
 
+	// menu gui toggle buttons
 	public void ToggleOptions ()
 	{
 		MainGameMenu.Instance.ToggleOptions();
@@ -103,7 +137,8 @@ public class GUICanvas : MonoBehaviour
 	{
 		MainGameMenu.Instance.ToggleAchievementsMenu();
 	}
-	
+
+	// poup buy buttons
 	public void BuyWithBolts()
 	{
 		MainGameMenu.Instance.BuyWithBolts ();
@@ -114,63 +149,64 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.BuyWithCrystals();
 	}
 
+	// toggle buttons
 	public void HideBackButton ()
 	{
-		transform.Find ("WorldMapButton").gameObject.SetActive (false);
-	}
-
-	public void ShowBackButton ()
-	{
-		transform.Find ("WorldMapButton").gameObject.SetActive (true);
+		mWorldMapButton.gameObject.SetActive (false);
 	}
 
 	public void HidePopupBuyButton ()
 	{
-		transform.Find ("PopupBuyMenu").gameObject.SetActive (false);
+		mPopupBuyMenu.gameObject.SetActive (false);
 	}
 
 	public void HidePopupCraftingButton ()
 	{
-		transform.Find ("PopupCraftingMenu").gameObject.SetActive (false);
+		mPopupCraftingMenu.gameObject.SetActive (false);
 	}
 	
 	public void HidePopupAchievementsButton ()
 	{
-		transform.Find ("PopupAchievementsMenu").gameObject.SetActive (false);
+		mPopupAchievementsMenu.gameObject.SetActive (false);
 	}
 	
-	public void ShowPopupBuyButton ()
+	public void HidePerkButtons ()
 	{
-		transform.Find ("PopupBuyMenu").gameObject.SetActive (true);
-	}
-
-	public void ShowPopupCraftingButton ()
-	{
-		transform.Find ("PopupCraftingMenu").gameObject.SetActive (true);
-	}
-	
-	public void ShowPopupAchievementsButton ()
-	{
-		transform.Find ("PopupAchievementsMenu").gameObject.SetActive (true);
+		mPerkButtons.gameObject.SetActive (false);
 	}
 	
 	public void HideItemButtons ()
 	{
-		transform.Find ("Items").gameObject.SetActive (false);
+		mItemButtons.gameObject.SetActive (false);
+	}
+	
+	public void ShowBackButton ()
+	{
+		mWorldMapButton.gameObject.SetActive (true);
+	}
+
+	public void ShowPopupBuyButton ()
+	{
+		mPopupBuyMenu.gameObject.SetActive (true);
+	}
+
+	public void ShowPopupCraftingButton ()
+	{
+		mPopupCraftingMenu.gameObject.SetActive (true);
+	}
+	
+	public void ShowPopupAchievementsButton ()
+	{
+		mPopupAchievementsMenu.gameObject.SetActive (true);
 	}
 
 	public void ShowItemButtons ()
 	{
-		transform.Find ("Items").gameObject.SetActive (true);
-	}
-
-	public void HidePerkButtons ()
-	{
-		transform.Find ("Perks").gameObject.SetActive (false);
+		mItemButtons.gameObject.SetActive (true);
 	}
 
 	public void ShowPerkButtons ()
 	{
-		transform.Find ("Perks").gameObject.SetActive (true);
+		mPerkButtons.gameObject.SetActive (true);
 	}
 }

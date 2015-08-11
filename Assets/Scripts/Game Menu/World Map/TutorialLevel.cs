@@ -71,8 +71,8 @@ public class TutorialLevel : LevelBase
 	
 	public override void setFocusLevel (float focusLevel)
 	{
-		mFrame.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
-		mPictureImage.transform.localPosition = new Vector3 (0, 0, 100 * focusLevel);
+		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 
