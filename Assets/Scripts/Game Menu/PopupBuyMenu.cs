@@ -36,7 +36,7 @@ public class PopupBuyMenu : MonoBehaviour
 	{
 		GUICanvas.Instance.ShowPopupBuyButton();
 		MainGameMenu.Instance.HideBuyButtons();
-		transform.position = position;
+		//transform.position = position;
 		mOpen = true;
 		gameObject.SetActive(true);
 	}

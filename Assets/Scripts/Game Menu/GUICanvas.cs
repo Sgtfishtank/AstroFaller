@@ -54,7 +54,7 @@ public class GUICanvas : MonoBehaviour
 	{
 		MainGameMenu.Instance.PerksMenu().BuyAirPerk((Perk.PerkPart)partperk);
 	}
-	
+
 	public void BuyBurstPerk(int partperk)
 	{
 		MainGameMenu.Instance.PerksMenu().BuyBurstPerk((Perk.PerkPart)partperk);

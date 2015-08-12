@@ -31,7 +31,7 @@ public class GlobalVariables : MonoBehaviour
 	public Vector3 MAIN_CAMERA_OFFSET					= new Vector3(0, 0, 230);
 
 	// MAIN_MENU_GUI_CANVAS
-	public float BUTTON_PRESS_MOVE_SPEED				= 12;
+	public float BUTTON_PRESS_MOVE_TIME				= 0.8f;
 
 	// WORLD_MAP_MENU
 	public float WORLD_MAP_SCROLL_OFFSET = 60;

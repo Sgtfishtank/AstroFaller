@@ -46,7 +46,7 @@ public class MenuCamera : MonoBehaviour
 	{
 		mHelpMenu = transform.Find("Help").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
-		mWorldMapButton = transform.Find("WorldMapButton").gameObject;
+		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
 		mMoving = false;
