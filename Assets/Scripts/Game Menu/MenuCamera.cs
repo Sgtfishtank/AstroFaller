@@ -54,11 +54,11 @@ public class MenuCamera : MonoBehaviour
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
 		mPopupBuyMenu.Init();
 
-		HideHelpMenu();
-		HideOptionsMenu();
-		HideBackButton();
-		HidePopupCraftingMenu();
-		HidePopupAchievementsMenu();
+		ShowHelpMenu(false);
+		ShowOptionsMenu(false);
+		ShowBackButton(false);
+		ShowPopupCraftingMenu(false);
+		ShowPopupAchievementsMenu(false);
 	}
 	
 	// Update is called once per frame
@@ -77,7 +77,7 @@ public class MenuCamera : MonoBehaviour
 
 			float dist = Vector3.Distance(mStartMenuPosition, mTargetMenuPosition);
 			Vector3 midPoint = ((mStartMenuPosition + mTargetMenuPosition) * 0.5f) + new Vector3(0, 0, dist) * GlobalVariables.Instance.MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR;
-
+			print(midPoint + "   " + mStartMenuPosition);
 			switch (mCameraMoveType) 
 			{
 			case MoveType.IsoscelesTriangle:
@@ -144,6 +144,11 @@ public class MenuCamera : MonoBehaviour
 		}
 	}
 
+	public bool IsMoving ()
+	{
+		return mMoving;
+	}
+
 	public void StartMove(GameObject menuPosition)
 	{
 		if (mMoving)
@@ -155,6 +160,11 @@ public class MenuCamera : MonoBehaviour
 		mTargetMenuPosition = menuPosition.transform.position;
 		mMoving = true;
 		mMovingT = 0;
+
+		if (mStartMenuPosition == mTargetMenuPosition)
+		{
+			mMovingT = 1;
+		}
 	}
 	
 	public PopupBuyMenu PopupBuyMenu ()
@@ -162,53 +172,28 @@ public class MenuCamera : MonoBehaviour
 		return mPopupBuyMenu;
 	}
 
-	public void HideBackButton ()
+	public void ShowBackButton (bool show)
 	{
-		mWorldMapButton.SetActive (false);
+		mWorldMapButton.SetActive (show);
 	}
 
-	public void HideHelpMenu ()
+	public void ShowHelpMenu (bool show)
 	{
-		mHelpMenu.SetActive (false);
-	}	
-
-	public void HideOptionsMenu ()
-	{
-		mOptionsMenu.SetActive (false);
-	}
-
-	public void HidePopupCraftingMenu ()
-	{
-		mPopupCraftingMenu.SetActive (false);
-	}
-
-	public void HidePopupAchievementsMenu ()
-	{
-		mPopupAchievementsMenu.SetActive (false);
-	}
-
-	public void ShowBackButton ()
-	{
-		mWorldMapButton.SetActive (true);
-	}
-
-	public void ShowHelpMenu ()
-	{
-		mHelpMenu.SetActive (true);
-	}	
-	
-	public void ShowOptionsMenu ()
-	{
-		mOptionsMenu.SetActive (true);
+		mHelpMenu.SetActive (show);
 	}
 	
-	public void ShowPopupCraftingMenu ()
+	public void ShowOptionsMenu (bool show)
 	{
-		mPopupCraftingMenu.SetActive (true);
+		mOptionsMenu.SetActive (show);
 	}
 	
-	public void ShowPopupAchievementsMenu ()
+	public void ShowPopupCraftingMenu (bool show)
 	{
-		mPopupAchievementsMenu.SetActive (true);
+		mPopupCraftingMenu.SetActive (show);
+	}
+	
+	public void ShowPopupAchievementsMenu (bool show)
+	{
+		mPopupAchievementsMenu.SetActive (show);
 	}
 }

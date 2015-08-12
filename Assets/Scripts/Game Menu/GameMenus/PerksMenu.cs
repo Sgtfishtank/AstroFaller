@@ -50,6 +50,8 @@ public class PerksMenu : GameMenu
 
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+
 		mCurrentPerk = mPerks[index];
 		mCurrentPerkPart = perkPart;
 
@@ -61,12 +63,16 @@ public class PerksMenu : GameMenu
 		}
 
 		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
+
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 	
 	void CloseBuyPerkMenu()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
 		mCurrentPerk = null;
-		MenuCamera.Instance.PopupBuyMenu().Close();
+
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 
 	// Update is called once per frame
@@ -86,19 +92,16 @@ public class PerksMenu : GameMenu
 
 	public void BuyAirPerk (Perk.PerkPart pp)
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(AIR_PERK_INDEX, pp);
 	}
 	
 	public void BuyLifePerk (Perk.PerkPart pp)
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(LIFE_PERK_INDEX, pp);
 	}
 	
 	public void BuyBurstPerk (Perk.PerkPart pp)
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyPerkMenu(BURST_PERK_INDEX, pp);
 	}
 

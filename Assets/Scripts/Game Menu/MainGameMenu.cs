@@ -26,6 +26,8 @@ public class MainGameMenu : MonoBehaviour
 	public GameMenu mStartMenu;
 
 	private GameMenu[] mGameMenus;
+	private GameMenu mCurrentGameMenu;
+	private int mCurrentGameMenuIndex;
 	private bool mShowHelpMenu = false;
 	private bool mShowOptionsMenu = false;
 	private bool mShowPopupCraftingMenu = false;
@@ -53,84 +55,66 @@ public class MainGameMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetMouseButtonUp(0))
+		if (mCurrentGameMenu == null)
 		{
-			Ray ray = MenuCamera.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-			int mask = Physics2D.DefaultRaycastLayers;
+			if (!MenuCamera.Instance.IsMoving())
+			{
+				EndChangeGameMenu();
 
-			RaycastHit[] hits = Physics.RaycastAll(ray.origin, ray.direction, Mathf.Infinity, mask);
-			for (int i = 0; i < hits.Length; i++) 
-			{
-				//print(hits[i].collider.name);
+				UpdateMenusAndButtons();
 			}
+		}
+		else 
+		{
+			if (Input.GetMouseButtonUp(0))
+			{
+				Ray ray = MenuCamera.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+				int mask = Physics2D.DefaultRaycastLayers;
 
-			RaycastHit hit;
-			if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, mask))
-			{
-				//PressButton(hit.collider.name);
+				RaycastHit[] hits = Physics.RaycastAll(ray.origin, ray.direction, Mathf.Infinity, mask);
+				for (int i = 0; i < hits.Length; i++) 
+				{
+					//print(hits[i].collider.name);
+				}
+
+				RaycastHit hit;
+				if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, mask))
+				{
+					//PressButton(hit.collider.name);
+				}
+				else
+				{
+					//ShowAllMenus();
+				}
 			}
-			else
-			{
-				//HideAllMenus();
-			}
 		}
-		
-		if (Input.GetKeyDown (KeyCode.Alpha1)) 
-		{
-			ChangeToWorldMapMenu();
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha2)) 
-		{
-			ChangeToItemsMenu();
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha3)) 
-		{
-			ChangeToPerksMenu();
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha4)) 
-		{
-			ChangeToChrystalShopMenu();
-		}
+	}
+
+	public void UpdateMenusAndButtons()
+	{
+		ShowBackButton(!mGameMenus[WORLD_MAP_MENU_INDEX].IsFocused() && (mCurrentGameMenu != null));
+		GUICanvas.Instance.ShowPerkButtons(mGameMenus[PERKS_MENU_INDEX].IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
+		GUICanvas.Instance.ShowItemButtons(mGameMenus[ITEMS_MENU_INDEX].IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
 	}
 
 	public void ChangeToWorldMapMenu()
 	{
-		ResetAllMenus();
-		ChangeGameMenu(WORLD_MAP_MENU_INDEX);
-		GUICanvas.Instance.HideBackButton ();
-		MenuCamera.Instance.HideBackButton ();
-		GUICanvas.Instance.HidePerkButtons();
-		GUICanvas.Instance.HideItemButtons();
+		StartChangeGameMenu(WORLD_MAP_MENU_INDEX);
 	}
 	
 	public void ChangeToPerksMenu()
 	{
-		ResetAllMenus();
-		ChangeGameMenu(PERKS_MENU_INDEX);
-		GUICanvas.Instance.ShowBackButton ();
-		MenuCamera.Instance.ShowBackButton ();
-		GUICanvas.Instance.ShowPerkButtons();
-		GUICanvas.Instance.HideItemButtons();
+		StartChangeGameMenu(PERKS_MENU_INDEX);
 	}
 	
 	public void ChangeToItemsMenu()
 	{
-		ResetAllMenus();
-		ChangeGameMenu(ITEMS_MENU_INDEX);
-		GUICanvas.Instance.ShowBackButton ();
-		MenuCamera.Instance.ShowBackButton ();
-		GUICanvas.Instance.HidePerkButtons();
-		GUICanvas.Instance.ShowItemButtons();
+		StartChangeGameMenu(ITEMS_MENU_INDEX);
 	}
 	
 	public void ChangeToChrystalShopMenu()
 	{
-		ResetAllMenus();
-		ChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
-		GUICanvas.Instance.ShowBackButton ();
-		MenuCamera.Instance.ShowBackButton ();
-		GUICanvas.Instance.HidePerkButtons();
-		GUICanvas.Instance.HideItemButtons();
+		StartChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
 	}
 
 	public PerksMenu PerksMenu ()
@@ -143,138 +127,129 @@ public class MainGameMenu : MonoBehaviour
 		return (ItemMenu)mGameMenus[ITEMS_MENU_INDEX];
 	}
 
-	public void ResetAllMenus ()
+	public void ResetAllMenusAndButtons ()
 	{
-		mShowHelpMenu = false;
-		mShowOptionsMenu = false;
-		mShowPopupCraftingMenu = false;
-		mShowPopupAchievementsMenu = false;
-
 		MenuCamera.Instance.PopupBuyMenu().Close();
-		MenuCamera.Instance.HideHelpMenu();
-		MenuCamera.Instance.HideOptionsMenu();
-		MenuCamera.Instance.HidePopupCraftingMenu();
-		GUICanvas.Instance.HidePopupCraftingButton();
-		MenuCamera.Instance.HidePopupAchievementsMenu();
-		GUICanvas.Instance.HidePopupAchievementsButton();
+
+		ShowHelpMenu(false);
+		ShowOptionsMenu(false);
+		ShowPopupCraftingMenu(false);
+		ShowPopupAchievementsMenu(false);
+	}
+	
+	void ShowHelpMenu(bool show)
+	{
+		mShowHelpMenu = show;
+		MenuCamera.Instance.ShowHelpMenu(show);
+	}
+	
+	void ShowOptionsMenu(bool show)
+	{
+		mShowOptionsMenu = show;
+		MenuCamera.Instance.ShowOptionsMenu(show);
+	}
+
+	void ShowPopupCraftingMenu(bool show)
+	{
+		mShowPopupCraftingMenu = show;
+		MenuCamera.Instance.ShowPopupCraftingMenu(show);
+		GUICanvas.Instance.ShowPopupCraftingButton(show);
+	}	
+
+	void ShowPopupAchievementsMenu(bool show)
+	{
+		mShowPopupAchievementsMenu = show;
+		MenuCamera.Instance.ShowPopupAchievementsMenu(show);
+		GUICanvas.Instance.ShowPopupAchievementsButton(show);
+	}
+	
+	void ShowBackButton(bool show)
+	{
+		GUICanvas.Instance.ShowBackButton(show);
+		MenuCamera.Instance.ShowBackButton(show);
 	}
 
 	public void ToggleOptions ()
 	{
 		bool active = mShowOptionsMenu;
-		ResetAllMenus();
+		ResetAllMenusAndButtons();
 		mShowOptionsMenu = !active;
-		if (mShowOptionsMenu) 
-		{
-			MenuCamera.Instance.ShowOptionsMenu();
-		}
-		else 
-		{
-			MenuCamera.Instance.HideOptionsMenu();
-		}
+		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
+		UpdateMenusAndButtons ();
 	}
 
 	public void ToggleHelp ()
 	{
 		bool active = mShowHelpMenu;
-		ResetAllMenus();
+		ResetAllMenusAndButtons();
 		mShowHelpMenu = !active;
-		if (mShowHelpMenu) 
-		{
-			MenuCamera.Instance.ShowHelpMenu();
-		}
-		else 
-		{
-			MenuCamera.Instance.HideOptionsMenu();
-		}
+		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+		UpdateMenusAndButtons ();
 	}
 
 	public void ToggleCraftingMenu ()
 	{
 		bool active = mShowPopupCraftingMenu;
-		ResetAllMenus();
+		ResetAllMenusAndButtons();
 		mShowPopupCraftingMenu = !active;
-		if (mShowPopupCraftingMenu) 
-		{
-			MenuCamera.Instance.ShowPopupCraftingMenu();
-			GUICanvas.Instance.ShowPopupCraftingButton();
-		}
-		else 
-		{
-			MenuCamera.Instance.HidePopupCraftingMenu();
-			GUICanvas.Instance.HidePopupCraftingButton();
-		}
+		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
+		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
+		UpdateMenusAndButtons ();
 	}
 
 	public void ToggleAchievementsMenu ()
 	{
 		bool active = mShowPopupAchievementsMenu;
-		ResetAllMenus();
+		ResetAllMenusAndButtons();
 		mShowPopupAchievementsMenu = !active;
-		if (mShowPopupAchievementsMenu)
-		{
-			MenuCamera.Instance.ShowPopupAchievementsMenu();
-			GUICanvas.Instance.ShowPopupAchievementsButton();
-		}
-		else 
-		{
-			MenuCamera.Instance.HidePopupAchievementsMenu();
-			GUICanvas.Instance.HidePopupAchievementsButton();
-		}
+		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
+		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+		UpdateMenusAndButtons ();
 	}
 	
 	public void BuyWithBolts()
 	{
-		for (int i = 0; i < mGameMenus.Length; i++) 
+		if (mCurrentGameMenu == null)
 		{
-			if (mGameMenus[i].IsFocused())
-			{
-				mGameMenus[i].BuyWithBolts();
-				return;
-			}
+			print("ERROR nothing focus in BuyWithBolts");
+			return;
 		}
+
+		mCurrentGameMenu.BuyWithBolts();
 	}
 	
 	public void BuyWithCrystals()
 	{
-		for (int i = 0; i < mGameMenus.Length; i++) 
+		if (mCurrentGameMenu == null)
 		{
-			if (mGameMenus[i].IsFocused())
-			{
-				mGameMenus[i].BuyWithCrystals();
-				return;
-			}
+			print("ERROR nothing focus in BuyWithCrystals");
+			return;
 		}
+
+		mCurrentGameMenu.BuyWithCrystals();
 	}
 
-	void ChangeGameMenu (int index)
+	void StartChangeGameMenu (int index)
 	{
+		ResetAllMenusAndButtons ();
+
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
 			mGameMenus[i].Unfocus();
 		}
+		mCurrentGameMenu = null;
 
 		MenuCamera.Instance.StartMove (mGameMenus [index].gameObject);
-		mGameMenus[index].Focus();
-	}	
-
-	public void ShowBuyButtons ()
-	{
-		if (mGameMenus[PERKS_MENU_INDEX].IsFocused())
-		{
-			GUICanvas.Instance.HideItemButtons();
-			GUICanvas.Instance.ShowPerkButtons();
-		}
-		else if (mGameMenus[ITEMS_MENU_INDEX].IsFocused())
-		{
-			GUICanvas.Instance.HidePerkButtons();
-			GUICanvas.Instance.ShowItemButtons();
-		}
+		mCurrentGameMenuIndex = index;
+		
+		UpdateMenusAndButtons();
 	}
-
-	public void HideBuyButtons ()
+	
+	void EndChangeGameMenu ()
 	{
-		GUICanvas.Instance.HidePerkButtons();
-		GUICanvas.Instance.HideItemButtons();
+		mCurrentGameMenu = mGameMenus [mCurrentGameMenuIndex];
+		mCurrentGameMenu.Focus();
+
+		UpdateMenusAndButtons();
 	}
 }

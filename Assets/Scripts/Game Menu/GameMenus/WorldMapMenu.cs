@@ -119,16 +119,7 @@ public class WorldMapMenu : GameMenu
 				case TouchPhase.Began:
 					break;
 				case TouchPhase.Moved:
-					if (touch.deltaPosition.y > 0.1f)
-					{
-						ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
-						print("+");
-					}
-					else if (touch.deltaPosition.y < 0.1f)
-					{
-						print("-");
-						ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
-					}
+					ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * touch.deltaPosition.y * Time.deltaTime);
 					break;
 				case TouchPhase.Canceled:
 					break;

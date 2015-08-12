@@ -35,12 +35,12 @@ public class GUICanvas : MonoBehaviour
 		mItemButtons = transform.Find ("Items").gameObject;
 		mPerkButtons = transform.Find ("Perks").gameObject;
 
-		HideBackButton();
-		HidePopupBuyButton();
-		HidePopupCraftingButton();
-		HidePopupAchievementsButton();
-		HideItemButtons();
-		HidePerkButtons();
+		ShowBackButton(false);
+		ShowPopupBuyButton(false);
+		ShowPopupCraftingButton(false);
+		ShowPopupAchievementsButton(false);
+		ShowItemButtons(false);
+		ShowPerkButtons(false);
 	}
 	
 	// Update is called once per frame
@@ -49,7 +49,7 @@ public class GUICanvas : MonoBehaviour
 	
 	}
 
-	// buy perks
+	// pressed buy perks
 	public void BuyAirPerk(int partperk)
 	{
 		MainGameMenu.Instance.PerksMenu().BuyAirPerk((Perk.PerkPart)partperk);
@@ -65,7 +65,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.PerksMenu().BuyLifePerk((Perk.PerkPart)partperk);
 	}
 	
-	// buy items
+	// pressed buy items
 	public void BuyUlimitedAirItem()
 	{
 		MainGameMenu.Instance.ItemsMenu().BuyUlimitedAirItem();
@@ -96,7 +96,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.ItemsMenu().BuyRocketThrustItem();
 	}
 
-	// change world menus
+	// pressed change world menus
 	public void ChangeToWorldMapMenu()
 	{
 		MainGameMenu.Instance.ChangeToWorldMapMenu();
@@ -117,7 +117,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.ChangeToChrystalShopMenu();
 	}
 
-	// menu gui toggle buttons
+	// pressed main gui buttons
 	public void ToggleOptions ()
 	{
 		MainGameMenu.Instance.ToggleOptions();
@@ -138,7 +138,7 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.ToggleAchievementsMenu();
 	}
 
-	// poup buy buttons
+	// pressed popup buy buttons
 	public void BuyWithBolts()
 	{
 		MainGameMenu.Instance.BuyWithBolts ();
@@ -150,63 +150,33 @@ public class GUICanvas : MonoBehaviour
 	}
 
 	// toggle buttons
-	public void HideBackButton ()
+	public void ShowBackButton (bool show)
 	{
-		mWorldMapButton.gameObject.SetActive (false);
+		mWorldMapButton.gameObject.SetActive (show);
 	}
 
-	public void HidePopupBuyButton ()
+	public void ShowPopupBuyButton (bool show)
 	{
-		mPopupBuyMenu.gameObject.SetActive (false);
+		mPopupBuyMenu.gameObject.SetActive (show);
 	}
 
-	public void HidePopupCraftingButton ()
+	public void ShowPopupCraftingButton (bool show)
 	{
-		mPopupCraftingMenu.gameObject.SetActive (false);
+		mPopupCraftingMenu.gameObject.SetActive (show);
 	}
 	
-	public void HidePopupAchievementsButton ()
+	public void ShowPopupAchievementsButton (bool show)
 	{
-		mPopupAchievementsMenu.gameObject.SetActive (false);
-	}
-	
-	public void HidePerkButtons ()
-	{
-		mPerkButtons.gameObject.SetActive (false);
-	}
-	
-	public void HideItemButtons ()
-	{
-		mItemButtons.gameObject.SetActive (false);
-	}
-	
-	public void ShowBackButton ()
-	{
-		mWorldMapButton.gameObject.SetActive (true);
+		mPopupAchievementsMenu.gameObject.SetActive (show);
 	}
 
-	public void ShowPopupBuyButton ()
+	public void ShowItemButtons (bool show)
 	{
-		mPopupBuyMenu.gameObject.SetActive (true);
+		mItemButtons.gameObject.SetActive (show);
 	}
 
-	public void ShowPopupCraftingButton ()
+	public void ShowPerkButtons (bool show)
 	{
-		mPopupCraftingMenu.gameObject.SetActive (true);
-	}
-	
-	public void ShowPopupAchievementsButton ()
-	{
-		mPopupAchievementsMenu.gameObject.SetActive (true);
-	}
-
-	public void ShowItemButtons ()
-	{
-		mItemButtons.gameObject.SetActive (true);
-	}
-
-	public void ShowPerkButtons ()
-	{
-		mPerkButtons.gameObject.SetActive (true);
+		mPerkButtons.gameObject.SetActive (show);
 	}
 }

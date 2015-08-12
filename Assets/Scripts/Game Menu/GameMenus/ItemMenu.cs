@@ -65,6 +65,8 @@ public class ItemMenu : GameMenu
 	
 	void OpenBuyItemMenu(int index)
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+
 		mCurrentItem = mItems[index];
 		
 		// alredy cannot unlock more - ABORT! ABORT!!
@@ -75,50 +77,46 @@ public class ItemMenu : GameMenu
 		}
 
 		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
-		GUICanvas.Instance.HideItemButtons();
+
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 	
 	void CloseBuyItemMenu()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+
 		mCurrentItem = null;
 
-		MenuCamera.Instance.PopupBuyMenu().Close();
-		GUICanvas.Instance.ShowItemButtons();
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 
 	public void BuyUlimitedAirItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(UNLIMITED_AIR_INDEX);
 	}
 	
 	public void BuyShockwaveItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(SHOCKWAVE_INDEX);
 	}
 	
 	public void BuyBoltMagnetItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(BOLTS_MAGNETS_INDEX);
 	}
 	
 	public void BuyForceFieldItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(FORCE_FIELD_INDEX);
 	}
 	
 	public void BuyBoltMultiplierItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(BOLTS_MULTIPLIER_INDEX);
 	}
 	
 	public void BuyRocketThrustItem()
 	{
-		MainGameMenu.Instance.ResetAllMenus ();
 		OpenBuyItemMenu(ROCKET_THRUST_INDEX);
 	}
 

@@ -34,19 +34,17 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Open(Vector3 position)
 	{
-		GUICanvas.Instance.ShowPopupBuyButton();
-		MainGameMenu.Instance.HideBuyButtons();
-		//transform.position = position;
 		mOpen = true;
 		gameObject.SetActive(true);
+
+		GUICanvas.Instance.ShowPopupBuyButton (true);
 	}
 
 	public void Close()
 	{
-		GUICanvas.Instance.HidePopupBuyButton();
-		MainGameMenu.Instance.ShowBuyButtons();
 		mOpen = false;
 		gameObject.SetActive(false);
+		GUICanvas.Instance.ShowPopupBuyButton (false);
 	}
 
 	public bool IsOpen ()
