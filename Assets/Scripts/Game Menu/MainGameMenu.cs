@@ -40,7 +40,7 @@ public class MainGameMenu : MonoBehaviour
 			mStartMenu = mGameMenus[WORLD_MAP_MENU_INDEX];
 		}
 
-		MenuCamera.Instance.transform.position = mStartMenu.transform.position + MenuCamera.Instance.mCameraOffset;
+		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
