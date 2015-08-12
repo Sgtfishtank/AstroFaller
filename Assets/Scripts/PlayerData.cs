@@ -25,8 +25,9 @@ public class PlayerData : MonoBehaviour
 					thisObject.GetComponent<PlayerData>().mBolts = 9999;
 					thisObject.GetComponent<PlayerData>().mCrystals = 9999;
 				}
-				
+
 				instance = thisObject.GetComponent<PlayerData>();
+				DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}

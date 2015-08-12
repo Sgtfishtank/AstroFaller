@@ -26,7 +26,12 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_HOVER							 = 1f   ;
 
 	// MAIN MENU CAMERA
-	public float MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR = 1f;
+	public float MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR		= 1f;
+	public float MAIN_CAMERA_OFFSET_MOVE_SPEED			= 0.387f;
+	public Vector3 MAIN_CAMERA_OFFSET					= new Vector3(0, 0, 230);
+
+	// MAIN_MENU_GUI_CANVAS
+	public float BUTTON_PRESS_MOVE_SPEED				= 12;
 
 	// WORLD_MAP_MENU
 	public float WORLD_MAP_SCROLL_OFFSET = 60;
@@ -160,7 +165,6 @@ public class GlobalVariables : MonoBehaviour
 	void Start ()
 	{
 		DontDestroyOnLoad(this.gameObject);
-		_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 	}
 	
 	// Update is called once per frame
@@ -178,10 +182,10 @@ public class GlobalVariables : MonoBehaviour
 				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				if (_thisObject ==  null)
 				{
-					//_thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				}
 
 				instance = _thisObject.GetComponent<GlobalVariables>();
+				DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
