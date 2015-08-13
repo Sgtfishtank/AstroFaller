@@ -3,35 +3,35 @@ using System.Collections;
 
 public class GlobalVariables : MonoBehaviour 
 {
-	// sigleton
-	private static GameObject _thisObject;
-
 	// GLOBAL VARIABLES START HERE
 
 
 	/*----------------------------------------AstroidSpawn----------------------------------*/
-	public float ASTROID_SPAWN_SPAWNRATE 				 = 5f   ;
-	public float ASTROID_SPAWN_XOFFSET					 = 10f  ; 
-	public float ASTROID_SPAWN_ROTATION_SPEED 			 = 10f  ;
-	public int   ASTROID_SPAWN_MAX_ASTROIDS				 = 5    ;
+	public float ASTROID_SPAWN_SPAWNRATE 				= 5f   ;
+	public float ASTROID_SPAWN_XOFFSET					= 10f  ; 
+	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f  ;
+	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5    ;
 
 	/*----------------------------------------Player----------------------------------------*/
-	public float PLAYER_HORIZONTAL_MOVESPEED			 = 1000f;
-	public float PLAYER_HORIZONTAL_MOVESPEED_KEYBORD	 = 1000f;
-	public float PLAYER_VERTICAL_SPEED_FALLOF			 = 2f ;
-	public float PLAYER_DASH_SPEED_DELAY				 = 2f   ;
-	public float PLAYER_DASH_SPEED						 = 20f  ;
+
 	public float PLAYER_DASH_CD							 = 10f  ;
-	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	 = 10f  ;
-	public float PLAYER_HOVER_FORCE						 = 15f	;
-	public float PLAYER_HOVER							 = 1f   ;
 	public int   BOLT_VALUE								 = 1	;
 	public int   BOLT_CLUSTER_VALUE						 = 1	;
+	public float PLAYER_HORIZONTAL_MOVESPEED			= 1000f;
+	public float PLAYER_HORIZONTAL_MOVESPEED_KEYBORD	= 1000f;
+	public float PLAYER_VERTICAL_SPEED_FALLOF			= 2f ;
+	public float PLAYER_DASH_SPEED_DELAY				= 2f   ;
+	public float PLAYER_DASH_SPEED						= 20f  ;
+	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	= 10f  ;
+	public float PLAYER_HOVER_FORCE						= 15f	;
+	//public float PLAYER_HOVER							= 1f ;
+	public float PLAYER_MIN_HOVER_SPEED 				= 1.5f;
 
 	// MAIN MENU CAMERA
 	public float MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR		= 1f;
 	public float MAIN_CAMERA_OFFSET_MOVE_SPEED			= 0.387f;
 	public Vector3 MAIN_CAMERA_OFFSET					= new Vector3(0, 0, 230);
+	public Vector3 MAIN_CAMERA_START_LEVEL_ZOOM			= new Vector3(0, 0, -460);
 
 	// MAIN_MENU_GUI_CANVAS
 	public float BUTTON_PRESS_MOVE_TIME				= 0.8f;
@@ -50,13 +50,31 @@ public class GlobalVariables : MonoBehaviour
 	// astreoid level
 	public int ASTEROID_BONUS_1_CRITERA_DISTANCE = 1000;
 	public int ASTEROID_BONUS_1_REWARD_BOLTS = 1000;
+	public int ASTEROID_BONUS_1_REWARD_CRYSTALS = 1000;
+	public int ASTEROID_BONUS_2_CRITERA_DISTANCE = 1000;
+	public int ASTEROID_BONUS_2_REWARD_BOLTS = 1000;
+	public int ASTEROID_BONUS_2_REWARD_CRYSTALS = 1000;
 
 	// cosmic storm level
 	public int COSMIC_LEVEL_CRITERA_DISTANCE = 1000;
 	public int COSMIC_BONUS_1_CRITERA_DISTANCE = 1000;
 	public int COSMIC_BONUS_1_REWARD_BOLTS = 1000;
+	public int COSMIC_BONUS_1_REWARD_CRYSTALS = 1000;
+	public int COSMIC_BONUS_2_CRITERA_DISTANCE = 1000;
+	public int COSMIC_BONUS_2_REWARD_BOLTS = 1000;
+	public int COSMIC_BONUS_2_REWARD_CRYSTALS = 1000;
 	
-	// satelite
+	// satelite graveyard level
+	public int SATELITE_LEVEL_CRITERA_DISTANCE = 1000;
+	public int SATELITE_BONUS_1_CRITERA_DISTANCE = 1000;
+	public int SATELITE_BONUS_1_REWARD_BOLTS = 1000;
+	public int SATELITE_BONUS_1_REWARD_CRYSTALS = 1000;
+	public int SATELITE_BONUS_2_CRITERA_DISTANCE = 1000;
+	public int SATELITE_BONUS_2_REWARD_BOLTS = 1000;
+	public int SATELITE_BONUS_2_REWARD_CRYSTALS = 1000;
+
+	// black hole level
+	public int BLACK_HOLE_LEVEL_CRITERA_DISTANCE = 1000;
 
 	// PERKS
 
@@ -174,7 +192,8 @@ public class GlobalVariables : MonoBehaviour
 	void Update () 
 	{
 	}
-
+	
+	// sigleton
 	private static GlobalVariables instance = null;
 	public static GlobalVariables Instance
 	{
@@ -182,13 +201,8 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				_thisObject = GameObject.Find("GlobalVaribelsPrefab");
-				if (_thisObject ==  null)
-				{
-				}
-
+				GameObject _thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				instance = _thisObject.GetComponent<GlobalVariables>();
-				DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
@@ -198,9 +212,24 @@ public class GlobalVariables : MonoBehaviour
 	{
 		switch (levelName) 
 		{
-		case "bonus 1": case "bonus 2": case "bonus 3": 
-		case "bonus 4": case "bonus 5": case "bonus 6":
+		case "bonus 1": 
 			return ASTEROID_BONUS_1_CRITERA_DISTANCE;
+		case "bonus 2": 
+			return ASTEROID_BONUS_2_CRITERA_DISTANCE;
+		case "cosmic storm level": 
+			return COSMIC_LEVEL_CRITERA_DISTANCE;
+		case "bonus 3": 
+			return COSMIC_BONUS_1_CRITERA_DISTANCE;
+		case "bonus 4":
+			return COSMIC_BONUS_2_CRITERA_DISTANCE;
+		case "satellite graveyard level":
+			return SATELITE_LEVEL_CRITERA_DISTANCE;
+		case "bonus 5":
+			return SATELITE_BONUS_1_CRITERA_DISTANCE;
+		case "bonus 6":
+			return SATELITE_BONUS_2_CRITERA_DISTANCE;
+		case "black hole level":
+			return BLACK_HOLE_LEVEL_CRITERA_DISTANCE;
 		default:
 			print("Error in DistanceCritera " + levelName);
 			break;
@@ -213,14 +242,23 @@ public class GlobalVariables : MonoBehaviour
 	{
 		switch (levelName) 
 		{
-		case "bonus 1": case "bonus 2": case "bonus 3": 
-		case "bonus 4": case "bonus 5": case "bonus 6":
+		case "bonus 1": 
 			return ASTEROID_BONUS_1_REWARD_BOLTS;
+		case "bonus 2": 
+			return ASTEROID_BONUS_2_REWARD_BOLTS;
+		case "bonus 3": 
+			return COSMIC_BONUS_1_REWARD_BOLTS;
+		case "bonus 4": 
+			return COSMIC_BONUS_2_REWARD_BOLTS;
+		case "bonus 5": 
+			return SATELITE_BONUS_1_REWARD_BOLTS;
+		case "bonus 6":
+			return SATELITE_BONUS_2_REWARD_BOLTS;
 		default:
 			print("Error in BonusRewardBolts " + levelName);
 			break;
 		}
-		
+
 		return 0;
 	}
 
@@ -228,9 +266,18 @@ public class GlobalVariables : MonoBehaviour
 	{
 		switch (levelName) 
 		{
-		case "bonus 1": case "bonus 2": case "bonus 3": 
-		case "bonus 4": case "bonus 5": case "bonus 6":
-			return ASTEROID_BONUS_1_REWARD_BOLTS;
+		case "bonus 1": 
+			return ASTEROID_BONUS_1_REWARD_CRYSTALS;
+		case "bonus 2": 
+			return ASTEROID_BONUS_2_REWARD_CRYSTALS;
+		case "bonus 3": 
+			return COSMIC_BONUS_1_REWARD_CRYSTALS;
+		case "bonus 4": 
+			return COSMIC_BONUS_2_REWARD_CRYSTALS;
+		case "bonus 5": 
+			return SATELITE_BONUS_1_REWARD_CRYSTALS;
+		case "bonus 6":
+			return SATELITE_BONUS_2_REWARD_CRYSTALS;
 		default:
 			print("Error in BonusRewardCrystals " + levelName);
 			break;

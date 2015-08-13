@@ -5,10 +5,14 @@ public class WorldMapMenu : GameMenu
 {
 	public LevelBase[] mLevels;
 
-	private float mScrollValue;
-	private int mCurrentLevelFocusIndex;
+	private float mScrollValue = 0;
+	private int mCurrentLevelFocusIndex = 0;
+	private LevelBase mCurrentLevel = null;
 	private GameObject mLevelsScroller;
-	private bool mFocused;
+	private bool mFocused = false;
+	private bool mLevelOpen = false;
+
+	bool mPlayLevelPhase;
 
 	// Use this for initialization
 	void Start () 
@@ -19,7 +23,6 @@ public class WorldMapMenu : GameMenu
 	{
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
-		mCurrentLevelFocusIndex = 0;
 		
 		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 
@@ -35,19 +38,20 @@ public class WorldMapMenu : GameMenu
 		}
 
 		CheckLevels();
-		
-		mFocused = false;
+
 		enabled = false;
 	}
 	
 	public override void Focus()
 	{
+		mLevelOpen = false;
 		mFocused = true;
 		enabled = true;
 	}
 	
 	public override void Unfocus()
 	{
+		mLevelOpen = false;
 		mFocused = false;
 		enabled = false;
 	}
@@ -103,80 +107,149 @@ public class WorldMapMenu : GameMenu
 			mScrollValue = Mathf.Lerp (mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
 		}
 
+		int last = mCurrentLevelFocusIndex;
 		mCurrentLevelFocusIndex = Mathf.RoundToInt (mScrollValue / GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE);
 		mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
+		if (last != mCurrentLevelFocusIndex) 
+		{
+			mLevelOpen = false;
+			MainGameMenu.Instance.UpdateMenusAndButtons();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.touchCount > 0)
+		if (mPlayLevelPhase)
 		{
-			foreach (Touch touch in Input.touches)
+			if (!MenuCamera.Instance.IsMoving())
 			{
-				switch (touch.phase)
-				{
-				case TouchPhase.Began:
-					break;
-				case TouchPhase.Moved:
-					ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * touch.deltaPosition.y * Time.deltaTime);
-					break;
-				case TouchPhase.Canceled:
-					break;
-				case TouchPhase.Ended:
-					break;
-				}
+				Application.LoadLevel("Level" + mCurrentLevelFocusIndex);
 			}
-		}
-
-		if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
-		{
-			mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
-			mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
-		}
-		else if (Input.GetKey(KeyCode.UpArrow))
-		{
-			ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
-		}
-		else if (Input.GetKey(KeyCode.DownArrow))
-		{
-			ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+			else
+			{
+			}
 		}
 		else 
 		{
-			mScrollValue = Mathf.Lerp(mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
+			if (Input.touchCount > 0)
+			{
+				foreach (Touch touch in Input.touches)
+				{
+					switch (touch.phase)
+					{
+					case TouchPhase.Began:
+						break;
+					case TouchPhase.Moved:
+						ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * touch.deltaPosition.y * Time.deltaTime / touch.deltaTime);
+						break;
+					case TouchPhase.Canceled:
+						break;
+					case TouchPhase.Ended:
+						break;
+					}
+				}
+			}
+
+			if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
+			{
+				mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
+				mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
+
+				mLevelOpen = false;
+				MainGameMenu.Instance.UpdateMenusAndButtons();
+			}
+			else if (Input.GetKey(KeyCode.UpArrow))
+			{
+				ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+			}
+			else if (Input.GetKey(KeyCode.DownArrow))
+			{
+				ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+			}
+			else 
+			{
+				mScrollValue = Mathf.Lerp(mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
+			}
+
+			if (Input.GetKeyDown(KeyCode.U))
+			{
+				if (mLevels[mCurrentLevelFocusIndex].IsUnlocked()) 
+				{
+					mLevels[mCurrentLevelFocusIndex].LockLevel();
+				}
+				else
+				{
+					mLevels[mCurrentLevelFocusIndex].UnlockLevel();
+				}
+			}
+			else if (Input.GetKeyDown(KeyCode.Return))
+			{
+				PlayLevel();
+			}
+
+			setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
+
+			for (int i = 0; i < mLevels.Length; i++) 
+			{
+				float diff = Mathf.Abs((i * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE) - mScrollValue) / GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE;
+				if (diff < 1)
+				{
+					mLevels[i].setFocusLevel(1 - diff);
+				}
+				else
+				{
+					mLevels[i].setFocusLevel(0);
+				}
+			}
+		}
+	}
+
+	public bool IsLevelOpen ()
+	{
+		return mLevelOpen;
+	}
+
+	public void PlayLevel ()
+	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
+		if (mCurrentLevelFocusIndex < 0) 
+		{
+			print("ERROR nothing level in PlayLevel");
+			return;
 		}
 
-		if (Input.GetKeyDown(KeyCode.U))
+		mCurrentLevel = mLevels [mCurrentLevelFocusIndex];
+		if ((!mCurrentLevel.IsPlayable()) || (!mCurrentLevel.IsUnlocked()))
 		{
-			if (mLevels[mCurrentLevelFocusIndex].IsUnlocked()) 
-			{
-				mLevels[mCurrentLevelFocusIndex].LockLevel();
-			}
-			else
-			{
-				mLevels[mCurrentLevelFocusIndex].UnlockLevel();
-			}
-		}
-		else if (Input.GetKeyDown(KeyCode.Return))
-		{
-			Application.LoadLevel("Level" + mCurrentLevelFocusIndex);
+			return;
 		}
 
-		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
-
-		for (int i = 0; i < mLevels.Length; i++) 
+		if (!mLevelOpen)
 		{
-			float diff = Mathf.Abs((i * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE) - mScrollValue) / GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE;
-			if (diff < 1)
-			{
-				mLevels[i].setFocusLevel(1 - diff);
-			}
-			else
-			{
-				mLevels[i].setFocusLevel(0);
-			}
+			mLevelOpen = true;
 		}
+		else
+		{
+			mLevelOpen = false;
+			StartPlayLevelPhase();
+		}
+
+		MainGameMenu.Instance.UpdateMenusAndButtons();
+	}
+
+	public bool IsPlayLevelPhase()
+	{
+		return mPlayLevelPhase;
+	}
+
+	void StartPlayLevelPhase ()
+	{
+		mPlayLevelPhase = true;
+		GUICanvas.Instance.showIconButtons(false);
+		GUICanvas.Instance.showPlayLevelButton (false);
+		MenuCamera.Instance.StartLevelZoom ();
 	}
 	
 	public override void BuyWithBolts()

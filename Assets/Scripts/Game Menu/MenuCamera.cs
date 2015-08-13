@@ -21,6 +21,7 @@ public class MenuCamera : MonoBehaviour
 	public enum MoveType
 	{
 		Linerar,
+		LinerarSaw,
 		IsoscelesTriangle,
 		Hyperbole,
 	}
@@ -40,7 +41,8 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mHelpMenu;
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
-	
+	private GameObject mPlayText;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -49,6 +51,7 @@ public class MenuCamera : MonoBehaviour
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
+		mPlayText = transform.Find("PlayText").gameObject;
 		mMoving = false;
 
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
@@ -77,9 +80,16 @@ public class MenuCamera : MonoBehaviour
 
 			float dist = Vector3.Distance(mStartMenuPosition, mTargetMenuPosition);
 			Vector3 midPoint = ((mStartMenuPosition + mTargetMenuPosition) * 0.5f) + new Vector3(0, 0, dist) * GlobalVariables.Instance.MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR;
-			print(midPoint + "   " + mStartMenuPosition);
 			switch (mCameraMoveType) 
 			{
+			case MoveType.LinerarSaw:
+				transform.position = Vector3.Lerp(mStartMenuPosition + mCameraOffset, mTargetMenuPosition + mCameraOffset, movingTime * movingTime * movingTime);
+
+				Color x2 = Color.black;
+				x2.a = movingTime * movingTime * movingTime;
+				GUICanvas.Instance.SetFadeColor(x2);
+
+				break;
 			case MoveType.IsoscelesTriangle:
 				if (mMovingT <= 0.5f)
 				{
@@ -166,10 +176,31 @@ public class MenuCamera : MonoBehaviour
 			mMovingT = 1;
 		}
 	}
+
+	public void StartLevelZoom ()
+	{	
+		if (mMoving) 
+		{
+			transform.position = mStartMenuPosition + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+		}
+
+		mStartMenuPosition = transform.position - GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+		mTargetMenuPosition = mStartMenuPosition + GlobalVariables.Instance.MAIN_CAMERA_START_LEVEL_ZOOM;
+		
+		mCameraMoveType = MoveType.LinerarSaw;
+		mUseSmoothStep = false;
+		mMoving = true;
+		mMovingT = 0;
+	}
 	
 	public PopupBuyMenu PopupBuyMenu ()
 	{
 		return mPopupBuyMenu;
+	}
+	
+	public void ShowPlayText (bool show)
+	{
+		mPlayText.SetActive(show);
 	}
 
 	public void ShowBackButton (bool show)

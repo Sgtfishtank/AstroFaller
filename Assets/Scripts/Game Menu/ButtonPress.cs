@@ -19,7 +19,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	
 	private float mMoveT;
 	private bool mPressed;
-	private Vector3 mBaseScale;
+	private Vector3 mBaseScale = Vector3.zero;
 	private Vector3 mBasePosition;
 
 	void Start()
@@ -35,6 +35,17 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	void OnDisable() 
 	{
+		if (mObj == null)
+		{
+			return;
+		}
+
+		if (mBaseScale == Vector3.zero)
+		{
+			mBaseScale = mObj.transform.localScale;
+			mBasePosition = mObj.transform.localPosition;
+		}
+
 		mPressed = false;
 		mMoveT = 0;
 		UpdateObj (mMoveT);

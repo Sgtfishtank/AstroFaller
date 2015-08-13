@@ -40,6 +40,11 @@ public class TutorialLevel : LevelBase
 	{
 		return mLevelName;
 	}
+	
+	public override bool IsPlayable()
+	{
+		return true;
+	}
 
 	public override bool UnlockLevel()
 	{

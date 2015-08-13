@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GUICanvas : MonoBehaviour 
 {
@@ -24,6 +25,9 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mPopupAchievementsMenu;
 	private GameObject mItemButtons;
 	private GameObject mPerkButtons;
+	private GameObject mIconButtons;
+	private GameObject mPlayLevelButton;
+	private Image mFadeImage;
 
 	// Use this for initialization
 	void Start () 
@@ -34,7 +38,12 @@ public class GUICanvas : MonoBehaviour
 		mPopupAchievementsMenu = transform.Find ("PopupAchievementsMenu").gameObject;
 		mItemButtons = transform.Find ("Items").gameObject;
 		mPerkButtons = transform.Find ("Perks").gameObject;
+		mIconButtons = transform.Find ("Icons").gameObject;
+		mPlayLevelButton = transform.Find ("PlayLevelButton").gameObject;
+		mFadeImage = transform.Find ("FadeLayer").GetComponent<Image> ();
 
+		showPlayLevelButton(false);
+		showIconButtons (true);
 		ShowBackButton(false);
 		ShowPopupBuyButton(false);
 		ShowPopupCraftingButton(false);
@@ -46,7 +55,11 @@ public class GUICanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-	
+	}
+
+	public void SetFadeColor(Color col)
+	{
+		mFadeImage.color = col;
 	}
 
 	// pressed buy perks
@@ -149,7 +162,23 @@ public class GUICanvas : MonoBehaviour
 		MainGameMenu.Instance.BuyWithCrystals();
 	}
 
+	// PlayLevel
+	public void PlayLevel()
+	{
+		MainGameMenu.Instance.WorldMapMenu().PlayLevel();
+	}
+
 	// toggle buttons
+	public void showPlayLevelButton (bool show)
+	{
+		mPlayLevelButton.gameObject.SetActive (show);
+	}
+
+	public void showIconButtons(bool show)
+	{
+		mIconButtons.gameObject.SetActive (show);
+	}
+
 	public void ShowBackButton (bool show)
 	{
 		mWorldMapButton.gameObject.SetActive (show);
