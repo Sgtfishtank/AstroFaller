@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
 	private MovementControls mMovementControls;
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
 	private float mDashTime;
+	private float mDashCDTime;
+	public int mBoltsCollected;
 
 	
 	// Use this for initialization
@@ -60,10 +62,14 @@ public class Player : MonoBehaviour
 	}
 	public void Dash()
 	{
-		mfp.Dash();
-		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-		mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
-		mRb.velocity = new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
+		if(mDashCDTime < Time.time)
+		{
+			mfp.Dash();
+			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
+			mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
+			mRb.velocity = new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
+			mDashCDTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_CD;
+		}
 	}
 	
 	void FixedUpdate()
@@ -78,16 +84,12 @@ public class Player : MonoBehaviour
 		{
 			Dash();
 		}
-		//transform.RotateAround(mMeshTrans.position, new Vector3(1,0,0), transform.rotation.z + 80 * Time.deltaTime);
-		//transform.RotateAround(mMeshTrans.position, new Vector3(0,1,0), transform.rotation.z + 100 * Time.deltaTime);
-		//transform.RotateAround(mMeshTrans.position, new Vector3(0,0,1), transform.rotation.z + 75 * Time.deltaTime);
 
 		// do nothing if dead
 		if(mIsDead)
 		{
 			return;
 		}
-
 
 		// jump and hover player
 		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
@@ -97,16 +99,37 @@ public class Player : MonoBehaviour
 		mMovementControls.Hover(mRb,10);
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
-			print ("mört");
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
 	}
+	void OnTriggerEnter(Collider col)
+	{
+		if(col.tag == "Bolt")
+		{
+			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+		}
+		else if(col.tag == "BoltCluster")
+		{
+			mBoltsCollected += GlobalVariables.Instance.BOLT_CLUSTER_VALUE;
+		}
+		else if(col.tag == "SpawnAstroid")
+		{
+			mAS.SetActive(true);
+		}
+	}
+	void OnTriggerExit(Collider col)
+	{
+		if(col.tag == "SpawnAstroid")
+		{
+			mAS.SetActive(false);
+		}
+	}
 
 	public int colectedBolts()
 	{
-		return 0;
+		return mBoltsCollected;
 	}
 
 	public int disance()
@@ -132,20 +155,6 @@ public class Player : MonoBehaviour
 
 			mRb.velocity = new Vector2(0, 0);
 			gameObject.SetActive(false);
-		}
-	}
-	void OnTriggerEnter(Collider col)
-	{
-		if(col.tag == "SpawnAstroid")
-		{
-			mAS.SetActive(true);
-		}
-	}
-	void OnTriggerExit(Collider col)
-	{
-		if(col.tag == "SpawnAstroid")
-		{
-			mAS.SetActive(false);
 		}
 	}
 

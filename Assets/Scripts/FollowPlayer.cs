@@ -50,7 +50,6 @@ public class FollowPlayer : MonoBehaviour {
 	}
 	public void Dash()
 	{
-		print ("fisk");
 		mDash = true;
 	}
 }

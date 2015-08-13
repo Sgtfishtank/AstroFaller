@@ -21,9 +21,12 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_VERTICAL_SPEED_FALLOF			 = 2f ;
 	public float PLAYER_DASH_SPEED_DELAY				 = 2f   ;
 	public float PLAYER_DASH_SPEED						 = 20f  ;
+	public float PLAYER_DASH_CD							 = 10f  ;
 	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	 = 10f  ;
 	public float PLAYER_HOVER_FORCE						 = 15f	;
 	public float PLAYER_HOVER							 = 1f   ;
+	public int   BOLT_VALUE								 = 1	;
+	public int   BOLT_CLUSTER_VALUE						 = 1	;
 
 	// MAIN MENU CAMERA
 	public float MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR		= 1f;
