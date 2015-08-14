@@ -18,12 +18,13 @@ public class MainGameMenu : MonoBehaviour
 		}
 	}
 
+	public GameMenu mStartMenu;
+	public GameObject mBackground;
+
 	private int WORLD_MAP_MENU_INDEX = 0;
 	private int ITEMS_MENU_INDEX = 2;
 	private int PERKS_MENU_INDEX = 1;
-	private int CRYSTAL_STORE_MENU_INDEX = 3;
-
-	public GameMenu mStartMenu;
+	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
 	private GameMenu mCurrentGameMenu;
@@ -67,6 +68,42 @@ public class MainGameMenu : MonoBehaviour
 
 		}
 	}
+	
+	public void Disable() 
+	{
+		print("MainGameMenu Off");
+
+		MenuCamera.Instance.gameObject.SetActive (false);
+		GUICanvas.Instance.ShowMenuButtons(false);
+		if (mBackground != null) 
+		{
+			mBackground.gameObject.SetActive (false);
+		}
+		
+		gameObject.SetActive (false);
+	}
+	
+	public void Enable() 
+	{
+		print("MainGameMenu On");
+
+		gameObject.SetActive (true);
+
+		MenuCamera.Instance.gameObject.SetActive (true);
+		GUICanvas.Instance.ShowMenuButtons(true);
+		GUICanvas.Instance.ShowIconButtons(true);
+		if (mBackground != null) 
+		{
+			mBackground.gameObject.SetActive (true);
+		}
+
+		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+
+
+		ResetAllMenusAndButtons ();
+		mStartMenu.Focus();
+		UpdateMenusAndButtons ();
+	}
 
 	public void UpdateMenusAndButtons()
 	{
@@ -82,19 +119,12 @@ public class MainGameMenu : MonoBehaviour
 
 		bool showBack = (!mGameMenus [WORLD_MAP_MENU_INDEX].IsFocused () && (mCurrentGameMenu != null));
 		MenuCamera.Instance.ShowBackButton(showBack);
-		GUICanvas.Instance.ShowBackButton(showBack);
+		GUICanvas.Instance.ShowWorldMapButton(showBack);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
-			//mGameMenus[i].UpdateMenusAndButtons();
+			mGameMenus[i].UpdateMenusAndButtons();
 		}
-
-		GUICanvas.Instance.ShowPerkButtons(PerksMenu().IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
-		GUICanvas.Instance.ShowItemButtons(ItemsMenu().IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
-		
-		GUICanvas.Instance.showPlayLevelButton(WorldMapMenu().IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen() && (!WorldMapMenu().IsPlayLevelPhase()));
-
-		MenuCamera.Instance.ShowPlayText(WorldMapMenu().IsFocused() && WorldMapMenu().IsLevelOpen());
 	}
 
 	public void ChangeToWorldMapMenu()
@@ -114,7 +144,7 @@ public class MainGameMenu : MonoBehaviour
 	
 	public void ChangeToChrystalShopMenu()
 	{
-		StartChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
+		StartChangeGameMenu(CRYSTAL_SHOP_MENU_INDEX);
 	}
 
 	public PerksMenu PerksMenu ()
@@ -130,6 +160,11 @@ public class MainGameMenu : MonoBehaviour
 	public WorldMapMenu WorldMapMenu ()
 	{
 		return (WorldMapMenu)mGameMenus[WORLD_MAP_MENU_INDEX];
+	}
+	
+	public CrystalShopMenu CrystalShopMenu()
+	{
+		return (CrystalShopMenu)mGameMenus[CRYSTAL_SHOP_MENU_INDEX];
 	}
 
 	public void ResetAllMenusAndButtons ()
@@ -207,7 +242,7 @@ public class MainGameMenu : MonoBehaviour
 		mCurrentGameMenu = null;
 
 		mCurrentGameMenuIndex = index;
-		MenuCamera.Instance.StartMove (mGameMenus [mCurrentGameMenuIndex].gameObject);
+		MenuCamera.Instance.StartMenuMove (mGameMenus [mCurrentGameMenuIndex].gameObject);
 		
 		UpdateMenusAndButtons();
 	}

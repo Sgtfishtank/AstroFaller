@@ -8,9 +8,13 @@ public class CrystalShopMenu : GameMenu
 	// Use this for initialization
 	void Start () 
 	{
-	
 	}
 	
+	// Update is called once per frame
+	void Update () 
+	{
+	}
+
 	public override void Init() 
 	{
 	}
@@ -31,12 +35,11 @@ public class CrystalShopMenu : GameMenu
 	{
 		return mFocused;
 	}
-
-	// Update is called once per frame
-	void Update () 
+	
+	public override void UpdateMenusAndButtons ()
 	{
 	}
-	
+
 	public override void BuyWithBolts()
 	{
 	}

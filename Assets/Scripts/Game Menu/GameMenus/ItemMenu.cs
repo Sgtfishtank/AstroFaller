@@ -18,6 +18,21 @@ public class ItemMenu : GameMenu
 	void Start () 
 	{
 	}
+	
+	// Update is called once per frame
+	void Update () 
+	{
+		if ((mCurrentItem != null) && MenuCamera.Instance.PopupBuyMenu().IsOpen()) 
+		{
+			string description = mCurrentItem.BuyDescription ();
+			string current = mCurrentItem.BuyCurrent ();
+			string next = mCurrentItem.BuyNext ();
+			int costBolts = mCurrentItem.BuyCostBolts();
+			int nextCrystals = mCurrentItem.BuyCostCrystals();
+			
+			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+		}
+	}
 
 	public override void Init() 
 	{
@@ -47,29 +62,51 @@ public class ItemMenu : GameMenu
 	{
 		return mFocused;
 	}
-
-	// Update is called once per frame
-	void Update () 
+	
+	public override void UpdateMenusAndButtons ()
 	{
-		if (MenuCamera.Instance.PopupBuyMenu().IsOpen ()) 
+		GUICanvas.Instance.ShowItemButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+	}
+	
+	public override void BuyWithBolts()
+	{
+		if (mCurrentItem == null)
 		{
-			string description = mCurrentItem.BuyDescription ();
-			string current = mCurrentItem.BuyCurrent ();
-			string next = mCurrentItem.BuyNext ();
-			int costBolts = mCurrentItem.BuyCostBolts();
-			int nextCrystals = mCurrentItem.BuyCostCrystals();
-			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			print("Error popup buying nothing!");
+			return;
+		}
+		
+		int cost = mCurrentItem.BuyCostBolts();
+		if (PlayerData.Instance.withdrawBolts(cost))
+		{
+			mCurrentItem.UnlockItem();
+			CloseBuyItemMenu ();
 		}
 	}
 	
+	public override void BuyWithCrystals()
+	{
+		if (mCurrentItem == null)
+		{
+			print("Error popup buying nothing!");
+			return;
+		}
+		
+		int cost = mCurrentItem.BuyCostCrystals();
+		if (PlayerData.Instance.withdrawCrystals(cost))
+		{
+			mCurrentItem.UnlockItem();
+			CloseBuyItemMenu ();
+		}
+	}
+
 	void OpenBuyItemMenu(int index)
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons ();
 
 		mCurrentItem = mItems[index];
 		
-		// alredy cannot unlock more - ABORT! ABORT!!
+		// cannot unlock more - ABORT! ABORT!!
 		if (!mCurrentItem.CanUnlockItem())
 		{
 			mCurrentItem = null;
@@ -118,37 +155,5 @@ public class ItemMenu : GameMenu
 	public void BuyRocketThrustItem()
 	{
 		OpenBuyItemMenu(ROCKET_THRUST_INDEX);
-	}
-
-	public override void BuyWithBolts()
-	{
-		if (mCurrentItem == null)
-		{
-			print("Error popup buying nothing!");
-			return;
-		}
-		
-		int cost = mCurrentItem.BuyCostBolts();
-		if (PlayerData.Instance.withdrawBolts(cost))
-		{
-			mCurrentItem.UnlockItem();
-			CloseBuyItemMenu ();
-		}
-	}
-	
-	public override void BuyWithCrystals()
-	{
-		if (mCurrentItem == null)
-		{
-			print("Error popup buying nothing!");
-			return;
-		}
-		
-		int cost = mCurrentItem.BuyCostCrystals();
-		if (PlayerData.Instance.withdrawCrystals(cost))
-		{
-			mCurrentItem.UnlockItem();
-			CloseBuyItemMenu ();
-		}
 	}
 }

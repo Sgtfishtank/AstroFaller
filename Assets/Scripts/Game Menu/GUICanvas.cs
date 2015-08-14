@@ -18,7 +18,9 @@ public class GUICanvas : MonoBehaviour
 			return instance;
 		}
 	}
-
+	
+	private GameObject mMenuButtons;
+	private GameObject mInGameButtons;
 	private GameObject mWorldMapButton;
 	private GameObject mPopupBuyMenu;
 	private GameObject mPopupCraftingMenu;
@@ -27,29 +29,38 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mPerkButtons;
 	private GameObject mIconButtons;
 	private GameObject mPlayLevelButton;
+	private GameObject mBackToMenuButton;
 	private Image mFadeImage;
 
 	// Use this for initialization
 	void Start () 
 	{
-		mWorldMapButton = transform.Find ("WorldMapButton").gameObject;
-		mPopupBuyMenu = transform.Find ("PopupBuyMenu").gameObject;
-		mPopupCraftingMenu = transform.Find ("PopupCraftingMenu").gameObject;
-		mPopupAchievementsMenu = transform.Find ("PopupAchievementsMenu").gameObject;
-		mItemButtons = transform.Find ("Items").gameObject;
-		mPerkButtons = transform.Find ("Perks").gameObject;
-		mIconButtons = transform.Find ("Icons").gameObject;
-		mPlayLevelButton = transform.Find ("PlayLevelButton").gameObject;
 		mFadeImage = transform.Find ("FadeLayer").GetComponent<Image> ();
 
+		//assign all menu buttons
+		mMenuButtons = transform.Find ("MenuButtons").gameObject;
+		mWorldMapButton = mMenuButtons.transform.Find ("WorldMapButton").gameObject;
+		mPopupBuyMenu = mMenuButtons.transform.Find ("PopupBuyMenu").gameObject;
+		mPopupCraftingMenu = mMenuButtons.transform.Find ("PopupCraftingMenu").gameObject;
+		mPopupAchievementsMenu = mMenuButtons.transform.Find ("PopupAchievementsMenu").gameObject;
+		mItemButtons = mMenuButtons.transform.Find ("Items").gameObject;
+		mPerkButtons = mMenuButtons.transform.Find ("Perks").gameObject;
+		mIconButtons = mMenuButtons.transform.Find ("Icons").gameObject;
+		mPlayLevelButton = mMenuButtons.transform.Find ("PlayLevelButton").gameObject;
+		
+		//assign all in game buttons
+		mInGameButtons = transform.Find ("InGameButtons").gameObject;
+		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
+
 		showPlayLevelButton(false);
-		showIconButtons (true);
-		ShowBackButton(false);
+		ShowIconButtons (true);
+		ShowWorldMapButton(false);
 		ShowPopupBuyButton(false);
 		ShowPopupCraftingButton(false);
 		ShowPopupAchievementsButton(false);
 		ShowItemButtons(false);
 		ShowPerkButtons(false);
+		ShowBackToMenuButton(false);
 	}
 	
 	// Update is called once per frame
@@ -167,19 +178,36 @@ public class GUICanvas : MonoBehaviour
 	{
 		MainGameMenu.Instance.WorldMapMenu().PlayLevel();
 	}
+	
+	// pressed back to menu
+	public void BackToMenu()
+	{
+		WorldGen.Instance.Disable();
+		MainGameMenu.Instance.Enable();
+	}
 
-	// toggle buttons
+	// menu toggle buttons
+	public void ShowMenuButtons(bool show)
+	{
+		mMenuButtons.gameObject.SetActive (show);
+	}
+
+	public void ShowInGameButtons(bool show)
+	{
+		mInGameButtons.gameObject.SetActive (show);
+	}
+
 	public void showPlayLevelButton (bool show)
 	{
 		mPlayLevelButton.gameObject.SetActive (show);
 	}
 
-	public void showIconButtons(bool show)
+	public void ShowIconButtons(bool show)
 	{
 		mIconButtons.gameObject.SetActive (show);
 	}
 
-	public void ShowBackButton (bool show)
+	public void ShowWorldMapButton (bool show)
 	{
 		mWorldMapButton.gameObject.SetActive (show);
 	}
@@ -207,5 +235,11 @@ public class GUICanvas : MonoBehaviour
 	public void ShowPerkButtons (bool show)
 	{
 		mPerkButtons.gameObject.SetActive (show);
+	}
+	
+	// in-game toggle buttons
+	public void ShowBackToMenuButton(bool show)
+	{
+		mBackToMenuButton.gameObject.SetActive (show);
 	}
 }

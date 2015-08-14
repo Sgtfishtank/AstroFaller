@@ -26,8 +26,11 @@ public class MenuCamera : MonoBehaviour
 		Hyperbole,
 	}
 
-	public MoveType mCameraMoveType;
-	public bool mUseSmoothStep;
+	public MoveType mDefaultCameraMoveType;
+	public bool mDefaultUseSmoothStep;
+
+	private MoveType mCameraMoveType;
+	private bool mUseSmoothStep;
 
 	private Vector3 mStartMenuPosition;
 	private Vector3 mTargetMenuPosition;
@@ -72,11 +75,7 @@ public class MenuCamera : MonoBehaviour
 		{
 			mMovingT = Mathf.Clamp01(mMovingT + (Time.deltaTime * GlobalVariables.Instance.MAIN_CAMERA_OFFSET_MOVE_SPEED));
 
-			float movingTime = mMovingT;
-			if (mUseSmoothStep)
-			{
-				movingTime = Mathf.SmoothStep(0, 1, mMovingT);
-			}
+			float movingTime =  MovingT();
 
 			float dist = Vector3.Distance(mStartMenuPosition, mTargetMenuPosition);
 			Vector3 midPoint = ((mStartMenuPosition + mTargetMenuPosition) * 0.5f) + new Vector3(0, 0, dist) * GlobalVariables.Instance.MAIN_CAMERA_MOVE_ZOOM_OUT_FACTOR;
@@ -84,11 +83,6 @@ public class MenuCamera : MonoBehaviour
 			{
 			case MoveType.LinerarSaw:
 				transform.position = Vector3.Lerp(mStartMenuPosition + mCameraOffset, mTargetMenuPosition + mCameraOffset, movingTime * movingTime * movingTime);
-
-				Color x2 = Color.black;
-				x2.a = movingTime * movingTime * movingTime;
-				GUICanvas.Instance.SetFadeColor(x2);
-
 				break;
 			case MoveType.IsoscelesTriangle:
 				if (mMovingT <= 0.5f)
@@ -105,13 +99,11 @@ public class MenuCamera : MonoBehaviour
 				{
 					float movingTimePart = movingTime * 2;
 					float zdiff = Mathf.Abs(midPoint.z - mStartMenuPosition.z);
-					//float ydiff = Mathf.Abs(midPoint.y - mStartMenuPosition.y);
-					//float xdiff = Mathf.Abs(midPoint.x - mStartMenuPosition.x);
 					float x = Mathf.Lerp(mStartMenuPosition.x, midPoint.x, movingTimePart);
 					float y = Mathf.Lerp(mStartMenuPosition.y, midPoint.y, movingTimePart);
 					float z = mStartMenuPosition.z + zdiff - (zdiff * Mathf.Pow(1 - movingTimePart, 2));
 
-					// prevent other dimentions from appearing
+					// prevent other dimensions from appearing
 					if (midPoint.z < mStartMenuPosition.z)
 					{
 						z = mStartMenuPosition.z - zdiff + (zdiff * Mathf.Pow(1 - movingTimePart, 2));
@@ -123,13 +115,11 @@ public class MenuCamera : MonoBehaviour
 				{
 					float movingTimePart = (movingTime - 0.5f) * 2;
 					float zdiff = Mathf.Abs(midPoint.z - mTargetMenuPosition.z);
-					//float ydiff = Mathf.Abs(midPoint.y - mTargetMenuPosition.y);
-					//float xdiff = Mathf.Abs(midPoint.x - mTargetMenuPosition.x);
 					float x = Mathf.Lerp(midPoint.x, mTargetMenuPosition.x, movingTimePart);
 					float y = Mathf.Lerp(midPoint.y, mTargetMenuPosition.y, movingTimePart);
 					float z = midPoint.z - (zdiff * Mathf.Pow(movingTimePart, 2));
 					
-					// prevent other dimentions from appearing
+					// prevent other dimensions from appearing
 					if (midPoint.z < mTargetMenuPosition.z)
 					{
 						z = midPoint.z + (zdiff * Mathf.Pow(movingTimePart, 2));
@@ -147,8 +137,6 @@ public class MenuCamera : MonoBehaviour
 			if (mMovingT >= 1.0f)
 			{
 				transform.position = mTargetMenuPosition + mCameraOffset;
-				mTargetMenuPosition = Vector3.zero;
-				mStartMenuPosition = Vector3.zero;
 				mMoving = false;
 			}
 		}
@@ -159,40 +147,52 @@ public class MenuCamera : MonoBehaviour
 		return mMoving;
 	}
 
-	public void StartMove(GameObject menuPosition)
+	public float MovingT ()
 	{
+		if (mUseSmoothStep)
+		{
+			return Mathf.SmoothStep(0, 1, mMovingT);
+		}
+
+		return mMovingT;
+	}
+
+	public void StartMenuMove(GameObject menuPosition)
+	{
+		mTargetMenuPosition = menuPosition.transform.position;
+		mCameraMoveType = mDefaultCameraMoveType;
+		mUseSmoothStep = mDefaultUseSmoothStep;
+
+		StartCameraMove ();
+	}
+
+	public void StartLevelZoom ()
+	{
+		mTargetMenuPosition = transform.position - GlobalVariables.Instance.MAIN_CAMERA_OFFSET + GlobalVariables.Instance.MAIN_CAMERA_START_LEVEL_ZOOM;
+		mCameraMoveType = MoveType.LinerarSaw;
+		mUseSmoothStep = false;
+
+		StartCameraMove ();
+	}
+
+	void StartCameraMove()
+	{	
 		if (mMoving)
 		{
 			transform.position = mStartMenuPosition + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 		}
 
 		mStartMenuPosition = transform.position - GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
-		mTargetMenuPosition = menuPosition.transform.position;
+
 		mMoving = true;
 		mMovingT = 0;
 
-		if (mStartMenuPosition == mTargetMenuPosition)
+		if (Vector3.Distance(mStartMenuPosition, mTargetMenuPosition) < 0.01f)
 		{
 			mMovingT = 1;
 		}
 	}
 
-	public void StartLevelZoom ()
-	{	
-		if (mMoving) 
-		{
-			transform.position = mStartMenuPosition + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
-		}
-
-		mStartMenuPosition = transform.position - GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
-		mTargetMenuPosition = mStartMenuPosition + GlobalVariables.Instance.MAIN_CAMERA_START_LEVEL_ZOOM;
-		
-		mCameraMoveType = MoveType.LinerarSaw;
-		mUseSmoothStep = false;
-		mMoving = true;
-		mMovingT = 0;
-	}
-	
 	public PopupBuyMenu PopupBuyMenu ()
 	{
 		return mPopupBuyMenu;

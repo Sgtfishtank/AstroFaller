@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
 		mAS.SetActive (false);
-		mfp = GameObject.Find("Main Camera").GetComponent<FollowPlayer>();
+		mfp = GameObject.Find("InGame Camera").GetComponent<FollowPlayer>();
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 

@@ -35,17 +35,21 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	void OnDisable() 
 	{
+	}
+	
+	void OnEnable() 
+	{
 		if (mObj == null)
 		{
 			return;
 		}
-
+		
 		if (mBaseScale == Vector3.zero)
 		{
 			mBaseScale = mObj.transform.localScale;
 			mBasePosition = mObj.transform.localPosition;
 		}
-
+		
 		mPressed = false;
 		mMoveT = 0;
 		UpdateObj (mMoveT);
@@ -68,17 +72,18 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			mMoveT = Mathf.Clamp01(mMoveT - (Time.deltaTime / GlobalVariables.Instance.BUTTON_PRESS_MOVE_TIME));
 		}
 
-		float movingTime = mMoveT;
+		UpdateObj (mMoveT);
+	}
+
+	void UpdateObj(float moveT)
+	{
+		float movingTime = moveT;
+
 		if (mUseSmoothStep)
 		{
 			movingTime = Mathf.SmoothStep(0, 1, mMoveT);
 		}
 
-		UpdateObj (movingTime);
-	}
-
-	void UpdateObj(float movingTime)
-	{
 		switch (mPressAction) 
 		{
 		case PressAction.MoveBack:
