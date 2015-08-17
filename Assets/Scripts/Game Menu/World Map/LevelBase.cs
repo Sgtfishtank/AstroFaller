@@ -14,4 +14,6 @@ public abstract class LevelBase : MonoBehaviour
 	public abstract bool LockLevel ();
 
 	public abstract void setFocusLevel (float focusLevel);
+
+	public abstract bool IsPlayable();
 }

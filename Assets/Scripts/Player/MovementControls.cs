@@ -113,14 +113,17 @@ public class MovementControls
 		if (mHoverActive)
 		{
 			// revese the polarity of the gravity sigularity cap'n!
-			mRb.AddForce(new Vector3(0, -mRb.mass * Physics.gravity.y * GlobalVariables.Instance.PLAYER_HOVER, 0), ForceMode.Force);
+			mRb.AddForce(-Physics.gravity * mRb.mass);
+
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
+				float minVel = GlobalVariables.Instance.PLAYER_MIN_HOVER_SPEED;
 
 				// slow down the fall speed
-				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y) / Time.fixedDeltaTime);
+				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y + minVel) / Time.fixedDeltaTime);
+				//        f = m        *               a
 
-				//if(mRb.velocity.y <= -0.5f)
+				if(mRb.velocity.y <= -minVel)
 				{
 					mRb.AddForce(new Vector3(0, force * GlobalVariables.Instance.PLAYER_HOVER_FORCE, 0));
 				}

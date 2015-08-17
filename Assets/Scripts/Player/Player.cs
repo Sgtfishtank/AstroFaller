@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 		safeInit();
 		mAS = GameObject.Find("AstroidSpawn");
 		mAS.SetActive (false);
-		mfp = GameObject.Find("Main Camera").GetComponent<FollowPlayer>();
+		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -56,10 +56,7 @@ public class Player : MonoBehaviour
 		//transform.position = GameManager.Instance().mPlayerStartPosition.transform.position;
 		mIsDead = false;
 	}
-	public void Hover()
-	{
-		mMovementControls.Hover(mRb,10);
-	}
+
 	public void Dash()
 	{
 		if(mDashCDTime < Time.time)
@@ -96,7 +93,6 @@ public class Player : MonoBehaviour
 
 		// move player
 		mMovementControls.Move(mRb);
-		mMovementControls.Hover(mRb,10);
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;

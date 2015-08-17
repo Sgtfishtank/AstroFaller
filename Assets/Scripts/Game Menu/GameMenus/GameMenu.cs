@@ -11,6 +11,8 @@ public abstract class GameMenu : MonoBehaviour
 
 	public abstract bool IsFocused();
 
+	public abstract void UpdateMenusAndButtons ();
+
 	public abstract void BuyWithBolts ();
 
 	public abstract void BuyWithCrystals ();

@@ -18,16 +18,7 @@ public class PlayerData : MonoBehaviour
 			if (instance == null)
 			{
 				GameObject thisObject = GameObject.Find("PlayerData");
-				if (thisObject ==  null)
-				{
-					thisObject = new GameObject("PlayerData");
-					thisObject.AddComponent<PlayerData>();
-					thisObject.GetComponent<PlayerData>().mBolts = 9999;
-					thisObject.GetComponent<PlayerData>().mCrystals = 9999;
-				}
-
 				instance = thisObject.GetComponent<PlayerData>();
-				DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
@@ -39,13 +30,11 @@ public class PlayerData : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-	
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-	
 	}
 
 	public bool withdrawCrystals (int amount)

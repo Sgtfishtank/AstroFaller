@@ -18,12 +18,13 @@ public class MainGameMenu : MonoBehaviour
 		}
 	}
 
+	public GameMenu mStartMenu;
+	public GameObject mBackground;
+
 	private int WORLD_MAP_MENU_INDEX = 0;
 	private int ITEMS_MENU_INDEX = 2;
 	private int PERKS_MENU_INDEX = 1;
-	private int CRYSTAL_STORE_MENU_INDEX = 3;
-
-	public GameMenu mStartMenu;
+	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
 	private GameMenu mCurrentGameMenu;
@@ -60,41 +61,70 @@ public class MainGameMenu : MonoBehaviour
 			if (!MenuCamera.Instance.IsMoving())
 			{
 				EndChangeGameMenu();
-
-				UpdateMenusAndButtons();
 			}
 		}
 		else 
 		{
-			if (Input.GetMouseButtonUp(0))
-			{
-				Ray ray = MenuCamera.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-				int mask = Physics2D.DefaultRaycastLayers;
 
-				RaycastHit[] hits = Physics.RaycastAll(ray.origin, ray.direction, Mathf.Infinity, mask);
-				for (int i = 0; i < hits.Length; i++) 
-				{
-					//print(hits[i].collider.name);
-				}
-
-				RaycastHit hit;
-				if (Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, mask))
-				{
-					//PressButton(hit.collider.name);
-				}
-				else
-				{
-					//ShowAllMenus();
-				}
-			}
 		}
+	}
+	
+	public void Disable() 
+	{
+		print("MainGameMenu Off");
+
+		MenuCamera.Instance.gameObject.SetActive (false);
+		GUICanvas.Instance.ShowMenuButtons(false);
+		if (mBackground != null) 
+		{
+			mBackground.gameObject.SetActive (false);
+		}
+		
+		gameObject.SetActive (false);
+	}
+	
+	public void Enable() 
+	{
+		print("MainGameMenu On");
+
+		gameObject.SetActive (true);
+
+		MenuCamera.Instance.gameObject.SetActive (true);
+		GUICanvas.Instance.ShowMenuButtons(true);
+		GUICanvas.Instance.ShowIconButtons(true);
+		if (mBackground != null) 
+		{
+			mBackground.gameObject.SetActive (true);
+		}
+
+		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+
+
+		ResetAllMenusAndButtons ();
+		mStartMenu.Focus();
+		UpdateMenusAndButtons ();
 	}
 
 	public void UpdateMenusAndButtons()
 	{
-		ShowBackButton(!mGameMenus[WORLD_MAP_MENU_INDEX].IsFocused() && (mCurrentGameMenu != null));
-		GUICanvas.Instance.ShowPerkButtons(mGameMenus[PERKS_MENU_INDEX].IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
-		GUICanvas.Instance.ShowItemButtons(mGameMenus[ITEMS_MENU_INDEX].IsFocused() && !MenuCamera.Instance.PopupBuyMenu().IsOpen());
+		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+		
+		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
+
+		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
+		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
+
+		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
+		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+
+		bool showBack = (!mGameMenus [WORLD_MAP_MENU_INDEX].IsFocused () && (mCurrentGameMenu != null));
+		MenuCamera.Instance.ShowBackButton(showBack);
+		GUICanvas.Instance.ShowWorldMapButton(showBack);
+
+		for (int i = 0; i < mGameMenus.Length; i++) 
+		{
+			mGameMenus[i].UpdateMenusAndButtons();
+		}
 	}
 
 	public void ChangeToWorldMapMenu()
@@ -114,59 +144,37 @@ public class MainGameMenu : MonoBehaviour
 	
 	public void ChangeToChrystalShopMenu()
 	{
-		StartChangeGameMenu(CRYSTAL_STORE_MENU_INDEX);
+		StartChangeGameMenu(CRYSTAL_SHOP_MENU_INDEX);
 	}
 
 	public PerksMenu PerksMenu ()
 	{
-		return (PerksMenu)mGameMenus [PERKS_MENU_INDEX];
+		return (PerksMenu)mGameMenus[PERKS_MENU_INDEX];
 	}
 	
-	public ItemMenu ItemsMenu ()
+	public ItemMenu ItemsMenu()
 	{
 		return (ItemMenu)mGameMenus[ITEMS_MENU_INDEX];
+	}
+
+	public WorldMapMenu WorldMapMenu ()
+	{
+		return (WorldMapMenu)mGameMenus[WORLD_MAP_MENU_INDEX];
+	}
+	
+	public CrystalShopMenu CrystalShopMenu()
+	{
+		return (CrystalShopMenu)mGameMenus[CRYSTAL_SHOP_MENU_INDEX];
 	}
 
 	public void ResetAllMenusAndButtons ()
 	{
 		MenuCamera.Instance.PopupBuyMenu().Close();
 
-		ShowHelpMenu(false);
-		ShowOptionsMenu(false);
-		ShowPopupCraftingMenu(false);
-		ShowPopupAchievementsMenu(false);
-	}
-	
-	void ShowHelpMenu(bool show)
-	{
-		mShowHelpMenu = show;
-		MenuCamera.Instance.ShowHelpMenu(show);
-	}
-	
-	void ShowOptionsMenu(bool show)
-	{
-		mShowOptionsMenu = show;
-		MenuCamera.Instance.ShowOptionsMenu(show);
-	}
-
-	void ShowPopupCraftingMenu(bool show)
-	{
-		mShowPopupCraftingMenu = show;
-		MenuCamera.Instance.ShowPopupCraftingMenu(show);
-		GUICanvas.Instance.ShowPopupCraftingButton(show);
-	}	
-
-	void ShowPopupAchievementsMenu(bool show)
-	{
-		mShowPopupAchievementsMenu = show;
-		MenuCamera.Instance.ShowPopupAchievementsMenu(show);
-		GUICanvas.Instance.ShowPopupAchievementsButton(show);
-	}
-	
-	void ShowBackButton(bool show)
-	{
-		GUICanvas.Instance.ShowBackButton(show);
-		MenuCamera.Instance.ShowBackButton(show);
+		mShowHelpMenu = false;
+		mShowOptionsMenu = false;
+		mShowPopupCraftingMenu = false;
+		mShowPopupAchievementsMenu = false;
 	}
 
 	public void ToggleOptions ()
@@ -174,7 +182,6 @@ public class MainGameMenu : MonoBehaviour
 		bool active = mShowOptionsMenu;
 		ResetAllMenusAndButtons();
 		mShowOptionsMenu = !active;
-		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
 		UpdateMenusAndButtons ();
 	}
 
@@ -183,7 +190,6 @@ public class MainGameMenu : MonoBehaviour
 		bool active = mShowHelpMenu;
 		ResetAllMenusAndButtons();
 		mShowHelpMenu = !active;
-		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
 		UpdateMenusAndButtons ();
 	}
 
@@ -192,8 +198,6 @@ public class MainGameMenu : MonoBehaviour
 		bool active = mShowPopupCraftingMenu;
 		ResetAllMenusAndButtons();
 		mShowPopupCraftingMenu = !active;
-		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
-		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
 		UpdateMenusAndButtons ();
 	}
 
@@ -202,11 +206,9 @@ public class MainGameMenu : MonoBehaviour
 		bool active = mShowPopupAchievementsMenu;
 		ResetAllMenusAndButtons();
 		mShowPopupAchievementsMenu = !active;
-		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
-		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 		UpdateMenusAndButtons ();
 	}
-	
+
 	public void BuyWithBolts()
 	{
 		if (mCurrentGameMenu == null)
@@ -239,8 +241,8 @@ public class MainGameMenu : MonoBehaviour
 		}
 		mCurrentGameMenu = null;
 
-		MenuCamera.Instance.StartMove (mGameMenus [index].gameObject);
 		mCurrentGameMenuIndex = index;
+		MenuCamera.Instance.StartMenuMove (mGameMenus [mCurrentGameMenuIndex].gameObject);
 		
 		UpdateMenusAndButtons();
 	}

@@ -44,10 +44,24 @@ public class BonusRewardLevel : LevelBase
 		switch (mRewardType)
 		{
 		case RewardType.Bolts:
-			mRewardText.text = GlobalVariables.Instance.BonusRewardBolts(mLevelName) + " bolts";
+			if (!mUnlocked)
+			{
+				mRewardText.text = "Locked. Requierd distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
+			}
+			else 
+			{
+				mRewardText.text = GlobalVariables.Instance.BonusRewardBolts(mLevelName) + " bolts rewarded";
+			}
 			break;
 		case RewardType.Crystals:
-			mRewardText.text = GlobalVariables.Instance.BonusRewardCrystals(mLevelName) + " crystals";
+			if (!mUnlocked)
+			{
+				mRewardText.text = "Locked. Requierd distance: " + GlobalVariables.Instance.DistanceCritera(mLevelName);
+			}
+			else 
+			{
+				mRewardText.text = GlobalVariables.Instance.BonusRewardCrystals(mLevelName) + " crystals rewarded";
+			}
 			break;
 		default:
 			print("Error RewardType in Update" + mRewardType);
@@ -58,6 +72,11 @@ public class BonusRewardLevel : LevelBase
 	public override string LevelName ()
 	{
 		return mLevelName;
+	}
+	
+	public override bool IsPlayable()
+	{
+		return false;
 	}
 
 	public override bool UnlockLevel()

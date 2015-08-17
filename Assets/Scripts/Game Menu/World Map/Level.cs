@@ -5,8 +5,8 @@ public class Level : LevelBase
 {
 	public string mLevelName;
 	
-	private int mTotalDistance;
-	private int mTotalBolts;
+	private int mTotalDistance = 0;
+	private int mTotalBolts = 0;
 	private TextMesh mTitleText;
 	private	TextMesh mTotalDistanceText;
 	private	MeshRenderer mPictureImage;
@@ -40,12 +40,25 @@ public class Level : LevelBase
 	void Update () 
 	{
 		mTitleText.text = mLevelName;
-		mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
+
+		if (!mUnlocked)
+		{
+			mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
+		}
+		else
+		{
+			mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
+		}
 	}
 	
 	public override string LevelName ()
 	{
 		return mLevelName;
+	}
+	
+	public override bool IsPlayable()
+	{
+		return true;
 	}
 
 	public override bool UnlockLevel()
