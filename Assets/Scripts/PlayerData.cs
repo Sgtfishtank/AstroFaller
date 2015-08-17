@@ -26,6 +26,9 @@ public class PlayerData : MonoBehaviour
 
 	private int mBolts;
 	private int mCrystals;
+	private int mTotalBolts;
+	private int mTotalCrystals;
+	private int mTotalDistance;
 
 	// Use this for initialization
 	void Start () 
@@ -35,6 +38,31 @@ public class PlayerData : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+	}
+
+	public int bolts()
+	{
+		return mBolts;
+	}
+
+	public int crystals()
+	{
+		return mCrystals;
+	}
+	
+	public int totalBolts()
+	{
+		return mTotalBolts;
+	}
+	
+	public int totalCrystals()
+	{
+		return mTotalCrystals;
+	}
+	
+	public int totalDistance()
+	{
+		return mTotalDistance;
 	}
 
 	public bool withdrawCrystals (int amount)
@@ -80,6 +108,7 @@ public class PlayerData : MonoBehaviour
 		}
 
 		mBolts += amount;
+		mTotalBolts += amount;
 		return true;
 	}
 
@@ -92,6 +121,19 @@ public class PlayerData : MonoBehaviour
 		}
 
 		mCrystals += amount;
+		mTotalCrystals += amount;
+		return true;
+	}
+
+	public bool depositDistance (int amount)
+	{
+		if (amount < 0)
+		{
+			print("Error amount in depositDistance " + amount);
+			return false;
+		}
+
+		mTotalDistance += amount;
 		return true;
 	}
 }

@@ -31,6 +31,7 @@ public class WorldGen : MonoBehaviour
 	private GameObject mDirectionalLight;
 	public GameObject mDirectionalLightPrefab;
 	public GameObject mPlayerPrefab;
+	public float mStartTime = -1;
 
 	// Use this for initialization
 	void Start ()
@@ -64,7 +65,12 @@ public class WorldGen : MonoBehaviour
 				mIntroPhase = false;
 
 				mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
-				
+
+				mCurrentPos = mPlayer.transform.position.y - mOffset;
+				mPlayer.GetComponent<Player>().StartGame();
+
+				mStartTime = Time.time;
+
 				mCurrentSegment = Instantiate(mSegments[1], new Vector3(0,mCurrentPos,0), Quaternion.identity) as GameObject;
 			}
 		}
@@ -92,6 +98,16 @@ public class WorldGen : MonoBehaviour
 		}
 	}
 
+	public float LevelRunTime()
+	{
+		if (mStartTime < 0)
+		{
+			return -1;
+		}
+
+		return Time.time - mStartTime;
+	}
+
 	public void Disable() 
 	{
 		print("WorldGen Off");
@@ -101,8 +117,11 @@ public class WorldGen : MonoBehaviour
 		gameObject.SetActive (false);
 		mDirectionalLight.SetActive (false);
 
+		mStartTime = -1;
+
 		if (mPlayer != null) 
 		{
+			mPlayer.GetComponent<Player>().DepositData();
 			mPlayer.gameObject.SetActive (false);
 		}
 	}
@@ -119,6 +138,7 @@ public class WorldGen : MonoBehaviour
 		{
 			mPlayer.gameObject.SetActive (true);
 			mPlayer.GetComponent<Rigidbody>().useGravity = true;
+			mPlayer.transform.position = Vector3.zero;
 		}
 
 		mDirectionalLight.SetActive (true);

@@ -24,6 +24,11 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	void Start()
 	{
+	}
+
+	public void Init()
+	{
+		mObj = GUICanvas.Instance.GUIObject(name);
 		if (mObj != null)
 		{
 			mBaseScale = mObj.transform.localScale;

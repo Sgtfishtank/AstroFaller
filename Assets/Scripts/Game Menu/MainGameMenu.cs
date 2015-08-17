@@ -257,4 +257,14 @@ public class MainGameMenu : MonoBehaviour
 
 		UpdateMenusAndButtons();
 	}
+
+	public GameObject GUIObject (string name)
+	{
+		switch (name) 
+		{
+		default:
+			return null;
+			break;
+		}
+	}
 }

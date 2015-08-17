@@ -9,8 +9,7 @@ public class AstroidRemove : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		a = GameObject.Find("AstroidSpawn").GetComponent<AstroidSpawn>();
-		mpl = GameObject.Find("Player");
+		mpl = WorldGen.Instance.mPlayer;
 	}
 	
 	// Update is called once per frame

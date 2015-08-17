@@ -186,6 +186,16 @@ public class MovementControls
 		{
 			rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
 		}
+
+		// clamp positoin x
+		float ply = InGameCamera.Instance.GetComponent<Camera> ().WorldToScreenPoint(rb.transform.position).y;
+		Vector3 left = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(50, ply, InGameCamera.Instance.transform.position.z));
+		Vector3 right = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(Screen.width - 50, ply, InGameCamera.Instance.transform.position.z));
+		Vector3 pl2 = rb.transform.position;
+		Debug.Log(left);
+		Debug.Log(right);
+		pl2.x = Mathf.Clamp (pl2.x, right.x, left.x);
+		rb.transform.position = pl2;
 	}
 
 	public bool isHovering ()

@@ -51,8 +51,7 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mWorldMapButton;
 	private GameObject mPlayText;
 
-	// Use this for initialization
-	void Start () 
+	void Awake()
 	{
 		mHelpMenu = transform.Find("Help").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
@@ -69,10 +68,15 @@ public class MenuCamera : MonoBehaviour
 		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
 		
 		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 10);
-
+		
 		GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
-
+		
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
+	}
+
+	// Use this for initialization
+	void Start () 
+	{
 		mPopupBuyMenu.Init();
 
 		ShowHelpMenu(false);
@@ -242,4 +246,45 @@ public class MenuCamera : MonoBehaviour
 	{
 		mPopupAchievementsMenu.SetActive (show);
 	}
+
+	public GameObject GUIObject (string name)
+	{
+		switch (name) 
+		{
+		case "CraftingButton":
+			return transform.Find("Icons/workshop_icon").gameObject;	
+		case "OptionsButton":
+			return transform.Find("Icons/settings_icon").gameObject;			
+		case "HelpButton":
+			return transform.Find("Icons/info_icon").gameObject;			
+		case "AchievementsButton":
+			return transform.Find("Icons/achievement_icon").gameObject;		
+		case "WorldMapButton":
+			return transform.Find("Icons/worldmap_icon").gameObject;	
+		case "QuestsButton":
+			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_1").gameObject;	
+		case "StatsButton":
+			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_2").gameObject;
+		case "KimJongUnBoardsButton":
+			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_3").gameObject;
+		case "ItemsButton":
+			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_1").gameObject;
+		case "PerksButton":
+			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_2").gameObject;
+		case "CrystalStoreButton":
+			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_3").gameObject;
+		case "BoltsButton":
+			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
+		case "CrystalsButton 1":
+			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
+		case "PlayLevelButton":
+			return transform.Find("PlayText/start_button").gameObject;
+		case "BackToMenuButton":
+			return null;
+		default:
+			return null;
+			break;
+		}
+	}
+
 }
