@@ -28,6 +28,10 @@ public class MenuCamera : MonoBehaviour
 
 	public MoveType mDefaultCameraMoveType;
 	public bool mDefaultUseSmoothStep;
+	public GameObject mPopupCraftingMenuPrefab;
+	public GameObject mPopupAchievementsMenuPrefab;
+	public GameObject mHelpMenuPrefab;
+	public GameObject mOptionsMenuPrefab;
 
 	private MoveType mCameraMoveType;
 	private bool mUseSmoothStep;
@@ -56,6 +60,14 @@ public class MenuCamera : MonoBehaviour
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
 		mPlayText = transform.Find("PlayText").gameObject;
 		mMoving = false;
+		
+		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
+		
+		GlobalVariables.Instance.Instanciate (mPopupAchievementsMenuPrefab, mPopupAchievementsMenu.transform, 19);
+		
+		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
+		
+		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 10);
 
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
 		mPopupBuyMenu.Init();

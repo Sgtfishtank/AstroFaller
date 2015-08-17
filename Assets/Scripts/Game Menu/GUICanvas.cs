@@ -12,7 +12,7 @@ public class GUICanvas : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				GameObject thisObject = GameObject.Find("Canvas");
+				GameObject thisObject = GameObject.Find("GUICanvas");
 				instance = thisObject.GetComponent<GUICanvas>();
 			}
 			return instance;

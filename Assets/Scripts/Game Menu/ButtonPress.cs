@@ -24,8 +24,15 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	void Start()
 	{
-		mBaseScale = mObj.transform.localScale;
-		mBasePosition = mObj.transform.localPosition;
+		if (mObj != null)
+		{
+			mBaseScale = mObj.transform.localScale;
+			mBasePosition = mObj.transform.localPosition;
+		}
+		else
+		{
+			enabled = false;	
+		}
 	}
 
 	public void OnPointerDown (PointerEventData eventData) 
@@ -65,7 +72,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		if (mPressed) 
 		{
 			mMoveT = Mathf.Clamp01(mMoveT + (Time.deltaTime / GlobalVariables.Instance.BUTTON_PRESS_MOVE_TIME));
-
 		}
 		else 
 		{

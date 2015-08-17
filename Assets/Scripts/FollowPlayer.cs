@@ -17,6 +17,11 @@ public class FollowPlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		if (mplayer == null)
+		{
+			mplayer = WorldGen.Instance.mPlayer.transform;
+		}
+
 		Vector3 pos = transform.position;
 		pos.z = -zdist;
 		pos.y = mplayer.position.y-ydist;

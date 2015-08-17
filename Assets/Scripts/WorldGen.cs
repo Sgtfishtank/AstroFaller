@@ -18,7 +18,7 @@ public class WorldGen : MonoBehaviour
 	}
 
 	public GameObject[] mSegments;
-	private GameObject mCurrentSegment;
+	private GameObject mCurrentSegment = null;
 	private GameObject mNextSegment;
 	public GameObject mPlayer;
 	private bool mFirstTime = true;
@@ -28,11 +28,21 @@ public class WorldGen : MonoBehaviour
 
 	public bool mIntroPhase;
 	public float mIntroPhaseT;
+	private GameObject mDirectionalLight;
+	public GameObject mDirectionalLightPrefab;
+	public GameObject mPlayerPrefab;
 
 	// Use this for initialization
 	void Start ()
 	{
 		mPlayer = GameObject.Find("Player");
+		if (mPlayer == null)
+		{
+			mPlayer = GameObject.Instantiate(mPlayerPrefab);
+		}
+
+		mDirectionalLight = GameObject.Instantiate (mDirectionalLightPrefab);
+		mDirectionalLight.SetActive (false);
 
 		WorldGen.Instance.gameObject.SetActive (false);
 	}
@@ -52,6 +62,10 @@ public class WorldGen : MonoBehaviour
 			{
 				GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
 				mIntroPhase = false;
+
+				mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
+				
+				mCurrentSegment = Instantiate(mSegments[1], new Vector3(0,mCurrentPos,0), Quaternion.identity) as GameObject;
 			}
 		}
 		else
@@ -62,6 +76,7 @@ public class WorldGen : MonoBehaviour
 				mCurrentSegment = mNextSegment;
 				mNextSegment = Instantiate(mSegments[UnityEngine.Random.Range(0,mSegments.Length)],
 				                           new Vector3 (0,mCurrentPos-mOffset,0),Quaternion.identity) as GameObject;
+
 				mCurrentPos -= mOffset;
 			}
 
@@ -70,6 +85,8 @@ public class WorldGen : MonoBehaviour
 				mFirstTime = false;
 				mNextSegment = Instantiate(mSegments[UnityEngine.Random.Range(0,mSegments.Length)],
 				                           new Vector3 (0,mCurrentPos -mOffset,0),Quaternion.identity) as GameObject;
+				
+
 				mCurrentPos -= mOffset;
 			}
 		}
@@ -82,6 +99,7 @@ public class WorldGen : MonoBehaviour
 		InGameCamera.Instance.gameObject.SetActive (false);
 		GUICanvas.Instance.ShowInGameButtons(false);
 		gameObject.SetActive (false);
+		mDirectionalLight.SetActive (false);
 
 		if (mPlayer != null) 
 		{
@@ -102,11 +120,8 @@ public class WorldGen : MonoBehaviour
 			mPlayer.gameObject.SetActive (true);
 			mPlayer.GetComponent<Rigidbody>().useGravity = true;
 		}
-		
-		mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
-		
-		mCurrentSegment = Instantiate(mSegments[1], new Vector3(0,mCurrentPos,0), Quaternion.identity) as GameObject;
 
+		mDirectionalLight.SetActive (true);
 		gameObject.SetActive (true);
 		
 		mIntroPhase = true;

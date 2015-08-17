@@ -19,6 +19,7 @@ public class MainGameMenu : MonoBehaviour
 	}
 
 	public GameMenu mStartMenu;
+	public GameObject mBackgroundPrefab;
 	public GameObject mBackground;
 
 	private int WORLD_MAP_MENU_INDEX = 0;
@@ -37,6 +38,8 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		mBackground = GameObject.Instantiate (mBackgroundPrefab);
+
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 		if (mStartMenu == null)
 		{

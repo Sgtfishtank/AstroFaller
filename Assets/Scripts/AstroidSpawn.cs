@@ -23,13 +23,15 @@ public class AstroidSpawn : MonoBehaviour {
 		mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
 		mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 		mAstroids = new List<GameObject>();
-		mPlayerObj = GameObject.Find ("Player");
-		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
+
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		mPlayerObj = WorldGen.Instance.mPlayer;
+		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
+
 		if(Time.time > mLastSpawn+mCd && mAstroids.Count < mMaxAstroids)
 		{
 			mLastSpawn = Time.time +mCd;
