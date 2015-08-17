@@ -27,7 +27,7 @@ public class WorldGen : MonoBehaviour
 	private string mCurrentLevel;
 
 	public bool mIntroPhase;
-	private float mIntroPhaseT;
+	public float mIntroPhaseT;
 
 	// Use this for initialization
 	void Start ()
