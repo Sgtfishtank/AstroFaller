@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ForceField : Item 
 {
+	public GameObject mPrefab;
+
 	private bool mUnlocked;
 	private int mItemLevel;
 	
@@ -13,7 +15,7 @@ public class ForceField : Item
 
 	public override void Init()
 	{
-
+		GlobalVariables.Instance.Instanciate (mPrefab, transform, 2.593437f);
 	}
 
 	// Update is called once per frame

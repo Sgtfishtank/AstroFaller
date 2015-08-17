@@ -4,6 +4,7 @@ using System.Collections;
 public class Level : LevelBase 
 {
 	public string mLevelName;
+	public GameObject mPrefab;
 	
 	private int mTotalDistance = 0;
 	private int mTotalBolts = 0;
@@ -21,6 +22,13 @@ public class Level : LevelBase
 
 	public override void Init()
 	{
+		GameObject gab = GameObject.Instantiate (mPrefab);
+		gab.transform.parent = transform;
+		gab.transform.localPosition = Vector3.zero;
+		gab.transform.localRotation = Quaternion.identity;
+		gab.transform.localScale = Vector3.one;
+		gab.transform.name = "level";
+
 		mTitleText = transform.Find ("level/level name text").GetComponent<TextMesh> ();
 		mTotalDistanceText = transform.Find ("level/top distance text").GetComponent<TextMesh> ();
 		mPictureImage = transform.Find ("level/level picture").GetComponent<MeshRenderer> ();
