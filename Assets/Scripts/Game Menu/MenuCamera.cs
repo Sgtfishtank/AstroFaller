@@ -50,6 +50,7 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
 	private GameObject mPlayText;
+	private GameObject mPlayTutorial;
 
 	void Awake()
 	{
@@ -59,6 +60,7 @@ public class MenuCamera : MonoBehaviour
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
 		mPlayText = transform.Find("PlayText").gameObject;
+		mPlayTutorial = transform.Find("PlayTutorial").gameObject;
 		mMoving = false;
 		
 		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
@@ -70,6 +72,8 @@ public class MenuCamera : MonoBehaviour
 		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 10);
 		
 		GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
+
+		GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayTutorial.transform, 1);
 		
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
 	}
@@ -219,7 +223,9 @@ public class MenuCamera : MonoBehaviour
 	
 	public void ShowPlayText (bool show)
 	{
-		mPlayText.SetActive(show);
+		bool isTutorial = MainGameMenu.Instance.WorldMapMenu().IsTutorial();
+		mPlayText.SetActive(show && (!isTutorial));
+		mPlayTutorial.SetActive(show && isTutorial);
 	}
 
 	public void ShowBackButton (bool show)
@@ -277,8 +283,10 @@ public class MenuCamera : MonoBehaviour
 			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
 		case "CrystalsButton 1":
 			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
-		case "PlayLevelButton":
+		case "PlayLevelButton 0":
 			return transform.Find("PlayText/start_button").gameObject;
+		case "PlayLevelButton 1":
+			return transform.Find("PlayTutorial/start_button").gameObject;
 		case "BackToMenuButton":
 			return null;
 		default:

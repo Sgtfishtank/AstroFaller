@@ -20,11 +20,18 @@ public class WorldGen : MonoBehaviour
 	public GameObject[] mSegments;
 	private GameObject mCurrentSegment = null;
 	private GameObject mNextSegment;
-	public GameObject mPlayer;
-	private bool mFirstTime = true;
-	private float mCurrentPos =-25;
+	//private bool mFirstTime = false;
+	private float mCurrentPos;
 	private float mOffset = 50;
+
+	public GameObject mPlayer;
 	private string mCurrentLevel;
+	
+	private GameObject[] mBgSegments;
+	private GameObject mCurrentBgSegment;
+	private GameObject mNextBgSegment;
+	private float mCurrentBgPos;
+	private float mBgOffset = 600;
 
 	public bool mIntroPhase;
 	public float mIntroPhaseT;
@@ -33,8 +40,9 @@ public class WorldGen : MonoBehaviour
 	public GameObject mPlayerPrefab;
 	public float mStartTime = -1;
 
-	// Use this for initialization
-	void Start ()
+	public float mUsualShiftkingRailgun = 0;
+
+	void Awake()
 	{
 		mPlayer = GameObject.Find("Player");
 		if (mPlayer == null)
@@ -44,7 +52,11 @@ public class WorldGen : MonoBehaviour
 
 		mDirectionalLight = GameObject.Instantiate (mDirectionalLightPrefab);
 		mDirectionalLight.SetActive (false);
+	}
 
+	// Use this for initialization
+	void Start ()
+	{
 		WorldGen.Instance.gameObject.SetActive (false);
 	}
 
@@ -64,29 +76,20 @@ public class WorldGen : MonoBehaviour
 				GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
 				mIntroPhase = false;
 
-				mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
-
-				mCurrentPos = mPlayer.transform.position.y - mOffset;
 				mPlayer.GetComponent<Player>().StartGame();
 
 				mStartTime = Time.time;
 
-				mCurrentSegment = Instantiate(mSegments[1], new Vector3(0,mCurrentPos,0), Quaternion.identity) as GameObject;
+				SpawnSegments();
 			}
 		}
 		else
 		{
-			if(mCurrentPos > mPlayer.transform.position.y && !mFirstTime)
+			if(mCurrentPos > mPlayer.transform.position.y)
 			{
-				Destroy(mCurrentSegment);
-				mCurrentSegment = mNextSegment;
-				mNextSegment = Instantiate(mSegments[UnityEngine.Random.Range(0,mSegments.Length)],
-				                           new Vector3 (0,mCurrentPos-mOffset,0),Quaternion.identity) as GameObject;
-
-				mCurrentPos -= mOffset;
+				NextSegment();
 			}
-
-			else if (mCurrentPos > mPlayer.transform.position.y)
+			/*else if (mCurrentPos > mPlayer.transform.position.y)
 			{
 				mFirstTime = false;
 				mNextSegment = Instantiate(mSegments[UnityEngine.Random.Range(0,mSegments.Length)],
@@ -94,8 +97,81 @@ public class WorldGen : MonoBehaviour
 				
 
 				mCurrentPos -= mOffset;
+			}*/
+			if (mCurrentBgPos > mPlayer.transform.position.y)
+			{
+				NextBgSegment();
+			}
+
+			if (mPlayer.transform.position.y < -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL)
+			{
+				ShiftBackWorld();
 			}
 		}
+	}
+
+	void NextSegment ()
+	{
+		Destroy(mCurrentSegment);
+		mCurrentSegment = mNextSegment;
+		mCurrentPos -= mOffset;
+
+		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0,mSegments.Length)];
+		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
+		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+	}
+
+	void NextBgSegment ()
+	{
+		Vector3 pos; 
+		GameObject segmentPrefab;
+
+		Destroy(mCurrentBgSegment);
+		mCurrentBgSegment = mNextBgSegment;
+		mCurrentBgPos -= mBgOffset;
+
+		segmentPrefab = mBgSegments[UnityEngine.Random.Range(0, mBgSegments.Length)];
+		pos = new Vector3 (0, mCurrentBgPos, 0);
+		pos += segmentPrefab.transform.position;
+		pos += Random.insideUnitSphere * 100;
+		mNextBgSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+		mNextBgSegment.transform.localScale = segmentPrefab.transform.localScale * (0.75f + (Random.value * 0.5f));
+	}
+
+	void SpawnSegments()
+	{
+		mCurrentPos = mPlayer.transform.position.y - mOffset;
+		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
+		mCurrentSegment = Instantiate(mSegments[1], pos, Quaternion.identity) as GameObject;
+		
+		mCurrentPos -= mOffset;
+		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0, mSegments.Length)];
+		pos = new Vector3 (0, mCurrentPos, 0);
+		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+	}
+
+	void SpawnBgSegments()
+	{
+		Vector3 pos; 
+		GameObject segmentPrefab;
+
+		mCurrentBgPos = mPlayer.transform.position.y;
+
+		segmentPrefab = mBgSegments [1];
+		pos = new Vector3 (0, mCurrentBgPos, 0);
+		pos += segmentPrefab.transform.position;
+		pos += Random.insideUnitSphere * 100;
+		mCurrentBgSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+		mCurrentBgSegment.transform.localScale = segmentPrefab.transform.localScale * (0.75f + (Random.value * 0.5f));
+
+		mCurrentBgPos -= mBgOffset;
+
+		segmentPrefab = mBgSegments[UnityEngine.Random.Range(0, mBgSegments.Length)];
+		pos = new Vector3 (0, mCurrentBgPos, 0);
+		pos += segmentPrefab.transform.position;
+		pos += Random.insideUnitSphere * 100;
+		mNextBgSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+		mNextBgSegment.transform.localScale = segmentPrefab.transform.localScale * (0.75f + (Random.value * 0.5f));
 	}
 
 	public float LevelRunTime()
@@ -106,6 +182,27 @@ public class WorldGen : MonoBehaviour
 		}
 
 		return Time.time - mStartTime;
+	}
+
+	public float fallShift()
+	{
+		return mUsualShiftkingRailgun;
+	}
+	
+	void ShiftBackWorld()
+	{
+		float shift = -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL;
+
+		mUsualShiftkingRailgun -= shift;
+		mCurrentBgPos -= shift;
+		mCurrentPos -= shift;
+		mCurrentSegment.transform.position -= new Vector3(0, shift, 0);
+		mCurrentBgSegment.transform.position -= new Vector3(0, shift, 0);
+		mNextSegment.transform.position -= new Vector3(0, shift, 0);
+		mNextBgSegment.transform.position -= new Vector3(0, shift, 0);
+		mPlayer.transform.position -= new Vector3(0, shift, 0);
+
+		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
 
 	public void Disable() 
@@ -143,7 +240,12 @@ public class WorldGen : MonoBehaviour
 
 		mDirectionalLight.SetActive (true);
 		gameObject.SetActive (true);
-		
+
+		mBgSegments = Resources.LoadAll<GameObject>("Parralax") as GameObject[];
+		mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
+
+		SpawnBgSegments();
+
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
 	}

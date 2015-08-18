@@ -128,12 +128,11 @@ public class MovementControls
 				}
 
 				// stop at alomst standstill
-				if(mRb.velocity.y > -0.5f)
-				{
-					//mRb.velocity = new Vector2(mRb.velocity.x, 0);
-				}
+				//if(mRb.velocity.y > -0.5f)
+				//{
+				//	mRb.velocity = new Vector2(mRb.velocity.x, 0);
+				//}
 			}
-			Debug.Log(mRb.velocity.y);
 		}
 	}
 	
@@ -187,15 +186,10 @@ public class MovementControls
 			rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
 		}
 
-		// clamp positoin x
-		float ply = InGameCamera.Instance.GetComponent<Camera> ().WorldToScreenPoint(rb.transform.position).y;
-		Vector3 left = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(50, ply, InGameCamera.Instance.transform.position.z));
-		Vector3 right = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(Screen.width - 50, ply, InGameCamera.Instance.transform.position.z));
-		Vector3 pl2 = rb.transform.position;
-		Debug.Log(left);
-		Debug.Log(right);
-		pl2.x = Mathf.Clamp (pl2.x, right.x, left.x);
-		rb.transform.position = pl2;
+		// clamp position in x axis
+		Vector3 pl2 = rb.transform.position + (rb.transform.rotation * rb.centerOfMass);
+		pl2.x = Mathf.Clamp (pl2.x, -GlobalVariables.Instance.PLAYER_MINMAX_X, GlobalVariables.Instance.PLAYER_MINMAX_X);
+		rb.transform.position = pl2 - (rb.transform.rotation * rb.centerOfMass);
 	}
 
 	public bool isHovering ()

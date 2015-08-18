@@ -81,28 +81,29 @@ public class Player : MonoBehaviour
 	
 	void FixedUpdate()
 	{
+		// jump and hover player
+		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
+		
+		// move player
+		mMovementControls.Move(mRb);
+
 		// hover physics
 		mMovementControls.Hover(mRb,10);
 	}
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.E))
-		{
-			Dash();
-		}
-
 		// do nothing if dead
 		if(mIsDead)
 		{
 			return;
 		}
 
-		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
+		if(Input.GetKeyDown(KeyCode.E))
+		{
+			Dash();
+		}
 
-		// move player
-		mMovementControls.Move(mRb);
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;
@@ -146,7 +147,7 @@ public class Player : MonoBehaviour
 
 	public int distance()
 	{
-		int dist = (int)(transform.position.y - mStartYValue);
+		int dist = (int)(transform.position.y - mStartYValue - WorldGen.Instance.fallShift());
 		return -dist;
 	}
 

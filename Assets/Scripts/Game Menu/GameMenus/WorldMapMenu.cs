@@ -264,6 +264,11 @@ public class WorldMapMenu : GameMenu
 
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
+	
+	public bool IsTutorial ()
+	{
+		return (mCurrentLevelFocusIndex == 0);
+	}
 
 	public bool IsPlayLevelPhase()
 	{

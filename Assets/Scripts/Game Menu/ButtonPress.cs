@@ -21,6 +21,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private bool mPressed;
 	private Vector3 mBaseScale = Vector3.zero;
 	private Vector3 mBasePosition;
+	private Vector3 mOffset;
 
 	void Start()
 	{
@@ -28,7 +29,23 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	public void Init()
 	{
-		mObj = GUICanvas.Instance.GUIObject(name);
+
+		if (GetComponents<ButtonPress>().Length < 2)
+		{
+			mObj = GUICanvas.Instance.GUIObject(name);
+		}
+		else
+		{
+			ButtonPress[] bp = GetComponents<ButtonPress>();
+			for (int i = 0; i < bp.Length; i++) 
+			{
+				if (bp[i] == this) 
+				{
+					mObj = GUICanvas.Instance.GUIObject(name + " " + i);
+				}
+			}
+		}
+
 		if (mObj != null)
 		{
 			mBaseScale = mObj.transform.localScale;

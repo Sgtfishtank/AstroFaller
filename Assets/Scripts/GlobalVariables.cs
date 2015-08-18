@@ -9,7 +9,7 @@ public class GlobalVariables : MonoBehaviour
 	/*----------------------------------------AstroidSpawn----------------------------------*/
 	public float ASTROID_SPAWN_SPAWNRATE 				= 5f   ;
 	public float ASTROID_SPAWN_XOFFSET					= 10f  ; 
-	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f  ;
+	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f ;
 	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5    ;
 
 	/*----------------------------------------Player----------------------------------------*/
@@ -25,8 +25,10 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	= 10f  ;
 	public float PLAYER_HOVER_FORCE						= 15f	;
 	public float PLAYER_MIN_HOVER_SPEED 				= 1.5f;
+	public float PLAYER_MINMAX_X						= 5;
 
 	// WorldGen
+	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;
 	public float WORLD_GEN_INTRO_TIME					= 3f;
 
 	// MAIN MENU CAMERA

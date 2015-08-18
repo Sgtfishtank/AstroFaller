@@ -3,29 +3,27 @@ using System.Collections;
 
 public class FollowPlayer : MonoBehaviour {
 
-	// Use this for initialization
 	public Transform mplayer;
 	public float zdist;
 	public float ydist;
-	private bool mDash =  false;
 	public float mDashDelay;
-	void Start ()
-	{
-
-	}
 	
-	// Update is called once per frame
-	void Update ()
+	private bool mDash =  false;
+
+	// Use this for initialization
+	void Start ()
 	{
 		if (mplayer == null)
 		{
 			mplayer = WorldGen.Instance.mPlayer.transform;
 		}
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+		UpdatePosition();
 
-		Vector3 pos = transform.position;
-		pos.z = -zdist;
-		pos.y = mplayer.position.y-ydist;
-		transform.position = pos;
 		if(mDash)
 		{
 			if(ydist > 7.1f)
@@ -53,8 +51,17 @@ public class FollowPlayer : MonoBehaviour {
 			}
 		}
 	}
+
 	public void Dash()
 	{
 		mDash = true;
+	}
+	
+	public void UpdatePosition ()
+	{
+		Vector3 pos = transform.position;
+		pos.z = -zdist;
+		pos.y = mplayer.position.y + (mplayer.transform.rotation * mplayer.GetComponent<Rigidbody>().centerOfMass).y;
+		transform.position = pos;
 	}
 }

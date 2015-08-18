@@ -23,7 +23,7 @@ public class InGameCamera : MonoBehaviour
 	{
 		InGameCamera.Instance.gameObject.SetActive (false);
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
