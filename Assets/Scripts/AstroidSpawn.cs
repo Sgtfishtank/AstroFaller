@@ -19,17 +19,19 @@ public class AstroidSpawn : MonoBehaviour {
 
 	void Start ()
 	{
-		mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
-		mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
-		mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 		mAstroids = new List<GameObject>();
-		mPlayerObj = GameObject.Find ("Player");
-		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
+
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
+		mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
+		mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
+		mPlayerObj = WorldGen.Instance.mPlayer;
+		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
+
 		if(Time.time > mLastSpawn+mCd && mAstroids.Count < mMaxAstroids)
 		{
 			mLastSpawn = Time.time +mCd;
@@ -42,6 +44,9 @@ public class AstroidSpawn : MonoBehaviour {
 			GameObject instace = Instantiate(mAstroidTypes[astroid],
 			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayerObj.transform.position.y +y , 0),
 			                                 angel) as GameObject;
+
+			instace.GetComponent<AstroidRemove>().a = this;
+
 			//add velocity
 			instace.GetComponent<Rigidbody>().velocity = new Vector3(
 				UnityEngine.Random.Range(2,5)*(-x), mPlRigid.velocity.y-y, 0);
@@ -56,8 +61,8 @@ public class AstroidSpawn : MonoBehaviour {
 	}
 	public void RemoveAstroid(GameObject g)
 	{
-		GameObject t = mAstroids.Find(x => x.gameObject == g);
+		//GameObject t = mAstroids.Find(x => x.gameObject == g);
 		mAstroids.Remove(g);
-		Destroy(t);
+		Destroy(g);
 	}
 }

@@ -10,6 +10,7 @@ public class BonusRewardLevel : LevelBase
 	}
 	public string mLevelName;
 	public RewardType mRewardType;
+	public GameObject mPrefab;
 	
 	private TextMesh mTitleText;
 	private TextMesh mRewardText;
@@ -24,6 +25,13 @@ public class BonusRewardLevel : LevelBase
 
 	public override void Init()
 	{
+		GameObject gab = GameObject.Instantiate (mPrefab);
+		gab.transform.parent = transform;
+		gab.transform.localPosition = Vector3.zero;
+		gab.transform.localRotation = Quaternion.identity;
+		gab.transform.localScale = Vector3.one;
+		gab.transform.name = "bonus reward";
+
 		mTitleText = transform.Find ("bonus reward/bonus text").GetComponent<TextMesh>();
 		mRewardText = transform.Find ("bonus reward/reward text").GetComponent<TextMesh>();
 		mPictureImage = transform.Find ("bonus reward/bonus_orb 2/bonus_orb").GetComponent<MeshRenderer>();

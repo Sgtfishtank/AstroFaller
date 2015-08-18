@@ -4,6 +4,7 @@ using System.Collections;
 public class LifePerk : Perk 
 {
 	public string mPerkName;
+	public GameObject mPrefab;
 	
 	private bool mMainUnlocked;
 	private bool mLeftUnlocked;
@@ -26,6 +27,8 @@ public class LifePerk : Perk
 			mPerkName = gameObject.name;
 		}
 		
+		GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+
 		mTitleText = transform.Find ("Life/Life+ text").GetComponent<TextMesh> ();
 		mRight3 = transform.Find ("Life/perks_air 3").gameObject;
 		mLeft4 = transform.Find ("Life/perks_air 4").gameObject;

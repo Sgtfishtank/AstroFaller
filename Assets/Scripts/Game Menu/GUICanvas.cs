@@ -12,7 +12,7 @@ public class GUICanvas : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				GameObject thisObject = GameObject.Find("Canvas");
+				GameObject thisObject = GameObject.Find("GUICanvas");
 				instance = thisObject.GetComponent<GUICanvas>();
 			}
 			return instance;
@@ -31,6 +31,7 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mPlayLevelButton;
 	private GameObject mBackToMenuButton;
 	private Image mFadeImage;
+	private bool mShowDebugGUI;
 
 	// Use this for initialization
 	void Start () 
@@ -52,6 +53,12 @@ public class GUICanvas : MonoBehaviour
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
 		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
 
+		ButtonPress[] buttonPresss = transform.GetComponentsInChildren<ButtonPress>(true);
+		for (int i = 0; i < buttonPresss.Length; i++) 
+		{
+			buttonPresss[i].Init();	
+		}
+
 		showPlayLevelButton(false);
 		ShowIconButtons (true);
 		ShowWorldMapButton(false);
@@ -61,11 +68,58 @@ public class GUICanvas : MonoBehaviour
 		ShowItemButtons(false);
 		ShowPerkButtons(false);
 		ShowBackToMenuButton(false);
+
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		if ((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift)))
+		{
+			mShowDebugGUI = true;
+		}
+	}
+
+	void OnGUI()
+	{
+		if (!mShowDebugGUI)
+		{
+			return;
+		}
+
+		int startX = 10;
+		int startY = 10;
+
+		GUI.Box(new Rect(10, 10, 200, 200), "Debug Window");
+	 	startX += 10;
+		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Time on level: " + WorldGen.Instance.LevelRunTime());
+		startY += 24;
+
+		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().colectedBolts());
+		startY += 24;
+
+		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().colectedCrystals());
+		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().distance());
+		startY += 24;
+
+		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts: " + PlayerData.Instance.crystals());
+		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals: " + PlayerData.Instance.crystals());
+		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts Totla: " + PlayerData.Instance.totalBolts());
+		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
+		startY += 24;
+
+		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + PlayerData.Instance.totalDistance());
+		startY += 24;
 	}
 
 	public void SetFadeColor(Color col)
@@ -241,5 +295,27 @@ public class GUICanvas : MonoBehaviour
 	public void ShowBackToMenuButton(bool show)
 	{
 		mBackToMenuButton.gameObject.SetActive (show);
+	}
+
+	public GameObject GUIObject (string name)
+	{
+		switch (name) 
+		{
+		case "a":
+			return null;
+		}
+
+		GameObject ret = MenuCamera.Instance.GUIObject(name);
+		if (ret == null)
+		{
+			ret = MainGameMenu.Instance.GUIObject(name);
+		}
+
+		if (ret == null) 
+		{
+			print("ERORR! BUTTON OBJECT NOT FOUND: " + name);
+		}
+
+		return ret;
 	}
 }

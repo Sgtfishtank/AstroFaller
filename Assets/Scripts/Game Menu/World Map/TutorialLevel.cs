@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class TutorialLevel : LevelBase 
 {
 	public string mLevelName;
+	public GameObject mPrefab;
 
 	private TextMesh mTitleText;
 	private bool mUnlocked;
@@ -18,6 +19,13 @@ public class TutorialLevel : LevelBase
 	
 	public override void Init()
 	{
+		GameObject gab = GameObject.Instantiate (mPrefab);
+		gab.transform.parent = transform;
+		gab.transform.localPosition = Vector3.zero;
+		gab.transform.localRotation = Quaternion.identity;
+		gab.transform.localScale = Vector3.one;
+		gab.transform.name = "tutorial";
+
 		mTitleText = transform.Find ("tutorial/level name text").GetComponent<TextMesh> ();
 		mPictureImage = transform.Find ("tutorial/level picture").GetComponent<MeshRenderer> ();
 		mFrame = transform.Find ("tutorial/small_frame").GetComponent<MeshRenderer> ();

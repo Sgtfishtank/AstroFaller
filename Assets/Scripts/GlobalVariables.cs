@@ -287,4 +287,20 @@ public class GlobalVariables : MonoBehaviour
 		
 		return 0;
 	}
+
+	public GameObject Instanciate(GameObject prefab, Transform parent, float scale)
+	{
+		if (prefab == null) 
+		{
+			return null;
+		}
+
+		GameObject sammax = GameObject.Instantiate (prefab);
+		sammax.transform.parent = parent.transform;
+		sammax.transform.localPosition = Vector3.zero;
+		sammax.transform.localRotation = Quaternion.identity;
+		sammax.transform.localScale = Vector3.one * scale;
+		sammax.transform.name = prefab.name;
+		return sammax;
+	}
 }

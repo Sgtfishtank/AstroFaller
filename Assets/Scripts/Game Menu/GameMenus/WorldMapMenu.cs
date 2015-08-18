@@ -4,6 +4,7 @@ using System.Collections;
 public class WorldMapMenu : GameMenu 
 {
 	public LevelBase[] mLevels;
+	public GameObject mLevel;
 
 	private float mScrollValue = 0;
 	private int mCurrentLevelFocusIndex = 0;

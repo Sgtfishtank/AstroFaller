@@ -112,18 +112,17 @@ public class MovementControls
 	{
 		if (mHoverActive)
 		{
-			// revese the polarity of the gravity sigularity cap'n!
-			mRb.AddForce(-Physics.gravity * mRb.mass);
 
 			if(mRb.velocity.y < 0)//slows down the player to hover
 			{
-				float minVel = GlobalVariables.Instance.PLAYER_MIN_HOVER_SPEED;
+				// revese the polarity of the gravity sigularity cap'n!
+				mRb.AddForce(-Physics.gravity * mRb.mass);
 
 				// slow down the fall speed
-				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y + minVel) / Time.fixedDeltaTime);
+				float force = mRb.mass * (Mathf.Abs(mRb.velocity.y + GlobalVariables.Instance.PLAYER_MIN_HOVER_SPEED) / Time.fixedDeltaTime);
 				//        f = m        *               a
 
-				if(mRb.velocity.y <= -minVel)
+				if(mRb.velocity.y <= -GlobalVariables.Instance.PLAYER_MIN_HOVER_SPEED)
 				{
 					mRb.AddForce(new Vector3(0, force * GlobalVariables.Instance.PLAYER_HOVER_FORCE, 0));
 				}
@@ -187,6 +186,16 @@ public class MovementControls
 		{
 			rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
 		}
+
+		// clamp positoin x
+		float ply = InGameCamera.Instance.GetComponent<Camera> ().WorldToScreenPoint(rb.transform.position).y;
+		Vector3 left = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(50, ply, InGameCamera.Instance.transform.position.z));
+		Vector3 right = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(new Vector3(Screen.width - 50, ply, InGameCamera.Instance.transform.position.z));
+		Vector3 pl2 = rb.transform.position;
+		Debug.Log(left);
+		Debug.Log(right);
+		pl2.x = Mathf.Clamp (pl2.x, right.x, left.x);
+		rb.transform.position = pl2;
 	}
 
 	public bool isHovering ()

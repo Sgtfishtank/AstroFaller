@@ -24,7 +24,10 @@ public class Player : MonoBehaviour
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
 	private float mDashTime;
 	private float mDashCDTime;
+
+	private float mStartYValue;
 	public int mBoltsCollected;
+	public int mCrystalsCollected;
 
 	
 	// Use this for initialization
@@ -44,6 +47,13 @@ public class Player : MonoBehaviour
 		mAS = GameObject.Find("AstroidSpawn");
 		mAS.SetActive (false);
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+	}
+
+	public void StartGame()
+	{
+		mBoltsCollected = 0;
+		mCrystalsCollected = 0;
+		mStartYValue = transform.position.y;
 	}
 	
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
@@ -102,9 +112,10 @@ public class Player : MonoBehaviour
 	}
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.tag == "Bolt")
+		if(col.tag == "Bolts")
 		{
 			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+			col.gameObject.SetActive(false);
 		}
 		else if(col.tag == "BoltCluster")
 		{
@@ -127,10 +138,16 @@ public class Player : MonoBehaviour
 	{
 		return mBoltsCollected;
 	}
-
-	public int disance()
+	
+	public int colectedCrystals()
 	{
-		return (int)Mathf.Abs(transform.position.y);
+		return mBoltsCollected;
+	}
+
+	public int distance()
+	{
+		int dist = (int)(transform.position.y - mStartYValue);
+		return -dist;
 	}
 
 	public float airAmount()
@@ -151,7 +168,21 @@ public class Player : MonoBehaviour
 
 			mRb.velocity = new Vector2(0, 0);
 			gameObject.SetActive(false);
+
+			DepositData();
 		}
+	}
+
+	public void DepositData()
+	{
+		PlayerData.Instance.depositBolts(colectedBolts());
+		mBoltsCollected = 0;
+		
+		PlayerData.Instance.depositCrystals(colectedCrystals());
+		mCrystalsCollected = 0;
+		
+		PlayerData.Instance.depositDistance(distance());
+		mStartYValue = transform.position.y;
 	}
 
 	void respawn ()
