@@ -125,13 +125,18 @@ public class Player : MonoBehaviour
 		else if(col.tag == "SpawnAstroid")
 		{
 			mAS.SetActive(true);
+			InGameCamera.Instance.showWarning(true);
 		}
 	}
 	void OnTriggerExit(Collider col)
 	{
 		if(col.tag == "SpawnAstroid")
 		{
-			mAS.SetActive(false);
+			if (false) 
+			{
+				mAS.SetActive(false);
+				InGameCamera.Instance.showWarning(false);
+			}
 		}
 	}
 
