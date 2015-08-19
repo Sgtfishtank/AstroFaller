@@ -4,7 +4,8 @@ using System.Collections;
 public class Level : LevelBase 
 {
 	public string mLevelName;
-	public GameObject mPrefab;
+	public GameObject mLevelPrefab;
+	public GameObject mPlayPrefab;
 	
 	private int mTotalDistance = 0;
 	private int mTotalBolts = 0;
@@ -14,6 +15,8 @@ public class Level : LevelBase
 	private MeshRenderer mFrame;
 	private MeshRenderer mFrame2;
 	private bool mUnlocked;
+	private	GameObject mPlayButton;
+	private	GameObject mLevel;
 
 	// Use this for initialization
 	void Start () 
@@ -22,18 +25,18 @@ public class Level : LevelBase
 
 	public override void Init()
 	{
-		GameObject gab = GameObject.Instantiate (mPrefab);
-		gab.transform.parent = transform;
-		gab.transform.localPosition = Vector3.zero;
-		gab.transform.localRotation = Quaternion.identity;
-		gab.transform.localScale = Vector3.one;
-		gab.transform.name = "level";
+		mLevel = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
+		mLevel.transform.name = "level";
 
-		mTitleText = transform.Find ("level/level name text").GetComponent<TextMesh> ();
-		mTotalDistanceText = transform.Find ("level/top distance text").GetComponent<TextMesh> ();
-		mPictureImage = transform.Find ("level/level picture").GetComponent<MeshRenderer> ();
-		mFrame = transform.Find ("level/big_frame").GetComponent<MeshRenderer> ();
-		mFrame2 = transform.Find ("level/small_frame 2/small_frame").GetComponent<MeshRenderer> ();
+		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 1);
+		mPlayButton.transform.name = "PlayLevelButton";
+		mPlayButton.SetActive (false);
+
+		mTitleText = mLevel.transform.Find ("level name text").GetComponent<TextMesh> ();
+		mTotalDistanceText = mLevel.transform.Find ("top distance text").GetComponent<TextMesh> ();
+		mPictureImage = mLevel.transform.Find ("level picture").GetComponent<MeshRenderer> ();
+		mFrame = mLevel.transform.Find ("big_frame").GetComponent<MeshRenderer> ();
+		mFrame2 = mLevel.transform.Find ("small_frame 2/small_frame").GetComponent<MeshRenderer> ();
 		
 		mPictureImage.enabled = false;
 		
@@ -81,6 +84,16 @@ public class Level : LevelBase
 		return false;
 	}
 	
+	public override void Open()
+	{
+		mPlayButton.SetActive (true);
+	}
+	
+	public override void Close()
+	{
+		mPlayButton.SetActive (false);
+	}
+
 	public override bool IsUnlocked()
 	{
 		return mUnlocked;
@@ -94,7 +107,8 @@ public class Level : LevelBase
 			mPictureImage.enabled = false;
 			return true;
 		}
-		
+
+		Close ();
 		return false;
 	}
 	
@@ -103,6 +117,11 @@ public class Level : LevelBase
 		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mFrame2.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		
+
+		mPlayButton.transform.localPosition += GUICanvas.Instance.PlayButton().PositionOffset();
+		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.PlayButton().ScaleFactor();
 
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 

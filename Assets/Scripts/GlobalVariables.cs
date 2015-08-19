@@ -294,11 +294,12 @@ public class GlobalVariables : MonoBehaviour
 	{
 		if (prefab == null) 
 		{
+			print("ERORR null in Instanciate ");
 			return null;
 		}
 
 		GameObject sammax = GameObject.Instantiate (prefab);
-		sammax.transform.parent = parent.transform;
+		sammax.transform.parent = parent;
 		sammax.transform.localPosition = Vector3.zero;
 		sammax.transform.localRotation = Quaternion.identity;
 		sammax.transform.localScale = Vector3.one * scale;

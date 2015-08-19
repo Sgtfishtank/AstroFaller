@@ -50,7 +50,7 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
 	private GameObject mPlayText;
-	private GameObject mPlayTutorial;
+	//private GameObject mPlayTutorial;
 
 	void Awake()
 	{
@@ -59,8 +59,8 @@ public class MenuCamera : MonoBehaviour
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
-		mPlayText = transform.Find("PlayText").gameObject;
-		mPlayTutorial = transform.Find("PlayTutorial").gameObject;
+		//mPlayText = transform.Find("PlayText").gameObject;
+		//mPlayTutorial = transform.Find("PlayTutorial").gameObject;
 		mMoving = false;
 		
 		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
@@ -71,9 +71,9 @@ public class MenuCamera : MonoBehaviour
 		
 		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 10);
 		
-		GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
+		//GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
 
-		GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayTutorial.transform, 1);
+		//GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayTutorial.transform, 1);
 		
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
 	}
@@ -223,9 +223,14 @@ public class MenuCamera : MonoBehaviour
 	
 	public void ShowPlayText (bool show)
 	{
-		bool isTutorial = MainGameMenu.Instance.WorldMapMenu().IsTutorial();
-		mPlayText.SetActive(show && (!isTutorial));
-		mPlayTutorial.SetActive(show && isTutorial);
+		//if (mPlayText == null)
+		{
+			//mPlayText = MainGameMenu.Instance.WorldMapMenu().CurrentLevel().PlayButton();
+		}
+
+		//bool isTutorial = MainGameMenu.Instance.WorldMapMenu().IsTutorial();
+		//mPlayText.SetActive(show);
+		//mPlayTutorial.SetActive(show && isTutorial && false);
 	}
 
 	public void ShowBackButton (bool show)
@@ -284,9 +289,9 @@ public class MenuCamera : MonoBehaviour
 		case "CrystalsButton 1":
 			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
 		case "PlayLevelButton 0":
-			return transform.Find("PlayText/start_button").gameObject;
+			return null;
 		case "PlayLevelButton 1":
-			return transform.Find("PlayTutorial/start_button").gameObject;
+			return null;
 		case "BackToMenuButton":
 			return null;
 		default:

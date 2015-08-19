@@ -4,22 +4,30 @@ using System.Collections;
 public class AstroidRemove : MonoBehaviour {
 
 	public int xSize;
-	private GameObject mpl;
-	public AstroidSpawn a;
+	private Player mpl;
+	private AstroidSpawn mAstroidSpawn;
+
 	// Use this for initialization
 	void Start ()
 	{
-		mpl = WorldGen.Instance.mPlayer;
+		mpl = WorldGen.Instance.Player();
+		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
 	}
 	
 	// Update is called once per frame
-	void LateUpdate ()
+	void Update ()
 	{
-		if(!(transform.position.x < xSize && transform.position.x > -xSize &&
-		     transform.position.y < mpl.transform.position.y + 5 && transform.position.y > mpl.transform.position.y - 25))
+		if (OutOfBound())
 		{
-			a.RemoveAstroid(gameObject);
-
+			mAstroidSpawn.RemoveAstroid(gameObject);
 		}
+	}
+
+	public bool OutOfBound()
+	{
+		return (!(transform.position.x < GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE && 
+		            transform.position.x > -GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE &&
+		            transform.position.y < (mpl.transform.position.y + 5) && 
+		            transform.position.y > (mpl.transform.position.y - 25)));
 	}
 }

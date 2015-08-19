@@ -86,6 +86,14 @@ public class BonusRewardLevel : LevelBase
 	{
 		return false;
 	}
+	
+	public override void Open()
+	{
+	}
+	
+	public override void Close()
+	{
+	}
 
 	public override bool UnlockLevel()
 	{

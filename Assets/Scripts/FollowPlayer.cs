@@ -15,7 +15,7 @@ public class FollowPlayer : MonoBehaviour {
 	{
 		if (mplayer == null)
 		{
-			mplayer = WorldGen.Instance.mPlayer.transform;
+			mplayer = WorldGen.Instance.Player().transform;
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class FollowPlayer : MonoBehaviour {
 	{
 		Vector3 pos = transform.position;
 		pos.z = -zdist;
-		pos.y = mplayer.position.y + (mplayer.transform.rotation * mplayer.GetComponent<Rigidbody>().centerOfMass).y;
+		pos.y = mplayer.GetComponent<Player>().CenterPosition().y;
 		transform.position = pos;
 	}
 }

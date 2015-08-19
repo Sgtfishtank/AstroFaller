@@ -39,28 +39,23 @@ public class InGameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (WorldGen.Instance.mPlayer.GetComponent<Player>().mAS.GetComponent<AstroidSpawn>().mAstroids.Count < 1)
+		if (WorldGen.Instance.AstroidSpawn().mAstroids.Count < 1)
 		{
 			mWarning.SetActive(false);
 			return;
 		}
 		mWarning.SetActive(true);
 
-		GameObject ast = WorldGen.Instance.mPlayer.GetComponent<Player>().mAS.GetComponent<AstroidSpawn>().mAstroids[0];
-		GameObject ply = WorldGen.Instance.mPlayer;
-		Vector3 plPos = ply.transform.position + (ply.transform.rotation * ply.GetComponent<Rigidbody>().centerOfMass);
-		Vector3 diff = plPos - ast.transform.position;
+		GameObject ast = WorldGen.Instance.AstroidSpawn().mAstroids[0];
+		Player ply = WorldGen.Instance.Player();
 
-		Vector3 pos = ast.transform.position;
-		//pos.z -= 15f;
+		Vector3 diff = ply.CenterPosition() - ast.GetComponent<Rigidbody>().position;
 
-		Quaternion rot2 = Quaternion.Euler (0, 0, 90);
+		Vector3 plVel = ply.GetComponent<Rigidbody> ().velocity;
+		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, ast.GetComponent<Rigidbody>().velocity - new Vector3(0, plVel.y, 0));
+		mWarning.transform.rotation = rot * Quaternion.Euler (0, 0, 90);
 
-		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, diff);
-		mWarning.transform.rotation = rot * rot2;
-
-		Vector3 a = GetComponent<Camera> ().WorldToScreenPoint(pos);
-
+		Vector3 a = GetComponent<Camera>().WorldToScreenPoint(ast.transform.position);
 		if (a.x < Screen.width / 2)
 		{
 			a.x = Mathf.Clamp (a.x, 10, 11);

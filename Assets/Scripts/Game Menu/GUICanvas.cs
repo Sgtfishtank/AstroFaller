@@ -97,13 +97,13 @@ public class GUICanvas : MonoBehaviour
 		GUI.Label (new Rect(startX, startY, 180, 24), "Time on level: " + WorldGen.Instance.LevelRunTime());
 		startY += 24;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().colectedBolts());
+		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts on level: " + WorldGen.Instance.Player().colectedBolts());
 		startY += 24;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().colectedCrystals());
+		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals on level: " + WorldGen.Instance.Player().colectedCrystals());
 		startY += 24;
 		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + WorldGen.Instance.mPlayer.GetComponent<Player>().distance());
+		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + WorldGen.Instance.Player().distance());
 		startY += 24;
 
 		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts: " + PlayerData.Instance.crystals());
@@ -118,7 +118,7 @@ public class GUICanvas : MonoBehaviour
 		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
 		startY += 24;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + PlayerData.Instance.totalDistance());
+		GUI.Label (new Rect(startX, startY, 180, 24), "Distance total: " + PlayerData.Instance.totalDistance());
 		startY += 24;
 	}
 
@@ -297,6 +297,7 @@ public class GUICanvas : MonoBehaviour
 		mBackToMenuButton.gameObject.SetActive (show);
 	}
 
+	// other
 	public GameObject GUIObject (string name)
 	{
 		switch (name) 
@@ -317,5 +318,10 @@ public class GUICanvas : MonoBehaviour
 		}
 
 		return ret;
+	}
+
+	public ButtonPress PlayButton()
+	{
+		return mPlayLevelButton.GetComponent<ButtonPress>();
 	}
 }

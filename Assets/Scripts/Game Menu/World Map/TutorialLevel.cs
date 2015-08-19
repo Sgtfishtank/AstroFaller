@@ -5,12 +5,15 @@ using UnityEngine.UI;
 public class TutorialLevel : LevelBase 
 {
 	public string mLevelName;
-	public GameObject mPrefab;
+	public GameObject mLevelPrefab;
+	public GameObject mPlayPrefab;
 
 	private TextMesh mTitleText;
 	private bool mUnlocked;
 	private	MeshRenderer mPictureImage;
 	private	MeshRenderer mFrame;
+	private	GameObject mPlayButton;
+	private	GameObject mTutorial;
 
 	// Use this for initialization
 	void Start () 
@@ -19,16 +22,16 @@ public class TutorialLevel : LevelBase
 	
 	public override void Init()
 	{
-		GameObject gab = GameObject.Instantiate (mPrefab);
-		gab.transform.parent = transform;
-		gab.transform.localPosition = Vector3.zero;
-		gab.transform.localRotation = Quaternion.identity;
-		gab.transform.localScale = Vector3.one;
-		gab.transform.name = "tutorial";
+		mTutorial = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
+		mTutorial.transform.name = "tutorial";
 
-		mTitleText = transform.Find ("tutorial/level name text").GetComponent<TextMesh> ();
-		mPictureImage = transform.Find ("tutorial/level picture").GetComponent<MeshRenderer> ();
-		mFrame = transform.Find ("tutorial/small_frame").GetComponent<MeshRenderer> ();
+		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 0.75f);
+		mPlayButton.transform.name = "PlayLevelButton";
+		mPlayButton.SetActive (false);
+
+		mTitleText = mTutorial.transform.Find ("level name text").GetComponent<TextMesh> ();
+		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
+		mFrame = mTutorial.transform.Find ("small_frame").GetComponent<MeshRenderer> ();
 		mPictureImage.enabled = false;
 		
 		// add default
@@ -71,6 +74,16 @@ public class TutorialLevel : LevelBase
 		return mUnlocked;
 	}
 	
+	public override void Open()
+	{
+		mPlayButton.SetActive (true);
+	}
+	
+	public override void Close()
+	{
+		mPlayButton.SetActive (false);
+	}
+
 	public override bool LockLevel()
 	{
 		if (mUnlocked)
@@ -87,6 +100,7 @@ public class TutorialLevel : LevelBase
 	{
 		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 

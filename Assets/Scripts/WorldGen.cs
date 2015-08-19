@@ -16,6 +16,9 @@ public class WorldGen : MonoBehaviour
 			return instance;
 		}
 	}
+	
+	public GameObject mPlayerPrefab;
+	public GameObject mAstroidSpawnPrefab;
 
 	public GameObject[] mSegments;
 	private GameObject mCurrentSegment = null;
@@ -24,7 +27,8 @@ public class WorldGen : MonoBehaviour
 	private float mCurrentPos;
 	private float mOffset = 50;
 
-	public GameObject mPlayer;
+	public Player mPlayer;
+	public AstroidSpawn mAstroidSpawn;
 	private string mCurrentLevel;
 	
 	private GameObject[] mBgSegments;
@@ -37,27 +41,56 @@ public class WorldGen : MonoBehaviour
 	public float mIntroPhaseT;
 	private GameObject mDirectionalLight;
 	public GameObject mDirectionalLightPrefab;
-	public GameObject mPlayerPrefab;
 	public float mStartTime = -1;
 
 	public float mUsualShiftkingRailgun = 0;
 
 	void Awake()
 	{
-		mPlayer = GameObject.Find("Player");
-		if (mPlayer == null)
+		GameObject playerObj = GameObject.Find("Player");
+		if (playerObj == null)
 		{
-			mPlayer = GameObject.Instantiate(mPlayerPrefab);
+			playerObj = GameObject.Instantiate(mPlayerPrefab);
+			playerObj.name = mPlayerPrefab.name;
 		}
+		mPlayer = playerObj.GetComponent<Player>();
 
-		mDirectionalLight = GameObject.Instantiate (mDirectionalLightPrefab);
-		mDirectionalLight.SetActive (false);
+		GameObject astroidSpawnObj = GameObject.Find("AstroidSpawn");
+		if (astroidSpawnObj == null)
+		{
+			astroidSpawnObj = GameObject.Instantiate(mAstroidSpawnPrefab);
+			astroidSpawnObj.name = mAstroidSpawnPrefab.name;
+
+		}
+		mAstroidSpawn = astroidSpawnObj.GetComponent<AstroidSpawn>();
+
+
+		GameObject dirLightObj = GameObject.Find("InGame DirectionalLight");
+		if (dirLightObj == null)
+		{
+			dirLightObj = GameObject.Instantiate(mDirectionalLightPrefab);
+			dirLightObj.name = mDirectionalLightPrefab.name;
+		}
+		mDirectionalLight = dirLightObj;
 	}
 
 	// Use this for initialization
 	void Start ()
 	{
-		WorldGen.Instance.gameObject.SetActive (false);
+		mDirectionalLight.SetActive (false);
+		gameObject.SetActive (false);
+		mAstroidSpawn.gameObject.SetActive (false);
+		mPlayer.gameObject.SetActive (false);
+	}
+	
+	public Player Player ()
+	{
+		return mPlayer;
+	}
+	
+	public AstroidSpawn AstroidSpawn ()
+	{
+		return mAstroidSpawn;
 	}
 
 	// Update is called once per frame
@@ -147,7 +180,7 @@ public class WorldGen : MonoBehaviour
 		mCurrentPos -= mOffset;
 		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0, mSegments.Length)];
 		pos = new Vector3 (0, mCurrentPos, 0);
-		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+		mNextSegment = Instantiate(mSegments[0], pos, Quaternion.identity) as GameObject;
 	}
 
 	void SpawnBgSegments()
@@ -201,6 +234,7 @@ public class WorldGen : MonoBehaviour
 		mNextSegment.transform.position -= new Vector3(0, shift, 0);
 		mNextBgSegment.transform.position -= new Vector3(0, shift, 0);
 		mPlayer.transform.position -= new Vector3(0, shift, 0);
+		mPlayer.GetComponent<Player>().mAS.GetComponent<AstroidSpawn>().ShiftBack(shift);
 
 		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}

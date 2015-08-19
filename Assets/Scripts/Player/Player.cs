@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 	public Animator ani;
 	public Transform mMeshTrans;
 	public int mAirRegFalling;
-	public GameObject mAS;
+	public AstroidSpawn mAS;
 
 	private FollowPlayer mfp;
 	private float mAirAmount;
@@ -44,8 +44,7 @@ public class Player : MonoBehaviour
 
 		// finally extra init
 		safeInit();
-		mAS = GameObject.Find("AstroidSpawn");
-		mAS.SetActive (false);
+		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 	}
 
@@ -124,7 +123,7 @@ public class Player : MonoBehaviour
 		}
 		else if(col.tag == "SpawnAstroid")
 		{
-			mAS.SetActive(true);
+			mAS.gameObject.SetActive(true);
 			InGameCamera.Instance.showWarning(true);
 		}
 	}
@@ -134,7 +133,7 @@ public class Player : MonoBehaviour
 		{
 			if (false) 
 			{
-				mAS.SetActive(false);
+				mAS.gameObject.SetActive(false);
 				InGameCamera.Instance.showWarning(false);
 			}
 		}
@@ -148,6 +147,11 @@ public class Player : MonoBehaviour
 	public int colectedCrystals()
 	{
 		return mBoltsCollected;
+	}
+	
+	public Vector3 CenterPosition()
+	{
+		return mRb.worldCenterOfMass;
 	}
 
 	public int distance()
