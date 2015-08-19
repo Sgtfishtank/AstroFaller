@@ -151,7 +151,7 @@ public class WorldGen : MonoBehaviour
 
 		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0,mSegments.Length)];
 		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
-		mNextSegment = Instantiate(mSegments[0], pos, Quaternion.identity) as GameObject;
+		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
 	}
 
 	void NextBgSegment ()
@@ -180,7 +180,7 @@ public class WorldGen : MonoBehaviour
 		mCurrentPos -= mOffset;
 		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0, mSegments.Length)];
 		pos = new Vector3 (0, mCurrentPos, 0);
-		mNextSegment = Instantiate(mSegments[0], pos, Quaternion.identity) as GameObject;
+		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
 	}
 
 	void SpawnBgSegments()

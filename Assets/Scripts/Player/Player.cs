@@ -80,12 +80,6 @@ public class Player : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
-		
-		// move player
-		mMovementControls.Move(mRb);
-
 		// hover physics
 		mMovementControls.Hover(mRb,10);
 	}
@@ -97,6 +91,12 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
+		
+		// jump and hover player
+		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
+		
+		// move player
+		mMovementControls.Move(mRb);
 
 		if(Input.GetKeyDown(KeyCode.E))
 		{

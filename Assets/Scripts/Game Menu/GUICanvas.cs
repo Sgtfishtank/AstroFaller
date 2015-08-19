@@ -87,7 +87,7 @@ public class GUICanvas : MonoBehaviour
 			return;
 		}
 
-		int startX = 10;
+		/*int startX = 10;
 		int startY = 10;
 
 		GUI.Box(new Rect(10, 10, 200, 200), "Debug Window");
@@ -119,7 +119,7 @@ public class GUICanvas : MonoBehaviour
 		startY += 24;
 
 		GUI.Label (new Rect(startX, startY, 180, 24), "Distance total: " + PlayerData.Instance.totalDistance());
-		startY += 24;
+		startY += 24;*/
 	}
 
 	public void SetFadeColor(Color col)

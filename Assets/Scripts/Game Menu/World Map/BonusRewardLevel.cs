@@ -49,7 +49,7 @@ public class BonusRewardLevel : LevelBase
 	void Update () 
 	{
 		mTitleText.text = mLevelName;
-		switch (mRewardType)
+		/*switch (mRewardType)
 		{
 		case RewardType.Bolts:
 			if (!mUnlocked)
@@ -74,7 +74,7 @@ public class BonusRewardLevel : LevelBase
 		default:
 			print("Error RewardType in Update" + mRewardType);
 			break;
-		}
+		}*/
 	}
 	
 	public override string LevelName ()
