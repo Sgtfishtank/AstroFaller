@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
 			mfp.Dash();
 			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
 			mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
-			mRb.velocity = new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
+			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
 			mDashCDTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_CD;
 		}
 	}
@@ -82,6 +82,13 @@ public class Player : MonoBehaviour
 	{
 		// hover physics
 		mMovementControls.Hover(mRb,10);
+		
+		// jump and hover player
+		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
+		
+		// move player
+		mMovementControls.Move(mRb);
+
 	}
 
 	void Update()
@@ -91,12 +98,6 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
-		
-		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
-		
-		// move player
-		mMovementControls.Move(mRb);
 
 		if(Input.GetKeyDown(KeyCode.E))
 		{
@@ -105,7 +106,7 @@ public class Player : MonoBehaviour
 
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
-			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF;
+			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF * Time.deltaTime;
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
@@ -146,7 +147,7 @@ public class Player : MonoBehaviour
 	
 	public int colectedCrystals()
 	{
-		return mBoltsCollected;
+		return mCrystalsCollected;
 	}
 	
 	public Vector3 CenterPosition()

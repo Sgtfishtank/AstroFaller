@@ -36,18 +36,22 @@ public class AstroidSpawn : MonoBehaviour {
 		{
 			mLastSpawn = Time.time +mCd;
 			int x = UnityEngine.Random.Range(0,2)*2-1;
-			int y = UnityEngine.Random.Range(-12,5);
+			float y = UnityEngine.Random.Range(-25,8);
 			int astroid = UnityEngine.Random.Range(0,3);
 			Quaternion angel = UnityEngine.Random.rotation;
 
 			//Spawn astroid
 			GameObject instace = Instantiate(mAstroidTypes[astroid],
-			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayerObj.transform.position.y +y , 0),
+			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayerObj.transform.position.y + y , 0),
 			                                 angel) as GameObject;
 
 			//add velocity
-			instace.GetComponent<Rigidbody>().velocity = new Vector3(
-				UnityEngine.Random.Range(2,5)*(-x), mPlRigid.velocity.y-y, 0);
+			Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
+
+			Vector3 targetVel = mPlayerObj.transform.position - instace.transform.position;
+			targetVel.y += mPlRigid.velocity.y;
+
+			instace.GetComponent<Rigidbody>().velocity = Vector3.Lerp(targetVel, randVel, Random.value);
 
 			//add torque
 			instace.GetComponent<Rigidbody>().AddTorque(

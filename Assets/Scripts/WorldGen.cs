@@ -113,6 +113,8 @@ public class WorldGen : MonoBehaviour
 
 				mStartTime = Time.time;
 
+				mUsualShiftkingRailgun = 0;
+
 				SpawnSegments();
 			}
 		}
@@ -229,18 +231,53 @@ public class WorldGen : MonoBehaviour
 		mUsualShiftkingRailgun -= shift;
 		mCurrentBgPos -= shift;
 		mCurrentPos -= shift;
-		mCurrentSegment.transform.position -= new Vector3(0, shift, 0);
-		mCurrentBgSegment.transform.position -= new Vector3(0, shift, 0);
-		mNextSegment.transform.position -= new Vector3(0, shift, 0);
-		mNextBgSegment.transform.position -= new Vector3(0, shift, 0);
+		if(mCurrentSegment != null)
+		{
+			mCurrentSegment.transform.position -= new Vector3(0, shift, 0);
+			mNextSegment.transform.position -= new Vector3(0, shift, 0);
+		}
+		if(mCurrentBgSegment != null)
+		{
+			mCurrentBgSegment.transform.position -= new Vector3(0, shift, 0);
+			mNextBgSegment.transform.position -= new Vector3(0, shift, 0);
+		}
 		mPlayer.transform.position -= new Vector3(0, shift, 0);
 		mPlayer.GetComponent<Player>().mAS.GetComponent<AstroidSpawn>().ShiftBack(shift);
 
 		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
 
+	public void DespawnSegments() 
+	{
+		if (mNextSegment != null)
+		{
+			Destroy(mNextSegment);
+		}
+		
+		if (mCurrentSegment != null)
+		{
+			Destroy(mCurrentSegment);
+		}
+	}
+	
+	public void DespawnBgSegments() 
+	{
+		if (mNextBgSegment != null)
+		{
+			Destroy(mNextBgSegment);
+		}
+		
+		if (mCurrentBgSegment != null)
+		{
+			Destroy(mCurrentBgSegment);
+		}
+	}
+
 	public void Disable() 
 	{
+		DespawnSegments ();
+		DespawnBgSegments ();
+
 		print("WorldGen Off");
 
 		InGameCamera.Instance.gameObject.SetActive (false);

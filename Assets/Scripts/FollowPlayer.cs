@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FollowPlayer : MonoBehaviour {
+public class FollowPlayer : MonoBehaviour 
+{
 
 	public Transform mplayer;
 	public float zdist;
@@ -28,7 +29,7 @@ public class FollowPlayer : MonoBehaviour {
 		{
 			if(ydist > 7.1f)
 			{
-				ydist -= 0.5f;
+				ydist -= 5.0f * Time.deltaTime;
 			}
 			else if (mDashDelay == 0)
 			{
@@ -43,7 +44,7 @@ public class FollowPlayer : MonoBehaviour {
 		{
 			if (ydist < 9.0f)
 			{
-				ydist += 0.1f;
+				ydist += 3.0f * Time.deltaTime;
 			}
 			else if( mDashDelay != 0)
 			{
@@ -61,7 +62,7 @@ public class FollowPlayer : MonoBehaviour {
 	{
 		Vector3 pos = transform.position;
 		pos.z = -zdist;
-		pos.y = mplayer.GetComponent<Player>().CenterPosition().y;
+		pos.y = mplayer.GetComponent<Player>().CenterPosition().y - ydist;
 		transform.position = pos;
 	}
 }
