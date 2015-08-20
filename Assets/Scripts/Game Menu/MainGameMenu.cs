@@ -51,8 +51,10 @@ public class MainGameMenu : MonoBehaviour
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
 			mGameMenus[i].Init();
+			mGameMenus[i].gameObject.SetActive (false);
 		}
-
+		
+		mStartMenu.gameObject.SetActive (true);
 		mStartMenu.Focus();
 	}
 
@@ -246,7 +248,8 @@ public class MainGameMenu : MonoBehaviour
 
 		mCurrentGameMenuIndex = index;
 		MenuCamera.Instance.StartMenuMove (mGameMenus [mCurrentGameMenuIndex].gameObject);
-		
+
+		mGameMenus [index].gameObject.SetActive (true);
 		UpdateMenusAndButtons();
 	}
 	
@@ -254,6 +257,12 @@ public class MainGameMenu : MonoBehaviour
 	{
 		mCurrentGameMenu = mGameMenus [mCurrentGameMenuIndex];
 		mCurrentGameMenu.Focus();
+
+		for (int i = 0; i < mGameMenus.Length; i++) 
+		{
+			mGameMenus[i].gameObject.SetActive (false);
+		}
+		mCurrentGameMenu.gameObject.SetActive (true);
 
 		UpdateMenusAndButtons();
 	}

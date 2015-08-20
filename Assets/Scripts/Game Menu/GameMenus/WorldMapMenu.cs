@@ -64,7 +64,7 @@ public class WorldMapMenu : GameMenu
 				mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
 				mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
 				
-				mLevelOpen = false;
+				CloseLevels();
 				MainGameMenu.Instance.UpdateMenusAndButtons();
 			}
 			else if (Input.GetKey(KeyCode.UpArrow))
@@ -138,16 +138,16 @@ public class WorldMapMenu : GameMenu
 	
 	public override void Focus()
 	{
-		mLevelOpen = false;
 		mFocused = true;
 		enabled = true;
+		CloseLevels ();
 	}
 	
 	public override void Unfocus()
 	{
-		mLevelOpen = false;
 		mFocused = false;
 		enabled = false;
+		CloseLevels ();
 	}
 	
 	public override bool IsFocused ()
@@ -159,7 +159,12 @@ public class WorldMapMenu : GameMenu
 	{
 		GUICanvas.Instance.showPlayLevelButton(mFocused && (!mPlayLevelPhase));
 		
-		MenuCamera.Instance.ShowPlayText(mFocused && mLevelOpen);
+		MenuCamera.Instance.ShowPlayText(mFocused && mLevelOpen && false);
+	}
+
+	public LevelBase CurrentLevel()
+	{
+		return mCurrentLevel;
 	}
 	
 	public override void BuyWithBolts()
@@ -221,7 +226,7 @@ public class WorldMapMenu : GameMenu
 		mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
 		if (last != mCurrentLevelFocusIndex) 
 		{
-			mLevelOpen = false;
+			CloseLevels();
 			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
 	}
@@ -254,17 +259,32 @@ public class WorldMapMenu : GameMenu
 
 		if (!mLevelOpen)
 		{
-			mLevelOpen = true;
+			OpenLevel();
 		}
 		else
 		{
-			mLevelOpen = false;
+			CloseLevels();
 			StartPlayLevelPhase();
 		}
 
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
+	public void OpenLevel ()
+	{
+		mLevelOpen = true;
+		mCurrentLevel.Open();
+	}
+
+	public void CloseLevels()
+	{
+		mLevelOpen = false;
+		for (int i = 0; i < mLevels.Length; i++) 
+		{
+			mLevels[i].Close();
+		}
+	}
+
 	public bool IsTutorial ()
 	{
 		return (mCurrentLevelFocusIndex == 0);

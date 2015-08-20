@@ -24,6 +24,7 @@ namespace UnityStandardAssets.Utility
         // Update is called once per frame
         private void Update()
         {
+			return;
             float deltaTime = Time.deltaTime;
             if (ignoreTimescale)
             {

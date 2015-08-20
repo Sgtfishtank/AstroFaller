@@ -22,6 +22,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private Vector3 mBaseScale = Vector3.zero;
 	private Vector3 mBasePosition;
 	private Vector3 mOffset;
+	private float mScale;
 
 	void Start()
 	{
@@ -53,13 +54,18 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		}
 		else
 		{
-			enabled = false;	
+			//enabled = false;	
 		}
 	}
 
 	public void OnPointerDown (PointerEventData eventData) 
 	{
 		mPressed = true;
+	}
+
+	public bool IsPressed() 
+	{
+		return mPressed;
 	}
 
 	void OnDisable() 
@@ -88,7 +94,17 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
 		mPressed = false;
 	}
+
+	public Vector3 PositionOffset ()
+	{
+		return mOffset;
+	}
 	
+	public float ScaleFactor ()
+	{
+		return mScale;
+	}
+
 	void Update()
 	{
 		if (mPressed) 
@@ -115,14 +131,22 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		switch (mPressAction) 
 		{
 		case PressAction.MoveBack:
-			mObj.transform.localPosition = Vector3.Lerp (mBasePosition, mBasePosition - new Vector3 (0, 0, mMoveBackDistance), movingTime);
+			mOffset = Vector3.Lerp (Vector3.zero, Vector3.zero - new Vector3(0, 0, mMoveBackDistance), movingTime);
+			mScale = 1;
 			break;
 		case PressAction.ScaleDown:
-			mObj.transform.localScale = Vector3.Lerp (mBaseScale, mBaseScale * mScaleDownFactor, movingTime);
+			mOffset = Vector3.zero;
+			mScale = Mathf.Lerp (1, mScaleDownFactor, movingTime);
 			break;
 		default:
 			print ("ERROR in Update PressAction" + mPressAction);
 			break;
+		}
+
+		if (mObj != null)
+		{
+			mObj.transform.localPosition = mBasePosition + mOffset;
+			mObj.transform.localScale = mBaseScale * mScale;
 		}
 	}
 }
