@@ -35,17 +35,26 @@ public class MainGameMenu : MonoBehaviour
 	private bool mShowPopupCraftingMenu = false;
 	private bool mShowPopupAchievementsMenu = false;
 
-	// Use this for initialization
-	void Start () 
-	{
-		mBackground = GameObject.Instantiate (mBackgroundPrefab);
+	private FMOD.Studio.EventInstance fmodMusic;
+	private FMOD.Studio.EventInstance fmodSwipe;
 
+	void Awake() 
+	{
+		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
+
+		mBackground = GameObject.Instantiate (mBackgroundPrefab);
+		
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 		if (mStartMenu == null)
 		{
 			mStartMenu = mGameMenus[WORLD_MAP_MENU_INDEX];
 		}
+	}
 
+	// Use this for initialization
+	void Start () 
+	{
 		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
@@ -56,6 +65,8 @@ public class MainGameMenu : MonoBehaviour
 		
 		mStartMenu.gameObject.SetActive (true);
 		mStartMenu.Focus();
+
+		AudioManager.Instance.PlayMusic(fmodMusic);
 	}
 
 	// Update is called once per frame
@@ -103,7 +114,6 @@ public class MainGameMenu : MonoBehaviour
 		}
 
 		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
-
 
 		ResetAllMenusAndButtons ();
 		mStartMenu.Focus();
@@ -251,6 +261,8 @@ public class MainGameMenu : MonoBehaviour
 
 		mGameMenus [index].gameObject.SetActive (true);
 		UpdateMenusAndButtons();
+
+		AudioManager.Instance.PlaySound (fmodSwipe);
 	}
 	
 	void EndChangeGameMenu ()
@@ -265,6 +277,8 @@ public class MainGameMenu : MonoBehaviour
 		mCurrentGameMenu.gameObject.SetActive (true);
 
 		UpdateMenusAndButtons();
+		
+		AudioManager.Instance.StopSound(fmodSwipe, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 	}
 
 	public GameObject GUIObject (string name)
@@ -273,7 +287,6 @@ public class MainGameMenu : MonoBehaviour
 		{
 		default:
 			return null;
-			break;
 		}
 	}
 }

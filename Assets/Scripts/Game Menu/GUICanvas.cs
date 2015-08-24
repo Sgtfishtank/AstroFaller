@@ -33,11 +33,10 @@ public class GUICanvas : MonoBehaviour
 	private Image mFadeImage;
 	private bool mShowDebugGUI;
 
-	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
-		//mFadeImage = transform.Find ("FadeLayer").GetComponent<Image> ();
-
+		mFadeImage = transform.Find ("FadeLayer").GetComponent<Image> ();
+		
 		//assign all menu buttons
 		mMenuButtons = transform.Find ("MenuButtons").gameObject;
 		mWorldMapButton = mMenuButtons.transform.Find ("WorldMapButton").gameObject;
@@ -53,13 +52,18 @@ public class GUICanvas : MonoBehaviour
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
 		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
 
+	}
+
+	// Use this for initialization
+	void Start () 
+	{
 		ButtonPress[] buttonPresss = transform.GetComponentsInChildren<ButtonPress>(true);
 		for (int i = 0; i < buttonPresss.Length; i++) 
 		{
 			buttonPresss[i].Init();	
 		}
 
-		showPlayLevelButton(false);
+		/*showPlayLevelButton(false);
 		ShowIconButtons (true);
 		ShowWorldMapButton(false);
 		ShowPopupBuyButton(false);
@@ -67,8 +71,7 @@ public class GUICanvas : MonoBehaviour
 		ShowPopupAchievementsButton(false);
 		ShowItemButtons(false);
 		ShowPerkButtons(false);
-		ShowBackToMenuButton(false);
-
+		ShowBackToMenuButton(false);*/
 	}
 	
 	// Update is called once per frame
@@ -124,7 +127,7 @@ public class GUICanvas : MonoBehaviour
 
 	public void SetFadeColor(Color col)
 	{
-		//mFadeImage.color = col;
+		mFadeImage.color = col;
 	}
 
 	// pressed buy perks
@@ -238,6 +241,37 @@ public class GUICanvas : MonoBehaviour
 	{
 		WorldGen.Instance.Disable();
 		MainGameMenu.Instance.Enable();
+	}
+
+	// options
+	public void MuteMaster()
+	{
+		AudioManager.Instance.MuteMaster(transform.Find("Master").GetComponent<Toggle>().isOn);
+	}
+
+	public void MuteSounds()
+	{
+		AudioManager.Instance.MuteSounds(transform.Find("Master 2").GetComponent<Toggle>().isOn);
+	}
+
+	public void MuteMusic()
+	{
+		AudioManager.Instance.MuteMusic(transform.Find("Master 1").GetComponent<Toggle>().isOn);
+	}
+
+	public void MasterLevel()
+	{
+		AudioManager.Instance.MasterLevel(transform.Find("Slider").GetComponent<Slider>().value);
+	}
+	
+	public void SoundsLevel()
+	{
+		AudioManager.Instance.SoundsLevel(transform.Find("Slider 2").GetComponent<Slider>().value);
+	}
+	
+	public void MusicLevel()
+	{
+		AudioManager.Instance.MusicLevel(transform.Find("Slider 1").GetComponent<Slider>().value);
 	}
 
 	// menu toggle buttons

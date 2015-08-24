@@ -49,7 +49,7 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mHelpMenu;
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
-	private GameObject mPlayText;
+	//private GameObject mPlayText;
 	//private GameObject mPlayTutorial;
 
 	void Awake()
@@ -81,13 +81,11 @@ public class MenuCamera : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		mPopupBuyMenu.Init();
-
-		ShowHelpMenu(false);
+		/*ShowHelpMenu(false);
 		ShowOptionsMenu(false);
 		ShowBackButton(false);
 		ShowPopupCraftingMenu(false);
-		ShowPopupAchievementsMenu(false);
+		ShowPopupAchievementsMenu(false);*/
 	}
 	
 	// Update is called once per frame
@@ -296,7 +294,6 @@ public class MenuCamera : MonoBehaviour
 			return null;
 		default:
 			return null;
-			break;
 		}
 	}
 

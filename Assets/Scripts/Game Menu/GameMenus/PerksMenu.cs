@@ -116,7 +116,7 @@ public class PerksMenu : GameMenu
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
+		MenuCamera.Instance.PopupBuyMenu().Open();
 
 		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}

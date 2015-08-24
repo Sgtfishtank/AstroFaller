@@ -56,7 +56,10 @@ public class MovementControls
 			first = true;
 			if(mAirAmount > 0)//hoverfunction
 			{
-
+				if (mHoverActive == false)
+				{
+					AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate"));
+				}
 				mHoverActive = true;
 				//mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
 			}
@@ -73,6 +76,10 @@ public class MovementControls
 			
 			if(mAirAmount <= 0)
 			{
+				if (mHoverActive == true)
+				{
+					AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate"));
+				}
 				mHoverActive = false;
 			}
 		}
@@ -101,7 +108,11 @@ public class MovementControls
 				}
 
 			}
-
+			
+			if (mHoverActive == true)
+			{
+				AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate"));
+			}
 			mHoverActive = false;
 		}
 

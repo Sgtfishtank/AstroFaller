@@ -3,6 +3,7 @@ using System.Collections;
 
 public class InGameCamera : MonoBehaviour 
 {
+	public GameObject crash = null;
 	// snigleton
 	private static InGameCamera instance = null;
 	public static InGameCamera Instance
@@ -22,19 +23,23 @@ public class InGameCamera : MonoBehaviour
 	{
 	}
 
+	void OnEnable()
+	{
+		//crash.transform.position = Vector3.zero;
+	}
+	
+	void OnDisable()
+	{
+		//crash.transform.position = Vector3.zero;
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
-		InGameCamera.Instance.gameObject.SetActive (false);
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-	}
-
-	public void showWarning(bool show)
-	{
-		//mWarning.SetActive (show);
 	}
 }

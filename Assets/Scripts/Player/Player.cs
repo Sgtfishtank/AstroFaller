@@ -28,8 +28,17 @@ public class Player : MonoBehaviour
 	private float mStartYValue;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
-
 	
+	private FMOD.Studio.EventInstance fmodMusic2;
+	private FMOD.Studio.EventInstance mDownSwipeSound;
+	
+	// Use this for initialization
+	void Awake() 
+	{
+		fmodMusic2 = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
+		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
+	}
+
 	// Use this for initialization
 	void Start()
 	{
@@ -54,7 +63,7 @@ public class Player : MonoBehaviour
 		mCrystalsCollected = 0;
 		mStartYValue = transform.position.y;
 	}
-	
+
 	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
 	public void safeInit()
 	{
@@ -70,6 +79,7 @@ public class Player : MonoBehaviour
 	{
 		if(mDashCDTime < Time.time)
 		{
+			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 			mfp.Dash();
 			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
 			mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
@@ -125,18 +135,13 @@ public class Player : MonoBehaviour
 		else if(col.tag == "SpawnAstroid")
 		{
 			mAS.gameObject.SetActive(true);
-			InGameCamera.Instance.showWarning(true);
 		}
 	}
 	void OnTriggerExit(Collider col)
 	{
 		if(col.tag == "SpawnAstroid")
 		{
-			if (false) 
-			{
-				mAS.gameObject.SetActive(false);
-				InGameCamera.Instance.showWarning(false);
-			}
+			mAS.gameObject.SetActive(false);
 		}
 	}
 

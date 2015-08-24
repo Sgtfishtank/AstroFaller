@@ -17,9 +17,13 @@ public class AstroidSpawn : MonoBehaviour {
 	private Rigidbody mPlRigid;
 	private float mLastSpawn = 0;
 
-	void Start ()
+	void Awake ()
 	{
 		mAstroids = new List<GameObject>();
+	}
+
+	void Start ()
+	{
 
 	}
 	

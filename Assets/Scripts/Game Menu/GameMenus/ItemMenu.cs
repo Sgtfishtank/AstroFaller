@@ -113,7 +113,7 @@ public class ItemMenu : GameMenu
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open(transform.position);
+		MenuCamera.Instance.PopupBuyMenu().Open();
 
 		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}

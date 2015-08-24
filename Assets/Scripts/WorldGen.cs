@@ -64,7 +64,6 @@ public class WorldGen : MonoBehaviour
 		}
 		mAstroidSpawn = astroidSpawnObj.GetComponent<AstroidSpawn>();
 
-
 		GameObject dirLightObj = GameObject.Find("InGame DirectionalLight");
 		if (dirLightObj == null)
 		{
@@ -77,10 +76,10 @@ public class WorldGen : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		mDirectionalLight.SetActive (false);
+		/*mDirectionalLight.SetActive (false);
 		gameObject.SetActive (false);
 		mAstroidSpawn.gameObject.SetActive (false);
-		mPlayer.gameObject.SetActive (false);
+		mPlayer.gameObject.SetActive (false);*/
 	}
 	
 	public Player Player ()
@@ -153,7 +152,7 @@ public class WorldGen : MonoBehaviour
 
 		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0,mSegments.Length)];
 		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
-		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
+		mNextSegment = Instantiate(mSegments[0], pos, Quaternion.identity) as GameObject;
 	}
 
 	void NextBgSegment ()
@@ -284,6 +283,7 @@ public class WorldGen : MonoBehaviour
 		GUICanvas.Instance.ShowInGameButtons(false);
 		gameObject.SetActive (false);
 		mDirectionalLight.SetActive (false);
+		mAstroidSpawn.gameObject.SetActive (false);
 
 		mStartTime = -1;
 
@@ -308,7 +308,8 @@ public class WorldGen : MonoBehaviour
 			mPlayer.GetComponent<Rigidbody>().useGravity = true;
 			mPlayer.transform.position = Vector3.zero;
 		}
-
+		
+		mAstroidSpawn.gameObject.SetActive (false);
 		mDirectionalLight.SetActive (true);
 		gameObject.SetActive (true);
 

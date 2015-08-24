@@ -28,19 +28,15 @@ public class PopupBuyMenu : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-	}
-
-	public void Init() 
-	{
 		gameObject.SetActive(false);
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
 	}
 
-	public void Open(Vector3 position)
+	public void Open()
 	{
 		mOpen = true;
 		gameObject.SetActive(true);

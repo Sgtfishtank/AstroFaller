@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Level : LevelBase 
+public class Level : PlayableLevel 
 {
 	public string mLevelName;
 	public GameObject mLevelPrefab;
