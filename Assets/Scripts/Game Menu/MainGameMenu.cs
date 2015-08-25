@@ -41,7 +41,7 @@ public class MainGameMenu : MonoBehaviour
 	void Awake() 
 	{
 		mBackground = GameObject.Instantiate (mBackgroundPrefab);
-		
+
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 		if (mStartMenu == null)
 		{
@@ -60,11 +60,7 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].Init();
 			mGameMenus[i].gameObject.SetActive (false);
 		}
-		
-		mStartMenu.gameObject.SetActive (true);
-		mStartMenu.Focus();
 
-		AudioManager.Instance.PlayMusic(fmodMusic);
 	}
 
 	// Update is called once per frame
@@ -94,6 +90,8 @@ public class MainGameMenu : MonoBehaviour
 			mBackground.gameObject.SetActive (false);
 		}
 		
+		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
 		gameObject.SetActive (false);
 	}
 	
@@ -102,6 +100,11 @@ public class MainGameMenu : MonoBehaviour
 		print("MainGameMenu On");
 
 		gameObject.SetActive (true);
+		
+		mStartMenu.gameObject.SetActive (true);
+		mStartMenu.Focus();
+		
+		AudioManager.Instance.PlayMusic(fmodMusic);
 
 		MenuCamera.Instance.gameObject.SetActive (true);
 		GUICanvas.Instance.ShowMenuButtons(true);
@@ -123,6 +126,7 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
+		GUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
 
 		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
 		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);

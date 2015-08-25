@@ -19,11 +19,14 @@ public class WorldGen : MonoBehaviour
 	
 	public GameObject mPlayerPrefab;
 	public GameObject mAstroidSpawnPrefab;
-
+	
+	public int[] mTmies;
 	public GameObject[] mSegments;
+	public int[] mSegmentWeightDynamic;
+	public int[] mSegmentWeightStatic;
+	public int mSum;
 	private GameObject mCurrentSegment = null;
 	private GameObject mNextSegment;
-	//private bool mFirstTime = false;
 	private float mCurrentPos;
 	private float mOffset = 50;
 
@@ -44,6 +47,8 @@ public class WorldGen : MonoBehaviour
 	public float mStartTime = -1;
 
 	public float mUsualShiftkingRailgun = 0;
+	
+	private FMOD.Studio.EventInstance fmodMusic;
 
 	void Awake()
 	{
@@ -71,15 +76,13 @@ public class WorldGen : MonoBehaviour
 			dirLightObj.name = mDirectionalLightPrefab.name;
 		}
 		mDirectionalLight = dirLightObj;
+		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+
 	}
 
 	// Use this for initialization
 	void Start ()
 	{
-		/*mDirectionalLight.SetActive (false);
-		gameObject.SetActive (false);
-		mAstroidSpawn.gameObject.SetActive (false);
-		mPlayer.gameObject.SetActive (false);*/
 	}
 	
 	public Player Player ()
@@ -114,7 +117,7 @@ public class WorldGen : MonoBehaviour
 
 				mUsualShiftkingRailgun = 0;
 
-				SpawnSegments();
+				SpawnStartSegments();
 			}
 		}
 		else
@@ -123,15 +126,7 @@ public class WorldGen : MonoBehaviour
 			{
 				NextSegment();
 			}
-			/*else if (mCurrentPos > mPlayer.transform.position.y)
-			{
-				mFirstTime = false;
-				mNextSegment = Instantiate(mSegments[UnityEngine.Random.Range(0,mSegments.Length)],
-				                           new Vector3 (0,mCurrentPos -mOffset,0),Quaternion.identity) as GameObject;
-				
 
-				mCurrentPos -= mOffset;
-			}*/
 			if (mCurrentBgPos > mPlayer.transform.position.y)
 			{
 				NextBgSegment();
@@ -143,14 +138,41 @@ public class WorldGen : MonoBehaviour
 			}
 		}
 	}
+	int PickSegment()
+	{
+		int valie = UnityEngine.Random.Range (0, mSum);
+
+		int retval = -1;
+
+		int valueToCompare = 0;
+		for (int i = 0; i < mSegmentWeightDynamic.Length; i++)
+		{
+			valueToCompare += mSegmentWeightDynamic[i];
+			if ((valueToCompare > valie) && (retval == -1))
+			{
+				mSum += mSegmentWeightStatic[i] - mSegmentWeightDynamic[i];
+				mSegmentWeightDynamic[i] = mSegmentWeightStatic[i];
+				retval = i;
+			}
+			else
+			{
+				mSegmentWeightDynamic[i] += mSegmentWeightStatic[i];
+				mSum += mSegmentWeightStatic[i];
+			}
+		}
+
+		mTmies[retval]++;
+		return retval;
+	}
 
 	void NextSegment ()
 	{
+		print("next " + Time.time);
 		Destroy(mCurrentSegment);
 		mCurrentSegment = mNextSegment;
 		mCurrentPos -= mOffset;
+		GameObject segmentPrefab = mSegments [PickSegment ()];
 
-		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0,mSegments.Length)];
 		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
 		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
 	}
@@ -172,19 +194,19 @@ public class WorldGen : MonoBehaviour
 		mNextBgSegment.transform.localScale = segmentPrefab.transform.localScale * (0.75f + (Random.value * 0.5f));
 	}
 
-	void SpawnSegments()
+	void SpawnStartSegments()
 	{
 		mCurrentPos = mPlayer.transform.position.y - mOffset;
 		Vector3 pos = new Vector3 (0, mCurrentPos, 0);
 		mCurrentSegment = Instantiate(mSegments[1], pos, Quaternion.identity) as GameObject;
 		
 		mCurrentPos -= mOffset;
-		GameObject segmentPrefab = mSegments[UnityEngine.Random.Range(0, mSegments.Length)];
+		GameObject segmentPrefab = mSegments[PickSegment()];
 		pos = new Vector3 (0, mCurrentPos, 0);
 		mNextSegment = Instantiate(segmentPrefab, pos, Quaternion.identity) as GameObject;
 	}
 
-	void SpawnBgSegments()
+	void SpawnBgStartSegments()
 	{
 		Vector3 pos; 
 		GameObject segmentPrefab;
@@ -225,6 +247,8 @@ public class WorldGen : MonoBehaviour
 	
 	void ShiftBackWorld()
 	{
+		return;
+
 		float shift = -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL;
 
 		mUsualShiftkingRailgun -= shift;
@@ -245,8 +269,7 @@ public class WorldGen : MonoBehaviour
 
 		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
-
-	public void DespawnSegments() 
+	void DespawnSegments() 
 	{
 		if (mNextSegment != null)
 		{
@@ -259,7 +282,7 @@ public class WorldGen : MonoBehaviour
 		}
 	}
 	
-	public void DespawnBgSegments() 
+	void DespawnBgSegments() 
 	{
 		if (mNextBgSegment != null)
 		{
@@ -272,53 +295,96 @@ public class WorldGen : MonoBehaviour
 		}
 	}
 
+	void ShowComponents(bool show)
+	{
+	
+	}
+
 	public void Disable() 
 	{
+		print("WorldGen Off");
+		
 		DespawnSegments ();
 		DespawnBgSegments ();
 
-		print("WorldGen Off");
+		mBgSegments = null;
+		mSegments = null;
 
+//		showComponents(true);
 		InGameCamera.Instance.gameObject.SetActive (false);
 		GUICanvas.Instance.ShowInGameButtons(false);
+		GUICanvas.Instance.ShowOptionButtons(false);
 		gameObject.SetActive (false);
 		mDirectionalLight.SetActive (false);
+		
+		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+	
 		mAstroidSpawn.gameObject.SetActive (false);
-
-		mStartTime = -1;
 
 		if (mPlayer != null) 
 		{
 			mPlayer.GetComponent<Player>().DepositData();
 			mPlayer.gameObject.SetActive (false);
 		}
+
+		mStartTime = -1;
 	}
 	
 	public void Enable(string levelName)
 	{
 		print("WorldGen On");
 		mCurrentLevel = levelName;
+		
+		mBgSegments = Resources.LoadAll<GameObject>("Parralax") as GameObject[];
+		mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
+		mSegmentWeightStatic = new int[mSegments.Length];
+		mSegmentWeightDynamic = new int[mSegments.Length];
+		mTmies = new int[mSegments.Length];
+
+
+		mAstroidSpawn.gameObject.SetActive (false);
+		mPlayer.gameObject.SetActive (false);
+		
+		AudioManager.Instance.PlayMusic(fmodMusic);
 
 		InGameCamera.Instance.gameObject.SetActive (true);
 		GUICanvas.Instance.ShowInGameButtons(true);
-		GUICanvas.Instance.ShowBackToMenuButton (true);
+		GUICanvas.Instance.ShowBackToMenuButton(false);
 		if (mPlayer != null) 
 		{
 			mPlayer.gameObject.SetActive (true);
 			mPlayer.GetComponent<Rigidbody>().useGravity = true;
 			mPlayer.transform.position = Vector3.zero;
 		}
+		GUICanvas.Instance.ShowOptionButtons(false);
 		
 		mAstroidSpawn.gameObject.SetActive (false);
 		mDirectionalLight.SetActive (true);
+
 		gameObject.SetActive (true);
 
-		mBgSegments = Resources.LoadAll<GameObject>("Parralax") as GameObject[];
-		mSegments = Resources.LoadAll<GameObject>(mCurrentLevel) as GameObject[];
-
-		SpawnBgSegments();
+		SpawnBgStartSegments();
 
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
+		for (int i = 0; i < mSegmentWeightStatic.Length; i++)
+		{
+			if(mSegments[i].name == "Asteroids_trigger_area")
+			{
+				mSegmentWeightStatic[i] = 5;
+				mSum += 5;
+			}
+			else
+			{
+				mSegmentWeightStatic[i] = 1;
+				mSum += 1;
+			}
+		}
+
+		for (int i = 0; i < mSegments.Length; i++) 
+		{
+			mSegmentWeightDynamic[i] = mSegmentWeightStatic[i];
+			mTmies[i] = 0;
+		}
 	}
 }

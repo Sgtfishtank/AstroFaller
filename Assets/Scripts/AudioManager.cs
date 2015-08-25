@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour 
 {
-	public float mMasterLevel;
-	public float mMusicLevel;
-	public float mSoundsLevel;
-	public bool mMuteMaster;
-	public bool mMuteSounds;
-	public bool mMuteMusic;
+	public float mMasterLevel = 1;
+	public float mMusicLevel = 1;
+	public float mSoundsLevel = 1;
+	public bool mMuteMaster = false;
+	public bool mMuteSounds = false;
+	public bool mMuteMusic = false;
 
 	public List<FMOD.Studio.EventInstance> mPlayingSoundEvents;
 	public List<FMOD.Studio.EventInstance> mPlayingMusicEvents;

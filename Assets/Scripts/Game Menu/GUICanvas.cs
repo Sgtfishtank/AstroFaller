@@ -69,6 +69,31 @@ public class GUICanvas : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		Button[] buttons = GetComponentsInChildren<Button>();
+
+		for (int i = 0; i < buttons.Length; i++) 
+		{
+			ColorBlock cb = buttons[i].colors;
+
+			Color col = cb.highlightedColor;
+			col.a = 0;
+			cb.highlightedColor = col;
+
+			col = cb.normalColor;
+			col.a = 0;
+			cb.normalColor = col;
+			
+			col = cb.pressedColor;
+			col.a = 0;
+			cb.pressedColor = col;
+			
+			col = cb.disabledColor;
+			col.a = 0;
+			cb.disabledColor = col;
+
+			buttons[i].colors = cb;
+		}
+
 		ButtonPress[] buttonPresss = transform.GetComponentsInChildren<ButtonPress>(true);
 		for (int i = 0; i < buttonPresss.Length; i++) 
 		{
