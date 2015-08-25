@@ -49,8 +49,8 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mHelpMenu;
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
-	//private GameObject mPlayText;
-	//private GameObject mPlayTutorial;
+	private GameObject mWorldMapIcon;
+	private GameObject mOptionsIcon;
 
 	void Awake()
 	{
@@ -218,18 +218,6 @@ public class MenuCamera : MonoBehaviour
 	{
 		return mPopupBuyMenu;
 	}
-	
-	public void ShowPlayText (bool show)
-	{
-		//if (mPlayText == null)
-		{
-			//mPlayText = MainGameMenu.Instance.WorldMapMenu().CurrentLevel().PlayButton();
-		}
-
-		//bool isTutorial = MainGameMenu.Instance.WorldMapMenu().IsTutorial();
-		//mPlayText.SetActive(show);
-		//mPlayTutorial.SetActive(show && isTutorial && false);
-	}
 
 	public void ShowBackButton (bool show)
 	{
@@ -286,10 +274,6 @@ public class MenuCamera : MonoBehaviour
 			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
 		case "CrystalsButton 1":
 			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
-		case "PlayLevelButton 0":
-			return null;
-		case "PlayLevelButton 1":
-			return null;
 		case "BackToMenuButton":
 			return null;
 		default:

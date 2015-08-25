@@ -157,8 +157,6 @@ public class WorldMapMenu : GameMenu
 	public override void UpdateMenusAndButtons ()
 	{
 		GUICanvas.Instance.showPlayLevelButton(mFocused && (!mPlayLevelPhase));
-		
-		MenuCamera.Instance.ShowPlayText(mFocused && mLevelOpen && false);
 	}
 
 	public LevelBase CurrentLevel()

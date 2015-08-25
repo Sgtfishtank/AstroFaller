@@ -40,9 +40,6 @@ public class MainGameMenu : MonoBehaviour
 
 	void Awake() 
 	{
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
-		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
-
 		mBackground = GameObject.Instantiate (mBackgroundPrefab);
 		
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
@@ -55,7 +52,8 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{

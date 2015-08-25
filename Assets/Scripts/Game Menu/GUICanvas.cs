@@ -20,7 +20,6 @@ public class GUICanvas : MonoBehaviour
 	}
 	
 	private GameObject mMenuButtons;
-	private GameObject mInGameButtons;
 	private GameObject mWorldMapButton;
 	private GameObject mPopupBuyMenu;
 	private GameObject mPopupCraftingMenu;
@@ -29,7 +28,15 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mPerkButtons;
 	private GameObject mIconButtons;
 	private GameObject mPlayLevelButton;
+	
+	private GameObject mInGameButtons;
 	private GameObject mBackToMenuButton;
+
+	private GameObject mOptionButtons;
+	private GameObject mMasterButtons;
+	private GameObject mSoundButtons;
+	private GameObject mMusicButtons;
+
 	private Image mFadeImage;
 	private bool mShowDebugGUI;
 
@@ -48,10 +55,15 @@ public class GUICanvas : MonoBehaviour
 		mIconButtons = mMenuButtons.transform.Find ("Icons").gameObject;
 		mPlayLevelButton = mMenuButtons.transform.Find ("PlayLevelButton").gameObject;
 		
+		//assign all option buttons
+		mOptionButtons = transform.Find ("OptionButtons").gameObject;
+		mMasterButtons = mOptionButtons.transform.Find("Master").gameObject;
+		mSoundButtons = mOptionButtons.transform.Find("Sounds").gameObject;
+		mMusicButtons = mOptionButtons.transform.Find("Music").gameObject;
+
 		//assign all in game buttons
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
 		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
-
 	}
 
 	// Use this for initialization
@@ -62,16 +74,6 @@ public class GUICanvas : MonoBehaviour
 		{
 			buttonPresss[i].Init();	
 		}
-
-		/*showPlayLevelButton(false);
-		ShowIconButtons (true);
-		ShowWorldMapButton(false);
-		ShowPopupBuyButton(false);
-		ShowPopupCraftingButton(false);
-		ShowPopupAchievementsButton(false);
-		ShowItemButtons(false);
-		ShowPerkButtons(false);
-		ShowBackToMenuButton(false);*/
 	}
 	
 	// Update is called once per frame
@@ -246,35 +248,35 @@ public class GUICanvas : MonoBehaviour
 	// options
 	public void MuteMaster()
 	{
-		AudioManager.Instance.MuteMaster(transform.Find("Master").GetComponent<Toggle>().isOn);
+		AudioManager.Instance.MuteMaster(mMasterButtons.transform.Find("Master").GetComponent<Toggle>().isOn);
 	}
 
 	public void MuteSounds()
 	{
-		AudioManager.Instance.MuteSounds(transform.Find("Master 2").GetComponent<Toggle>().isOn);
+		AudioManager.Instance.MuteSounds(mSoundButtons.transform.Find("Master 2").GetComponent<Toggle>().isOn);
 	}
 
 	public void MuteMusic()
 	{
-		AudioManager.Instance.MuteMusic(transform.Find("Master 1").GetComponent<Toggle>().isOn);
+		AudioManager.Instance.MuteMusic(mMusicButtons.transform.Find("Master 1").GetComponent<Toggle>().isOn);
 	}
 
 	public void MasterLevel()
 	{
-		AudioManager.Instance.MasterLevel(transform.Find("Slider").GetComponent<Slider>().value);
+		AudioManager.Instance.MasterLevel(mMasterButtons.transform.Find("Slider").GetComponent<Slider>().value);
 	}
 	
 	public void SoundsLevel()
 	{
-		AudioManager.Instance.SoundsLevel(transform.Find("Slider 2").GetComponent<Slider>().value);
+		AudioManager.Instance.SoundsLevel(mSoundButtons.transform.Find("Slider 2").GetComponent<Slider>().value);
 	}
 	
 	public void MusicLevel()
 	{
-		AudioManager.Instance.MusicLevel(transform.Find("Slider 1").GetComponent<Slider>().value);
+		AudioManager.Instance.MusicLevel(mMusicButtons.transform.Find("Slider 1").GetComponent<Slider>().value);
 	}
 
-	// menu toggle buttons
+	// toggle menu buttons
 	public void ShowMenuButtons(bool show)
 	{
 		mMenuButtons.gameObject.SetActive (show);
@@ -325,10 +327,16 @@ public class GUICanvas : MonoBehaviour
 		mPerkButtons.gameObject.SetActive (show);
 	}
 	
-	// in-game toggle buttons
+	// toggle in-game buttons
 	public void ShowBackToMenuButton(bool show)
 	{
 		mBackToMenuButton.gameObject.SetActive (show);
+	}
+	
+	// toggle options buttons
+	public void ShowOptionButtons(bool show)
+	{
+		mOptionButtons.gameObject.SetActive (show);
 	}
 
 	// other

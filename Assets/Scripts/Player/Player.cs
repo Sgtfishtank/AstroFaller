@@ -28,14 +28,12 @@ public class Player : MonoBehaviour
 	private float mStartYValue;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
-	
-	private FMOD.Studio.EventInstance fmodMusic2;
+
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	
 	// Use this for initialization
 	void Awake() 
 	{
-		fmodMusic2 = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
 	}
 

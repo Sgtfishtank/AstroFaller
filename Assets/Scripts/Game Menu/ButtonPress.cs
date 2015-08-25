@@ -30,14 +30,13 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	public void Init()
 	{
-
-		if (GetComponents<ButtonPress>().Length < 2)
+		ButtonPress[] bp = GetComponents<ButtonPress>();
+		if (bp.Length < 2)
 		{
 			mObj = GUICanvas.Instance.GUIObject(name);
 		}
 		else
 		{
-			ButtonPress[] bp = GetComponents<ButtonPress>();
 			for (int i = 0; i < bp.Length; i++) 
 			{
 				if (bp[i] == this) 
@@ -51,10 +50,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		{
 			mBaseScale = mObj.transform.localScale;
 			mBasePosition = mObj.transform.localPosition;
-		}
-		else
-		{
-			//enabled = false;	
 		}
 	}
 
@@ -74,16 +69,11 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	
 	void OnEnable() 
 	{
-		if (mObj == null)
-		{
-			return;
-		}
-		
-		if (mBaseScale == Vector3.zero)
+		/*if (mBaseScale == Vector3.zero)
 		{
 			mBaseScale = mObj.transform.localScale;
 			mBasePosition = mObj.transform.localPosition;
-		}
+		}*/
 		
 		mPressed = false;
 		mMoveT = 0;
