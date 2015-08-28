@@ -28,7 +28,7 @@ public class WorldMapMenu : GameMenu
 			{
 				mPlayLevelPhase = false;
 				MainGameMenu.Instance.Disable();
-				WorldGen.Instance.Enable("Level1");
+				WorldGen.Instance.Enable(1);
 			}
 			else
 			{

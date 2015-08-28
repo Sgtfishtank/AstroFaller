@@ -160,7 +160,7 @@ public class Player : MonoBehaviour
 
 	public int distance()
 	{
-		int dist = (int)(transform.position.y - mStartYValue - WorldGen.Instance.fallShift());
+		int dist = (int)(transform.position.y - mStartYValue - WorldGen.Instance.FallShift());
 		return -dist;
 	}
 
@@ -197,6 +197,11 @@ public class Player : MonoBehaviour
 		
 		PlayerData.Instance.depositDistance(distance());
 		mStartYValue = transform.position.y;
+	}
+
+	public void ShiftBack (float shift)
+	{
+		transform.position -= new Vector3(0, shift, 0);
 	}
 
 	void respawn ()

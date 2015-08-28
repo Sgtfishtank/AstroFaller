@@ -5,14 +5,17 @@ public class GameStarter : MonoBehaviour
 {
 	public enum StartState
 	{
-		MainMenu,
-		InGame
+		WorldMap,
+		Items,
+		Perks,
+		CrystalShop,
+		AstroidLevel,
 	}
 
 	public StartState mStartState;
-	public int mStartInGameLevel;
 
 	private GameObject[] mEscenncials;
+	public GameObject currInstance;
 
 	void Awake()
 	{
@@ -24,6 +27,20 @@ public class GameStarter : MonoBehaviour
 				print("Error essceciall " + mEscenncials[i].name + " is missing in the scene.");
 			}
 		}
+
+		// triger static instance init
+		currInstance = InGame.Instance.gameObject;
+		currInstance = MainGameMenu.Instance.gameObject;
+
+		currInstance = InGameCamera.Instance.gameObject;
+		currInstance = MenuCamera.Instance.gameObject;
+
+		currInstance = GlobalVariables.Instance.gameObject;
+		currInstance = PlayerData.Instance.gameObject;
+		currInstance = GUICanvas.Instance.gameObject;
+		currInstance = AudioManager.Instance.gameObject;
+
+		currInstance = this.gameObject;
 	}
 
 	// Use this for initialization
@@ -31,17 +48,29 @@ public class GameStarter : MonoBehaviour
 	{
 		switch (mStartState) 
 		{
-		case StartState.MainMenu:
-			MainGameMenu.Instance.Enable();
+		case StartState.WorldMap:
 			WorldGen.Instance.Disable();
+			MainGameMenu.Instance.Enable(0);
 			break;
-		case StartState.InGame:
+		case StartState.Perks:
+			WorldGen.Instance.Disable();
+			MainGameMenu.Instance.Enable(1);
+			break;
+		case StartState.Items:
+			WorldGen.Instance.Disable();
+			MainGameMenu.Instance.Enable(2);
+			break;
+		case StartState.CrystalShop:
+			WorldGen.Instance.Disable();
+			MainGameMenu.Instance.Enable(3);
+			break;
+		case StartState.AstroidLevel:
 			MainGameMenu.Instance.Disable();
-			WorldGen.Instance.Enable("Level" + mStartInGameLevel);
+			WorldGen.Instance.Enable(1);
 			break;
 		default:
 			print("ERROR: StartState " + mStartState);
-			MainGameMenu.Instance.Disable();
+			MainGameMenu.Instance.Enable(0);
 			WorldGen.Instance.Disable();
 			break;
 		}

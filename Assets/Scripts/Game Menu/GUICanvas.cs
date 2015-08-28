@@ -18,7 +18,7 @@ public class GUICanvas : MonoBehaviour
 			return instance;
 		}
 	}
-	
+
 	private GameObject mMenuButtons;
 	private GameObject mWorldMapButton;
 	private GameObject mPopupBuyMenu;
@@ -38,7 +38,11 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mMusicButtons;
 
 	private Image mFadeImage;
-	private bool mShowDebugGUI;
+	public bool mShowDebugGUI;
+	private bool mShowButtons;
+
+	private Button[] mButtons;
+	private ButtonPress[] mButtonPresss;
 
 	void Awake () 
 	{
@@ -64,49 +68,75 @@ public class GUICanvas : MonoBehaviour
 		//assign all in game buttons
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
 		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
+		
+		mButtonPresss = transform.GetComponentsInChildren<ButtonPress>();
+		mButtons = GetComponentsInChildren<Button>();
+
+		ShowButtons (false);
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		Button[] buttons = GetComponentsInChildren<Button>();
-
-		for (int i = 0; i < buttons.Length; i++) 
+		for (int i = 0; i < mButtonPresss.Length; i++) 
 		{
-			ColorBlock cb = buttons[i].colors;
+			mButtonPresss[i].Init();	
+		}
+	}
 
+	void ShowButtons(bool show)
+	{
+		float alpha = 0;
+		if (show)
+		{
+			alpha = 1;
+		}
+
+		for (int i = 0; i < mButtons.Length; i++) 
+		{
+			ColorBlock cb = mButtons[i].colors;
+			
 			Color col = cb.highlightedColor;
-			col.a = 0;
+			col.a = alpha;
 			cb.highlightedColor = col;
-
+			
 			col = cb.normalColor;
-			col.a = 0;
+			col.a = alpha;
 			cb.normalColor = col;
 			
 			col = cb.pressedColor;
-			col.a = 0;
+			col.a = alpha;
 			cb.pressedColor = col;
 			
 			col = cb.disabledColor;
-			col.a = 0;
+			col.a = alpha;
 			cb.disabledColor = col;
-
-			buttons[i].colors = cb;
+			
+			mButtons[i].colors = cb;
 		}
 
-		ButtonPress[] buttonPresss = transform.GetComponentsInChildren<ButtonPress>(true);
-		for (int i = 0; i < buttonPresss.Length; i++) 
-		{
-			buttonPresss[i].Init();	
-		}
+		mShowButtons = show;
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
+		if (mShowDebugGUI)
+		{
+			if (Input.GetKeyDown(KeyCode.B))
+			{
+				ShowButtons(!mShowButtons);
+			}
+		}
+
 		if ((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift)))
 		{
-			mShowDebugGUI = true;
+			mShowDebugGUI = !mShowDebugGUI;
+
+			if (mShowDebugGUI == false)
+			{
+				ShowButtons(false);
+			}
 		}
 	}
 
@@ -267,7 +297,7 @@ public class GUICanvas : MonoBehaviour
 	public void BackToMenu()
 	{
 		WorldGen.Instance.Disable();
-		MainGameMenu.Instance.Enable();
+		MainGameMenu.Instance.Enable(0);
 	}
 
 	// options

@@ -18,7 +18,7 @@ public class MainGameMenu : MonoBehaviour
 		}
 	}
 
-	public GameMenu mStartMenu;
+	//public GameMenu mStartMenu;
 	public GameObject mBackgroundPrefab;
 	public GameObject mBackground;
 
@@ -43,24 +43,18 @@ public class MainGameMenu : MonoBehaviour
 		mBackground = GameObject.Instantiate (mBackgroundPrefab);
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
-		if (mStartMenu == null)
-		{
-			mStartMenu = mGameMenus[WORLD_MAP_MENU_INDEX];
-		}
+
+		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
-		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
-
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
 			mGameMenus[i].Init();
-			mGameMenus[i].gameObject.SetActive (false);
 		}
-
 	}
 
 	// Update is called once per frame
@@ -79,45 +73,50 @@ public class MainGameMenu : MonoBehaviour
 		}
 	}
 	
+	void ShowComponents(bool show)
+	{
+		MenuCamera.Instance.gameObject.SetActive (show);
+		GUICanvas.Instance.ShowInGameButtons(show);
+		
+		GUICanvas.Instance.ShowMenuButtons(show);
+		GUICanvas.Instance.ShowIconButtons(show);
+		
+		if (mBackground != null) 
+		{
+			mBackground.gameObject.SetActive (show);
+		}
+
+		gameObject.SetActive (show);
+	}
+
 	public void Disable() 
 	{
-		print("MainGameMenu Off");
+		ShowComponents(false);
 
-		MenuCamera.Instance.gameObject.SetActive (false);
-		GUICanvas.Instance.ShowMenuButtons(false);
-		if (mBackground != null) 
-		{
-			mBackground.gameObject.SetActive (false);
-		}
-		
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-
-		gameObject.SetActive (false);
 	}
 	
-	public void Enable() 
+	public void Enable(int menuIndex) 
 	{
-		print("MainGameMenu On");
-
-		gameObject.SetActive (true);
-		
-		mStartMenu.gameObject.SetActive (true);
-		mStartMenu.Focus();
-		
 		AudioManager.Instance.PlayMusic(fmodMusic);
+		
+		ShowComponents(true);
 
-		MenuCamera.Instance.gameObject.SetActive (true);
-		GUICanvas.Instance.ShowMenuButtons(true);
-		GUICanvas.Instance.ShowIconButtons(true);
-		if (mBackground != null) 
+		MenuCamera.Instance.transform.position = mGameMenus[menuIndex].transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+
+		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
-			mBackground.gameObject.SetActive (true);
+			mGameMenus[i].gameObject.SetActive (false);
+			mGameMenus[i].Unfocus();
 		}
 
-		MenuCamera.Instance.transform.position = mStartMenu.transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
-
 		ResetAllMenusAndButtons ();
-		mStartMenu.Focus();
+
+		mCurrentGameMenuIndex = menuIndex;
+		mCurrentGameMenu = mGameMenus[mCurrentGameMenuIndex];
+		mCurrentGameMenu.gameObject.SetActive (true);
+		mCurrentGameMenu.Focus();
+
 		UpdateMenusAndButtons ();
 	}
 
