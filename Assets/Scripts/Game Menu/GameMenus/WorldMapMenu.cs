@@ -131,8 +131,6 @@ public class WorldMapMenu : GameMenu
 		}
 
 		CheckLevels();
-
-		enabled = false;
 	}
 	
 	public override void Focus()

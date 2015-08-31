@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
 	public int mCrystalsCollected;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
+	private FMOD.Studio.EventInstance mHurtHitSound;
+	private FMOD.Studio.EventInstance mCoinPickUpSound;
 	
 	// Use this for initialization
 	void Awake() 

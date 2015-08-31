@@ -123,8 +123,7 @@ public class MovementControls
 	{
 		if (mHoverActive)
 		{
-
-			if(mRb.velocity.y < 0)//slows down the player to hover
+			if(mRb.velocity.y < 0) //slows down the player to hover
 			{
 				// revese the polarity of the gravity sigularity cap'n!
 				mRb.AddForce(-Physics.gravity * mRb.mass);
@@ -137,12 +136,6 @@ public class MovementControls
 				{
 					mRb.AddForce(new Vector3(0, force * GlobalVariables.Instance.PLAYER_HOVER_FORCE, 0));
 				}
-
-				// stop at alomst standstill
-				//if(mRb.velocity.y > -0.5f)
-				//{
-				//	mRb.velocity = new Vector2(mRb.velocity.x, 0);
-				//}
 			}
 		}
 	}
@@ -150,51 +143,48 @@ public class MovementControls
 	public void Move(Rigidbody rb)
 	{
 		LowPassFilterAccelerometer ();
-		//check if the speed is in between the set interval
-		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == 1) 
+		
+		float force = Input.acceleration.x;
+		float speeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
+
+		if (Input.acceleration.x == 0)
 		{
-			if(rb.velocity.x < 0)
-			{
-				rb.velocity += (new Vector3((Input.GetAxisRaw("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime- rb.velocity.x *.10f), 0,0));
-			}
-			else 
-			rb.velocity += (new Vector3((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0,0));
-		}
-		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.GetAxisRaw("Horizontal") == -1)
-		{
-			if(rb.velocity.x > 0)
-			{
-				rb.velocity += (new Vector3((Input.GetAxisRaw("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime- rb.velocity.x *.10f), 0,0));
-			}
-			else 
-			rb.velocity += (new Vector3((Input.GetAxisRaw ("Horizontal") * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD * Time.deltaTime), 0,0));
-		}
-		if (rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x < 0)
-		{
-			if(rb.velocity.x > 0)
-			{
-				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime- rb.velocity.x *.10f), 0,0));
-			}
-			else 
-				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0,0));
-		}
-		if (rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED && Input.acceleration.x > 0)
-		{
-			if(rb.velocity.x < 0)
-			{
-				rb.velocity += (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime- rb.velocity.x *.10f), 0,0));
-			}
-			else 
-				rb.velocity +=  (new Vector3((Input.acceleration.x * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED * Time.deltaTime), 0,0));
+			force = Input.GetAxisRaw("Horizontal");
+			speeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD;
 		}
 
-		if(rb.velocity.y <= -mPlayer.mMaxCurrentFallSpeed)//max fall speed
+		rb.velocity -= new Vector3 (rb.velocity.x, 0, 0) * 0.5f;
+
+		//check if the speed is in between the set interval
+		//if (/*rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED &&*/ (force > 0)) 
 		{
-			rb.velocity = new Vector2(rb.velocity.x,-mPlayer.mMaxCurrentFallSpeed);
+		//	rb.position += new Vector3(force * speeed, 0, 0) * Time.deltaTime;
 		}
-		if(Input.GetAxisRaw("Horizontal") == 0 || Input.acceleration.x == 0)//stops player movment on key release
+
+		//if (/*rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED &&*/ (force < 0))
 		{
-			rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
+			rb.velocity += new Vector3(force * speeed, 0, 0) * Time.deltaTime;
+		}
+		
+		// max horisotal speed
+		if (rb.velocity.x > GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED)
+		{
+			rb.velocity = new Vector2(GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED, rb.velocity.y);
+		}
+		else if (rb.velocity.x < -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED)
+		{
+			rb.velocity = new Vector2(-GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED, rb.velocity.y);
+		}
+
+		// max fall speed
+		if(rb.velocity.y < -mPlayer.mMaxCurrentFallSpeed)
+		{
+			rb.velocity = new Vector2(rb.velocity.x, -mPlayer.mMaxCurrentFallSpeed);
+		}
+
+		//if(Input.GetAxisRaw("Horizontal") == 0 || Input.acceleration.x == 0)//stops player movment on key release
+		{
+			//rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
 		}
 
 		// clamp position in x axis

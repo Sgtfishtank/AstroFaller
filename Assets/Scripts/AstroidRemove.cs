@@ -74,7 +74,7 @@ public class AstroidRemove : MonoBehaviour {
 
 	void OnCollisionEnter(Collision coll)
 	{
-		if (coll.gameObject != gameObject)
+		if ((coll.gameObject != gameObject) && (coll.gameObject != mpl.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
 		}
