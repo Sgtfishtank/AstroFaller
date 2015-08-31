@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
 	private float mDashTime;
 	private float mDashCDTime;
+	public int mLife;
 
 	private float mStartYValue;
 	public int mBoltsCollected;
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
 		safeInit();
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
 	}
 
 	public void StartGame()
@@ -144,6 +146,22 @@ public class Player : MonoBehaviour
 			mAS.gameObject.SetActive(false);
 		}
 	}
+	void OnCollisionEnter(Collision coll)
+	{
+		if(coll.transform.tag == "Enemy" )
+		{
+			print ("hejhej");
+			if(mLife == 1)
+			{
+				print ("fan");
+				PlayerDead();
+			}
+			else
+			{
+				mLife--;
+			}
+		}
+	}
 
 	public int colectedBolts()
 	{
@@ -180,6 +198,7 @@ public class Player : MonoBehaviour
 	{
 		if(!mInvulnerable && !mIsDead)
 		{
+			print ("why");
 			mIsDead = true;
 
 			mRb.velocity = new Vector2(0, 0);

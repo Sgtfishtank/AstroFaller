@@ -26,6 +26,7 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_HOVER_FORCE						= 15f	;
 	public float PLAYER_MIN_HOVER_SPEED 				= 1.5f;
 	public float PLAYER_MINMAX_X						= 5;
+	public int   PLAYER_MAX_LIFE						= 3		;
 
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;

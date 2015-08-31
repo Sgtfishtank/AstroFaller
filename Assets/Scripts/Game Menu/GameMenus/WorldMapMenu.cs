@@ -12,7 +12,7 @@ public class WorldMapMenu : GameMenu
 	private GameObject mLevelsScroller;
 	private bool mFocused = false;
 	private bool mLevelOpen = false;
-	private bool mPlayLevelPhase = false;
+	public bool mPlayLevelPhase = false;
 
 	// Use this for initialization
 	void Start () 

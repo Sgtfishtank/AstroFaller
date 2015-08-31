@@ -176,7 +176,7 @@ public class InGame : MonoBehaviour
 
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		
-		mPlayer.DepositData();
+		//mPlayer.DepositData();
 		
 		mStartTime = -1;
 	}
