@@ -145,12 +145,12 @@ public class MovementControls
 		LowPassFilterAccelerometer ();
 		
 		float force = Input.acceleration.x;
-		float speeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
+		float speed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
 
 		if (Input.acceleration.x == 0)
 		{
 			force = Input.GetAxisRaw("Horizontal");
-			speeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD;
+			speed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD;
 		}
 
 		rb.velocity -= new Vector3 (rb.velocity.x, 0, 0) * 0.5f;
@@ -162,9 +162,12 @@ public class MovementControls
 		}
 
 		//if (/*rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED &&*/ (force < 0))
-		{
-			rb.velocity += new Vector3(force * speeed, 0, 0) * Time.deltaTime;
-		}
+
+			if(mHoverActive)
+				rb.velocity += new Vector3(force * (speed/2), 0, 0) * Time.deltaTime;
+			else
+				rb.velocity += new Vector3(force * speed, 0, 0) * Time.deltaTime;
+
 		
 		// max horisotal speed
 		if (rb.velocity.x > GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED)

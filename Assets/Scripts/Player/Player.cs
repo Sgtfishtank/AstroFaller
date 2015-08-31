@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
 	void Awake() 
 	{
 		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
+		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
+		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 	}
 
 	// Use this for initialization
@@ -129,6 +131,7 @@ public class Player : MonoBehaviour
 		{
 			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			col.gameObject.SetActive(false);
+			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
 		}
 		else if(col.tag == "BoltCluster")
 		{
@@ -150,16 +153,15 @@ public class Player : MonoBehaviour
 	{
 		if(coll.transform.tag == "Enemy" )
 		{
-			print ("hejhej");
 			if(mLife == 1)
 			{
-				print ("fan");
 				PlayerDead();
 			}
 			else
 			{
 				mLife--;
 			}
+			AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
 		}
 	}
 
@@ -198,7 +200,6 @@ public class Player : MonoBehaviour
 	{
 		if(!mInvulnerable && !mIsDead)
 		{
-			print ("why");
 			mIsDead = true;
 
 			mRb.velocity = new Vector2(0, 0);

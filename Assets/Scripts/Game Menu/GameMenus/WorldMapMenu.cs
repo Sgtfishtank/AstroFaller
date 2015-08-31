@@ -95,7 +95,7 @@ public class WorldMapMenu : GameMenu
 				PlayLevel();
 			}
 			
-			setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
+			//setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
 			
 			for (int i = 0; i < mLevels.Length; i++) 
 			{
