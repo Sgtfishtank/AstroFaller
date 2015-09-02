@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
 	public GameObject boltParticles;
 	private bool doShift = false;
 	private float doShiftValue;
+	public GameObject mDash;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
@@ -62,6 +63,8 @@ public class Player : MonoBehaviour
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
+		mDash = GameObject.Find("Burst_Trail");
+		mDash.SetActive(false);
 	}
 
 	public void StartGame()
@@ -86,6 +89,7 @@ public class Player : MonoBehaviour
 	{
 		if(mDashCDTime < Time.time)
 		{
+			mDash.SetActive(true);
 			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 			mfp.Dash();
 			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
@@ -124,6 +128,10 @@ public class Player : MonoBehaviour
 		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF * Time.deltaTime;
+			if(mMaxCurrentFallSpeed < mMaxFallSpeed+0.1f)
+			{
+				mDash.SetActive(false);
+			}
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
