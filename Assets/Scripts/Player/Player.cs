@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public GameObject boltParticles;
+	private bool doShift = false;
+	private float doShiftValue;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
@@ -126,6 +128,16 @@ public class Player : MonoBehaviour
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
 	}
+
+	void LateUpdate()
+	{
+		if (doShift)
+		{
+			doShift = false;
+			ShiftBackLate();
+		}
+	}
+
 	void OnTriggerEnter(Collider col)
 	{
 		if(col.tag == "Bolts")
@@ -241,7 +253,27 @@ public class Player : MonoBehaviour
 
 	public void ShiftBack (float shift)
 	{
+		doShift = true;
+		doShiftValue = shift;
 		transform.position -= new Vector3(0, shift, 0);
+	}
+	
+	void ShiftBackLate()
+	{
+		ParticleSystem[] sys = GetComponentsInChildren<ParticleSystem> ();
+		for (int i = 0; i < sys.Length; i++) 
+		{
+			ParticleSystem.Particle[] particles = new ParticleSystem.Particle[sys[i].maxParticles];
+			
+			int size = sys[i].GetParticles(particles);
+
+			for (int j = 0; j < particles.Length; j++) 
+			{
+				particles[j].position -= new Vector3(0, doShiftValue, 0);
+			}
+			
+			sys[i].SetParticles(particles, size);
+		}
 	}
 
 	void respawn ()
