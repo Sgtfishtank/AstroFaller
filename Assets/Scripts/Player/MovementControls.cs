@@ -94,7 +94,6 @@ public class MovementControls
 			if(first)
 			{
 				float tamp =  UnityEngine.Random.Range(0f,1f);
-				Debug.Log (tamp);
 				mAni.CrossFade("Chubby_Tumblin",0.1f,0,tamp);
 				mAni.SetBool("Hover", false);
 				first= false;

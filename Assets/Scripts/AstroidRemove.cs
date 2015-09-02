@@ -6,6 +6,8 @@ public class AstroidRemove : MonoBehaviour {
 	public int xSize;
 	public GameObject mWarningPrefab;
 	public GameObject mWarning;
+	public GameObject mCollisionEffect1;
+	public GameObject mCollisionEffect2;
 
 	private Player mpl;
 	private AstroidSpawn mAstroidSpawn;
@@ -77,6 +79,8 @@ public class AstroidRemove : MonoBehaviour {
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mpl.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
+			Instantiate(mCollisionEffect1,coll.contacts[0].point,Quaternion.identity);
+			Instantiate(mCollisionEffect2,coll.contacts[0].point,Quaternion.identity);
 		}
 	}
 

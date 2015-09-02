@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 	private float mStartYValue;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
+	public GameObject boltParticles;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
@@ -129,9 +130,11 @@ public class Player : MonoBehaviour
 	{
 		if(col.tag == "Bolts")
 		{
+			Instantiate(boltParticles, col.transform.parent.position, Quaternion.identity);
 			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			col.gameObject.SetActive(false);
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
+
 		}
 		else if(col.tag == "BoltCluster")
 		{
@@ -150,6 +153,21 @@ public class Player : MonoBehaviour
 		}
 	}
 	void OnCollisionEnter(Collision coll)
+	{
+		if(coll.transform.tag == "Enemy" )
+		{
+			if(mLife == 1)
+			{
+				PlayerDead();
+			}
+			else
+			{
+				mLife--;
+			}
+			AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
+		}
+	}
+	void OnCollisionExit(Collision coll)
 	{
 		if(coll.transform.tag == "Enemy" )
 		{
