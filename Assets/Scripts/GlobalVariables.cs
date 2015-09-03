@@ -22,11 +22,16 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_VERTICAL_SPEED_FALLOF			= 2f ;
 	public float PLAYER_DASH_SPEED_DELAY				= 2f   ;
 	public float PLAYER_DASH_SPEED						= 20f  ;
-	public float PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED	= 10f  ;
+	public float PLAYER_MAX_HORIZONTAL_MOVESPEED	= 10f  ;
 	public float PLAYER_HOVER_FORCE						= 15f	;
 	public float PLAYER_MIN_HOVER_SPEED 				= 1.5f;
+	public float PLAYER_HOVER_FAILED_FORCE				= 10;
+	public float PLAYER_HORIZONTAL_MOVESPEED_HOVER_FACTOR = 0.5f;
 	public float PLAYER_MINMAX_X						= 5;
 	public int   PLAYER_MAX_LIFE						= 3		;
+	public float PLAYER_MAX_AIR							= 10;
+	public float PLAYER_AIR_DRAIN						= 10;
+	public float PLAYER_AIR_REG							= 10;
 
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;

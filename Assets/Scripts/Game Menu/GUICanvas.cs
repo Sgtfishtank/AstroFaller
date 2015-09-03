@@ -180,6 +180,9 @@ public class GUICanvas : MonoBehaviour
 
 		GUI.Label (new Rect(startX, startY, 180, 24), "Distance total: " + PlayerData.Instance.totalDistance());
 		startY += 24;
+		
+		GUI.Label (new Rect(startX, startY, 180, 24), "Air: " + InGame.Instance.Player().airAmount());
+		startY += 24;
 	}
 
 	public void SetFadeColor(Color col)

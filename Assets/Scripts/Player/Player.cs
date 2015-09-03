@@ -5,28 +5,28 @@ using System;
 
 public class Player : MonoBehaviour
 {
-	public int mAirMax;
-	public int mAirDrain;
 	public float mMaxFallSpeed = 10;
 	public float mMaxCurrentFallSpeed = 10;
-	public bool mAirReg = true;
 	public bool mInvulnerable = false;
-	public Animator ani;
+	public Animator mAni;
 	public Transform mMeshTrans;
-	public int mAirRegFalling;
-	public AstroidSpawn mAS;
+	private AstroidSpawn mAS;
+
+	public bool mUseAirDrain;
+	public bool mUseAirReg;
+	private float mAirAmount;
 
 	private FollowPlayer mfp;
-	private float mAirAmount;
 	private Rigidbody mRb;
+	private float mStartYValue;
 	private bool mIsDead = false;
 	private MovementControls mMovementControls;
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
+
 	private float mDashTime;
 	private float mDashCDTime;
 	public int mLife;
 
-	private float mStartYValue;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public GameObject boltParticles;
@@ -37,29 +37,35 @@ public class Player : MonoBehaviour
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
 	private FMOD.Studio.EventInstance mCoinPickUpSound;
+	private FMOD.Studio.EventInstance mInflateSound;
+	private FMOD.Studio.EventInstance mDeflateSound;
 	
 	// Use this for initialization
 	void Awake() 
 	{
+		// keep player along levels 
+		DontDestroyOnLoad(transform.gameObject);
+		
+		// init compoments
+		mRb = GetComponent<Rigidbody>();
+		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
 		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
-		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
-		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
+		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
+		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
+		
+		// init internal scrips
+		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
+		
+		// reset air
+		mAirAmount = GlobalVariables.Instance.PLAYER_MAX_AIR;
+		
+		// put at level start position, if any
+		mIsDead = false;
 	}
 
 	// Use this for initialization
 	void Start()
 	{
-			// keep player along levels
-		DontDestroyOnLoad(transform.gameObject);
-		
-		// init compoments
-		mRb = GetComponent<Rigidbody>();
-		
-		// init internal scrips
-		mMovementControls = new MovementControls(ani, null, this, skinnedMeshRenderer);
-
-		// finally extra init
-		safeInit();
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
@@ -72,17 +78,6 @@ public class Player : MonoBehaviour
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
 		mStartYValue = transform.position.y;
-	}
-
-	// Thism2 created 2015-04-17 : trigger as level specific initaliation for when the level loads 
-	public void safeInit()
-	{
-		// reset air
-		mAirAmount = mAirMax;
-
-		// put at level start position, if any
-		//transform.position = GameManager.Instance().mPlayerStartPosition.transform.position;
-		mIsDead = false;
 	}
 
 	public void Dash()
@@ -99,17 +94,29 @@ public class Player : MonoBehaviour
 		}
 	}
 	
+	public void Inflate()
+	{
+		mAni.SetBool("Hover", true);
+		AudioManager.Instance.PlaySoundOnce(mInflateSound);
+	}
+	
+	public void Deflate()
+	{
+		mAni.SetBool("Hover", false);
+		mAni.CrossFade("Chubby_Tumblin", 0.1f, 0, UnityEngine.Random.value);
+		AudioManager.Instance.PlaySoundOnce(mDeflateSound);
+	}
+
 	void FixedUpdate()
 	{
 		// hover physics
-		mMovementControls.Hover(mRb,10);
+		mMovementControls.Hover(mRb);
 		
 		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, 10);
+		mAirAmount = mMovementControls.JumpAndHover(mRb, mAirAmount);
 		
 		// move player
 		mMovementControls.Move(mRb);
-
 	}
 
 	void Update()
@@ -134,7 +141,6 @@ public class Player : MonoBehaviour
 			}
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
-
 	}
 
 	void LateUpdate()
@@ -165,6 +171,7 @@ public class Player : MonoBehaviour
 			mAS.gameObject.SetActive(true);
 		}
 	}
+
 	void OnTriggerExit(Collider col)
 	{
 		if(col.tag == "SpawnAstroid")

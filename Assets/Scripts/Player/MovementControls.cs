@@ -7,120 +7,112 @@ using System.Collections.Generic;
 public class MovementControls
 {
 	private bool mHoverActive = false;
-	private Animator mAni;
+	private bool mHoverFailed = false;
+	private float mHoverFailedT;
+
+	//private Animator mAni;
 	private Player mPlayer;
 	private SkinnedMeshRenderer[] skinnedMeshRenderer;
-	public float AccelerometerUpdateInterval = 0.25f;
-	public float LowPassKernelWidthInSeconds = 1.0f;
+
+	//public float AccelerometerUpdateInterval = 0.25f;
+	//public float LowPassKernelWidthInSeconds = 1.0f;
 	
-	private float LowPassFilterFactor;
+	//private float LowPassFilterFactor;
 	float blendSpeed = 400f;
 
 	float blendOne = 0;
-	bool first;
+	//bool first;
 
  // tweakable
-	private float lowPassValue = 0;
-	public bool temp = false;
+	//private float lowPassValue = 0;
+	//public bool temp = false;
 
 	public MovementControls (Animator ani, Transform mesh, Player player, SkinnedMeshRenderer[] skinmesh)
 	{
 		mPlayer = player;
-		LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
-		mAni = ani;
-		//mMesh = mesh;
+		//LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
 		skinnedMeshRenderer = skinmesh;
 	}
 
 	
 	private void LowPassFilterAccelerometer()
 	{
-		lowPassValue = Mathf.Lerp(lowPassValue, Input.acceleration.x, LowPassFilterFactor);
-
+		//lowPassValue = Mathf.Lerp(lowPassValue, Input.acceleration.x, LowPassFilterFactor);
 	}
+
 	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
 	{
 		if (Input.GetButton("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
 		{
-			if (blendOne < 100.1f)
+			//first = true;
+
+			if (!mHoverActive)
 			{
-				blendOne =Mathf.Clamp(blendOne+blendSpeed * Time.deltaTime,0,100);
-				for(int i = 0; i < skinnedMeshRenderer.Length; i++)
+				if (mAirAmount > 0)  // hoverfunction
 				{
-					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
-
+					mPlayer.Inflate ();
+					StartHover();
 				}
-
 			}
-			mAni.SetBool("Hover",true);
-			first = true;
-			if(mAirAmount > 0)//hoverfunction
+			else if (!mHoverFailed)
 			{
-				if (mHoverActive == false)
+				if (mAirAmount <= 0)
 				{
-					AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate"));
+					FailHover(mRb);
+					mPlayer.Deflate();
 				}
-				mHoverActive = true;
-				//mAirAmount -= Time.deltaTime * mPlayer.mAirDrain;
-			}
-			/*else
-			{
-				float x =UnityEngine.Random.Range(-10f,10f);
-				float y = UnityEngine.Random.Range(-10f,10f);
-				mRb.velocity = new Vector3(mRb.velocity.x + x, mRb.velocity.y + y ,0);
-				Debug.Log("x " + x + " y " + y);
-			}*/
-
-			// clamp to min air
-			mAirAmount = Mathf.Max(mAirAmount, 0);
-			
-			if(mAirAmount <= 0)
-			{
-				if (mHoverActive == true)
-				{
-					AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate"));
-				}
-				mHoverActive = false;
 			}
 		}
 		else//refill air and reset funktionality
 		{
-			if(mAirAmount < mPlayer.mAirMax && mPlayer.mAirReg)
+			if (mHoverActive)
 			{
-				mAirAmount += Time.deltaTime * mPlayer.mAirRegFalling;
-				// clamp to max air
-				mAirAmount = Mathf.Min(mAirAmount, mPlayer.mAirMax);
+				StopHover();
 			}
-			if(first)
-			{
-				float tamp =  UnityEngine.Random.Range(0f,1f);
-				mAni.CrossFade("Chubby_Tumblin",0.1f,0,tamp);
-				mAni.SetBool("Hover", false);
-				first= false;
-			}
-			if(blendOne>-0.1f)
-			{
-				blendOne =Mathf.Clamp(blendOne-blendSpeed * Time.deltaTime,0,100);
-				for(int i = 0; i< skinnedMeshRenderer.Length;i++)
-				{
-					skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
-				}
-
-			}
-			
-			if (mHoverActive == true)
-			{
-				AudioManager.Instance.PlaySoundOnce(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate"));
-			}
-			mHoverActive = false;
 		}
+
+		if (IsHovering())
+		{
+			if (blendOne < 100.1f)
+			{
+				blendOne = Mathf.Clamp(blendOne+blendSpeed * Time.deltaTime,0,100);
+				UpdateMeshBlend();
+			}
+		}
+		else
+		{
+			if(blendOne > -0.1f)
+			{
+				blendOne = Mathf.Clamp(blendOne-blendSpeed * Time.deltaTime,0,100);
+				UpdateMeshBlend();
+			}
+		}
+
+		// drain and clamp air amount
+		if (IsHovering() && mPlayer.mUseAirDrain)
+		{
+			mAirAmount -= GlobalVariables.Instance.PLAYER_AIR_DRAIN * Time.deltaTime;
+		}
+		else if (mPlayer.mUseAirReg)
+		{
+			mAirAmount += GlobalVariables.Instance.PLAYER_AIR_REG * Time.deltaTime;
+		}
+		mAirAmount = Mathf.Clamp(mAirAmount, 0, GlobalVariables.Instance.PLAYER_MAX_AIR);
 
 		return mAirAmount;
 	}
 
-	public void Hover(Rigidbody mRb, float airamount)
+	void UpdateMeshBlend()
 	{
-		if (mHoverActive)
+		for(int i = 0; i< skinnedMeshRenderer.Length;i++)
+		{
+			skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
+		}
+	}
+
+	public void Hover(Rigidbody mRb)
+	{
+		if (IsHovering())
 		{
 			if(mRb.velocity.y < 0) //slows down the player to hover
 			{
@@ -144,60 +136,93 @@ public class MovementControls
 		LowPassFilterAccelerometer ();
 		
 		float force = Input.acceleration.x;
-		float speed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
+		float moveSpeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
 
 		if (Input.acceleration.x == 0)
 		{
 			force = Input.GetAxisRaw("Horizontal");
-			speed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD;
+			moveSpeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_KEYBORD;
 		}
 
-		rb.velocity -= new Vector3 (rb.velocity.x, 0, 0) * 0.5f;
-
-		//check if the speed is in between the set interval
-		//if (/*rb.velocity.x < GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED &&*/ (force > 0)) 
+		// dampen speed
+		if (!IsHoverFailWiggling())
 		{
-		//	rb.position += new Vector3(force * speeed, 0, 0) * Time.deltaTime;
+			rb.velocity -= new Vector3 (rb.velocity.x, 0, 0) * 0.5f;
 		}
 
-		//if (/*rb.velocity.x > -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_MAX_SPEED &&*/ (force < 0))
+		// add movement
+		if (IsHoverFailWiggling())
+		{
+			// no player monent if hover failed
+		}
+		else if (IsHovering())
+		{
+			rb.velocity += new Vector3(force * moveSpeed, 0, 0) * GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_HOVER_FACTOR * Time.deltaTime;
+		}
+		else 
+		{
+			rb.velocity += new Vector3(force * moveSpeed, 0, 0) * Time.deltaTime;
+		}
 
-			if(mHoverActive)
-				rb.velocity += new Vector3(force * (speed/2), 0, 0) * Time.deltaTime;
-			else
-				rb.velocity += new Vector3(force * speed, 0, 0) * Time.deltaTime;
+		Vector3 plVel = rb.velocity;
 
-		
+		float maxSpeed = GlobalVariables.Instance.PLAYER_MAX_HORIZONTAL_MOVESPEED;
+
 		// max horisotal speed
-		if (rb.velocity.x > GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED)
+		if (IsHovering()) 
 		{
-			rb.velocity = new Vector2(GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED, rb.velocity.y);
+			maxSpeed *= GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED_HOVER_FACTOR;
 		}
-		else if (rb.velocity.x < -GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED)
-		{
-			rb.velocity = new Vector2(-GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED, rb.velocity.y);
-		}
+
+		plVel.x = Mathf.Clamp (plVel.x, -maxSpeed, maxSpeed);
 
 		// max fall speed
-		if(rb.velocity.y < -mPlayer.mMaxCurrentFallSpeed)
-		{
-			rb.velocity = new Vector2(rb.velocity.x, -mPlayer.mMaxCurrentFallSpeed);
-		}
+		plVel.y = Mathf.Max(plVel.y, -mPlayer.mMaxCurrentFallSpeed);
 
-		//if(Input.GetAxisRaw("Horizontal") == 0 || Input.acceleration.x == 0)//stops player movment on key release
-		{
-			//rb.AddForce( new Vector3(-rb.velocity.x * 90 * Time.deltaTime, 0, 0));
-		}
+		rb.velocity = plVel;
 
+		Vector3 plPos = rb.worldCenterOfMass;
+		
 		// clamp position in x axis
-		Vector3 pl2 = rb.transform.position + (rb.transform.rotation * rb.centerOfMass);
-		pl2.x = Mathf.Clamp (pl2.x, -GlobalVariables.Instance.PLAYER_MINMAX_X, GlobalVariables.Instance.PLAYER_MINMAX_X);
-		rb.transform.position = pl2 - (rb.transform.rotation * rb.centerOfMass);
+		plPos.x = Mathf.Clamp (plPos.x, -GlobalVariables.Instance.PLAYER_MINMAX_X, GlobalVariables.Instance.PLAYER_MINMAX_X);
+
+		rb.transform.position = plPos + (rb.transform.position - rb.worldCenterOfMass);
 	}
 
-	public bool isHovering ()
+	public bool IsHovering ()
 	{
-		return mHoverActive;
+		return (mHoverActive && (!mHoverFailed));
 	}
 
+	public bool IsHoveringFailed()
+	{
+		return (mHoverActive && mHoverFailed);
+	}
+	
+	public bool IsHoverFailWiggling()
+	{
+		return (mHoverActive && mHoverFailed && (mHoverFailedT > Time.time));
+	}
+
+	void StartHover ()
+	{
+		mHoverActive = true;
+	}
+	
+	void FailHover (Rigidbody mRb)
+	{
+		Vector3 vel = UnityEngine.Random.insideUnitCircle;
+		vel.z = 0;
+		vel.Normalize();
+		mRb.velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
+
+		mHoverFailed = true;
+		mHoverFailedT = Time.time + 1.0f;
+	}
+
+	void StopHover ()
+	{
+		mHoverActive = false;
+		mHoverFailed = false;
+	}
 }
