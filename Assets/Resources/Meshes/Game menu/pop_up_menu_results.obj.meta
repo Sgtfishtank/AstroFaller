@@ -1,0 +1,137 @@
+fileFormatVersion: 2
+guid: 0cdc802428e294f48b3dd13b79bc5a4b
+timeCreated: 1441364800
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: base
+    100002: base_frame
+    100004: button_1_base
+    100006: button_1_core
+    100008: button_1_frame
+    100010: button_2_base
+    100012: button_2_core
+    100014: button_2_frame
+    100016: frame_1
+    100018: frame_2
+    100020: frame_3
+    100022: modelPanel1ViewSelectedSet_multiplier_button
+    100024: multiplier_button
+    100026: multiplier_frame
+    100028: //RootNode
+    400000: base
+    400002: base_frame
+    400004: button_1_base
+    400006: button_1_core
+    400008: button_1_frame
+    400010: button_2_base
+    400012: button_2_core
+    400014: button_2_frame
+    400016: frame_1
+    400018: frame_2
+    400020: frame_3
+    400022: modelPanel1ViewSelectedSet_multiplier_button
+    400024: multiplier_button
+    400026: multiplier_frame
+    400028: //RootNode
+    2300000: base
+    2300002: base_frame
+    2300004: button_1_base
+    2300006: button_1_core
+    2300008: button_1_frame
+    2300010: button_2_base
+    2300012: button_2_core
+    2300014: button_2_frame
+    2300016: frame_1
+    2300018: frame_2
+    2300020: frame_3
+    2300022: modelPanel1ViewSelectedSet_multiplier_button
+    2300024: multiplier_button
+    2300026: multiplier_frame
+    3300000: base
+    3300002: base_frame
+    3300004: button_1_base
+    3300006: button_1_core
+    3300008: button_1_frame
+    3300010: button_2_base
+    3300012: button_2_core
+    3300014: button_2_frame
+    3300016: frame_1
+    3300018: frame_2
+    3300020: frame_3
+    3300022: modelPanel1ViewSelectedSet_multiplier_button
+    3300024: multiplier_button
+    3300026: multiplier_frame
+    4300000: base
+    4300002: base_frame
+    4300004: button_1_base
+    4300006: button_1_core
+    4300008: button_1_frame
+    4300010: button_2_base
+    4300012: button_2_core
+    4300014: button_2_frame
+    4300016: frame_1
+    4300018: frame_2
+    4300020: frame_3
+    4300022: modelPanel1ViewSelectedSet_multiplier_button
+    4300024: multiplier_button
+    4300026: multiplier_frame
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
