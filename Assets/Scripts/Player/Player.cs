@@ -20,19 +20,23 @@ public class Player : MonoBehaviour
 	private Rigidbody mRb;
 	private float mStartYValue;
 	private bool mIsDead = false;
+	private bool mPlaying;
 	private MovementControls mMovementControls;
 	public SkinnedMeshRenderer[] skinnedMeshRenderer;
 
 	private float mDashTime;
 	private float mDashCDTime;
+	
+	private bool doShift = false;
+	private float shiftAmount;
+	
 	public int mLife;
-
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public GameObject boltParticles;
-	private bool doShift = false;
-	private float doShiftValue;
 	public GameObject mDash;
+	private Collider mLastDmgCollider;
+	private float mPerfectDistanceY;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
@@ -50,6 +54,8 @@ public class Player : MonoBehaviour
 		mRb = GetComponent<Rigidbody>();
 		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
 		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
+		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
+		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
 		
@@ -61,6 +67,7 @@ public class Player : MonoBehaviour
 		
 		// put at level start position, if any
 		mIsDead = false;
+		mPlaying = false;
 	}
 
 	// Use this for initialization
@@ -78,6 +85,9 @@ public class Player : MonoBehaviour
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
 		mStartYValue = transform.position.y;
+		mPlaying = true;
+		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
+		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
 	}
 
 	public void Dash()
@@ -122,9 +132,15 @@ public class Player : MonoBehaviour
 	void Update()
 	{
 		// do nothing if dead
-		if(mIsDead)
+		if ((mIsDead) || (!mPlaying))
 		{
 			return;
+		}
+
+		if (CenterPosition().y < mPerfectDistanceY)
+		{
+			mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
+			InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
 		}
 
 		if(Input.GetKeyDown(KeyCode.E))
@@ -147,8 +163,8 @@ public class Player : MonoBehaviour
 	{
 		if (doShift)
 		{
-			doShift = false;
 			ShiftBackLate();
+			doShift = false;
 		}
 	}
 
@@ -181,32 +197,20 @@ public class Player : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision coll)
 	{
-		if(coll.transform.tag == "Enemy" )
+		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
 		{
-			if(mLife == 1)
-			{
-				PlayerDead();
-			}
-			else
-			{
-				mLife--;
-			}
-			AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
+			mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
+			InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
+
+			mLastDmgCollider = coll.collider;
+			PlayerDamage(1);
 		}
 	}
 	void OnCollisionExit(Collision coll)
 	{
 		if(coll.transform.tag == "Enemy" )
 		{
-			if(mLife == 1)
-			{
-				PlayerDead();
-			}
-			else
-			{
-				mLife--;
-			}
-			AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
+			//PlayerDamage(1);
 		}
 	}
 
@@ -227,7 +231,12 @@ public class Player : MonoBehaviour
 
 	public int distance()
 	{
-		int dist = (int)(transform.position.y - mStartYValue - WorldGen.Instance.FallShift());
+		if (!mPlaying)
+		{
+			return 0;
+		}
+
+		int dist = (int)(CenterPosition().y - mStartYValue - WorldGen.Instance.FallShift());
 		return -dist;
 	}
 
@@ -241,6 +250,19 @@ public class Player : MonoBehaviour
 		return mIsDead;
 	}
 	
+	public void PlayerDamage(int dmg)
+	{
+		if (!mInvulnerable)
+		{
+			mLife -= dmg;
+			if (mLife <= 0)
+			{
+				PlayerDead();
+			}
+		}
+		AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
+	}
+
 	public void PlayerDead()
 	{
 		if(!mInvulnerable && !mIsDead)
@@ -269,8 +291,9 @@ public class Player : MonoBehaviour
 	public void ShiftBack (float shift)
 	{
 		doShift = true;
-		doShiftValue = shift;
+		shiftAmount = shift;
 		transform.position -= new Vector3(0, shift, 0);
+		mPerfectDistanceY -= shift;
 	}
 	
 	void ShiftBackLate()
@@ -284,7 +307,7 @@ public class Player : MonoBehaviour
 
 			for (int j = 0; j < particles.Length; j++) 
 			{
-				particles[j].position -= new Vector3(0, doShiftValue, 0);
+				particles[j].position -= new Vector3(0, shiftAmount, 0);
 			}
 			
 			sys[i].SetParticles(particles, size);
@@ -293,8 +316,5 @@ public class Player : MonoBehaviour
 
 	void respawn ()
 	{
-		//ani.SetTrigger("Respawn");
-		//GameObject res = (GameObject)GameObject.Instantiate(mRespawnEffectPrefab, transform.position + new Vector3(0, -0.5f, 0), mRespawnEffectPrefab.transform.rotation);
-		//Destroy(res, 3);
 	}
 }

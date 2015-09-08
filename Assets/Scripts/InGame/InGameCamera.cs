@@ -18,9 +18,14 @@ public class InGameCamera : MonoBehaviour
 			return instance;
 		}
 	}
+	
+	private TextMesh mDistnceText;
+	private TextMesh mBoltsText;
 
 	void Awake()
 	{
+		mBoltsText = transform.Find ("UI/Bolt_Count_text").GetComponent<TextMesh> ();
+		mDistnceText = transform.Find ("UI/Distance_Text").GetComponent<TextMesh> ();
 	}
 
 	void OnEnable()
@@ -41,5 +46,7 @@ public class InGameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		mBoltsText.text = InGame.Instance.Player().colectedBolts() + " B";
+		mDistnceText.text = InGame.Instance.Player().distance() + " M";
 	}
 }

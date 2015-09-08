@@ -33,6 +33,8 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_AIR_DRAIN						= 10;
 	public float PLAYER_AIR_REG							= 10;
 
+	public int PERFECT_DISTANCE_SIZE					= 10;
+
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;
 	public float WORLD_GEN_INTRO_TIME					= 3f;

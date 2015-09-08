@@ -19,6 +19,9 @@ public class InGame : MonoBehaviour
 	
 	public GameObject mPlayerPrefab;
 	public GameObject mAstroidSpawnPrefab;
+	public GameObject mDirectionalLightPrefab;
+	public GameObject mPerfectDistanceMidPrefab;
+	//public GameObject mPerfectDistanceBoxPrefab;
 	
 	public Player mPlayer;
 	public AstroidSpawn mAstroidSpawn;
@@ -31,11 +34,14 @@ public class InGame : MonoBehaviour
 	public bool mIntroPhase;
 	public float mIntroPhaseT;
 	private GameObject mDirectionalLight;
-	public GameObject mDirectionalLightPrefab;
 	public float mStartTime = -1;
 
 	private WorldGen mWorldGen;
 	private WorldGen mBgGen;
+
+	private GameObject mPerfectDistanceMid;
+	//private GameObject mPerfectDistanceBoxL;
+	//private GameObject mPerfectDistanceBoxR;
 
 	void Awake()
 	{
@@ -68,6 +74,10 @@ public class InGame : MonoBehaviour
 		mDirectionalLight = dirLightObj;
 		
 		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+
+		mPerfectDistanceMid = GameObject.Instantiate (mPerfectDistanceMidPrefab);
+		//mPerfectDistanceBoxL = GameObject.Instantiate (mPerfectDistanceBoxPrefab);
+		//mPerfectDistanceBoxR = GameObject.Instantiate (mPerfectDistanceBoxPrefab);
 	}
 	
 	public Player Player ()
@@ -105,12 +115,7 @@ public class InGame : MonoBehaviour
 			{
 				GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
 				mIntroPhase = false;
-				
-				mPlayer.StartGame();
-				
-				mStartTime = Time.time;
-				
-				mWorldGen.StartSpawnSegments (mPlayer.transform.position.y - 25);
+				StartGame();
 			}
 		}
 		else
@@ -120,6 +125,19 @@ public class InGame : MonoBehaviour
 				ShiftBackWorld();
 			}
 		}
+	}
+
+	void StartGame ()
+	{
+		mPlayer.StartGame();
+		
+		mStartTime = Time.time;
+		
+		mPerfectDistanceMid.gameObject.SetActive (true);
+		//mPerfectDistanceBoxL.gameObject.SetActive (true);
+		//mPerfectDistanceBoxR.gameObject.SetActive (true);
+		
+		mWorldGen.StartSpawnSegments (mPlayer.transform.position.y - 25);
 	}
 
 	public float LevelRunTime()
@@ -136,7 +154,16 @@ public class InGame : MonoBehaviour
 	{
 		return mUsualShiftkingRailgun;
 	}
-	
+
+	public void UpdatePerfectDistance (float posY)
+	{
+		float yValue = posY;
+		mPerfectDistanceMid.transform.position = new Vector3 (0, yValue, 0);
+
+		//mPerfectDistanceBoxL.transform.position = new Vector3 (-GlobalVariables.Instance.PLAYER_MINMAX_X, yValue, 0);
+		//mPerfectDistanceBoxR.transform.position = new Vector3 (GlobalVariables.Instance.PLAYER_MINMAX_X, yValue, 0);
+	}
+
 	void ShiftBackWorld()
 	{
 		float shift = -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL;
@@ -147,6 +174,10 @@ public class InGame : MonoBehaviour
 		mWorldGen.ShiftBack(shift);
 		mPlayer.ShiftBack(shift);
 		mAstroidSpawn.ShiftBack(shift);
+
+		mPerfectDistanceMid.transform.position -= new Vector3 (0, shift, 0);
+		//mPerfectDistanceBoxL.transform.position -= new Vector3 (0, shift, -10);
+		//mPerfectDistanceBoxR.transform.position -= new Vector3 (0, shift, -10);
 		
 		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
@@ -158,6 +189,10 @@ public class InGame : MonoBehaviour
 		GUICanvas.Instance.ShowBackToMenuButton(show);
 		GUICanvas.Instance.ShowOptionButtons (false);
 		
+		mPerfectDistanceMid.gameObject.SetActive (false);
+		//mPerfectDistanceBoxL.gameObject.SetActive (false);
+		//mPerfectDistanceBoxR.gameObject.SetActive (false);
+
 		mAstroidSpawn.gameObject.SetActive (false);
 		mDirectionalLight.SetActive (show);
 		gameObject.SetActive (show);
