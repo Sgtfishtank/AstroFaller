@@ -258,6 +258,11 @@ public class Player : MonoBehaviour
 	{
 		return mCrystalsCollected;
 	}
+
+	public int CollectedPerfectDistances ()
+	{
+		return mPerfectDistanceCollected;
+	}
 	
 	public Vector3 CenterPosition()
 	{
