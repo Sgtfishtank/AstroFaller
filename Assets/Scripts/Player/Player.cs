@@ -103,6 +103,7 @@ public class Player : MonoBehaviour
 	{
 		if(mDashCDTime < Time.time)
 		{
+			ani.SetTrigger("Burst");
 			mDash.SetActive(true);
 			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 			mfp.Dash();
