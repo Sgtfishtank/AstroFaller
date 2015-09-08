@@ -33,16 +33,21 @@ public class Player : MonoBehaviour
 	public int mLife;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
+	public int mPerfectDistanceCollected;
 	public GameObject boltParticles;
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
+
+	private float blendSpeed = 400f;
+	private float blendOne = 0;
 
 	private FMOD.Studio.EventInstance mDownSwipeSound;
 	private FMOD.Studio.EventInstance mHurtHitSound;
 	private FMOD.Studio.EventInstance mCoinPickUpSound;
 	private FMOD.Studio.EventInstance mInflateSound;
 	private FMOD.Studio.EventInstance mDeflateSound;
+	public LensFlare mAntenLensFlare;
 	
 	// Use this for initialization
 	void Awake() 
@@ -65,6 +70,10 @@ public class Player : MonoBehaviour
 		// reset air
 		mAirAmount = GlobalVariables.Instance.PLAYER_MAX_AIR;
 		
+		mDash = transform.Find("Burst_Trail").gameObject;
+
+		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
+
 		// put at level start position, if any
 		mIsDead = false;
 		mPlaying = false;
@@ -75,8 +84,6 @@ public class Player : MonoBehaviour
 	{
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
-		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
-		mDash = GameObject.Find("Burst_Trail");
 		mDash.SetActive(false);
 	}
 
@@ -84,7 +91,9 @@ public class Player : MonoBehaviour
 	{
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
-		mStartYValue = transform.position.y;
+		mPerfectDistanceCollected = 0;
+		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
+		mStartYValue = CenterPosition().y;
 		mPlaying = true;
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
 		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
@@ -136,11 +145,22 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
+		
+		if ((mMovementControls.IsHovering()) && (blendOne < 100))
+		{
+			blendOne = Mathf.Clamp(blendOne + (blendSpeed * Time.deltaTime), 0, 100);
+			UpdateMeshBlend();
+		}
+		else if ((!mMovementControls.IsHovering()) && (blendOne > 0))
+		{
+			blendOne = Mathf.Clamp(blendOne - (blendSpeed * Time.deltaTime), 0, 100);
+			UpdateMeshBlend();
+		}
 
 		if (CenterPosition().y < mPerfectDistanceY)
 		{
-			mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
-			InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
+			UpdatePerfectDistance();
+			mPerfectDistanceCollected++;
 		}
 
 		if(Input.GetKeyDown(KeyCode.E))
@@ -157,6 +177,15 @@ public class Player : MonoBehaviour
 			}
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
+
+	}
+	
+	void UpdateMeshBlend()
+	{
+		for(int i = 0; i< skinnedMeshRenderer.Length;i++)
+		{
+			skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
+		}
 	}
 
 	void LateUpdate()
@@ -199,13 +228,19 @@ public class Player : MonoBehaviour
 	{
 		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
 		{
-			mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
-			InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
-
 			mLastDmgCollider = coll.collider;
+
+			UpdatePerfectDistance();
 			PlayerDamage(1);
 		}
 	}
+
+	void UpdatePerfectDistance ()
+	{
+		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
+		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
+	}
+
 	void OnCollisionExit(Collision coll)
 	{
 		if(coll.transform.tag == "Enemy" )
@@ -260,6 +295,18 @@ public class Player : MonoBehaviour
 				PlayerDead();
 			}
 		}
+		if (mLife >= 3)
+		{
+			mAntenLensFlare.color = Color.green;
+		}
+		else if (mLife >= 2)
+		{
+			mAntenLensFlare.color = Color.yellow;
+		}
+		else if (mLife <= 1)
+		{
+			mAntenLensFlare.color = Color.red;
+		}
 		AudioManager.Instance.PlaySoundOnce(mHurtHitSound);
 	}
 
@@ -285,7 +332,7 @@ public class Player : MonoBehaviour
 		mCrystalsCollected = 0;
 		
 		PlayerData.Instance.depositDistance(distance());
-		mStartYValue = transform.position.y;
+		mStartYValue = CenterPosition().y;
 	}
 
 	public void ShiftBack (float shift)

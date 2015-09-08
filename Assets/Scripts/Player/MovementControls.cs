@@ -12,15 +12,13 @@ public class MovementControls
 
 	//private Animator mAni;
 	private Player mPlayer;
-	private SkinnedMeshRenderer[] skinnedMeshRenderer;
+	//private SkinnedMeshRenderer[] skinnedMeshRenderer;
 
 	//public float AccelerometerUpdateInterval = 0.25f;
 	//public float LowPassKernelWidthInSeconds = 1.0f;
 	
 	//private float LowPassFilterFactor;
-	float blendSpeed = 400f;
 
-	float blendOne = 0;
 	//bool first;
 
  // tweakable
@@ -31,7 +29,7 @@ public class MovementControls
 	{
 		mPlayer = player;
 		//LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
-		skinnedMeshRenderer = skinmesh;
+		//skinnedMeshRenderer = skinmesh;
 	}
 
 	
@@ -58,7 +56,7 @@ public class MovementControls
 			{
 				if (mAirAmount <= 0)
 				{
-					FailHover(mRb);
+					FailHover();
 					mPlayer.Deflate();
 				}
 			}
@@ -68,23 +66,6 @@ public class MovementControls
 			if (mHoverActive)
 			{
 				StopHover();
-			}
-		}
-
-		if (IsHovering())
-		{
-			if (blendOne < 100.1f)
-			{
-				blendOne = Mathf.Clamp(blendOne+blendSpeed * Time.deltaTime,0,100);
-				UpdateMeshBlend();
-			}
-		}
-		else
-		{
-			if(blendOne > -0.1f)
-			{
-				blendOne = Mathf.Clamp(blendOne-blendSpeed * Time.deltaTime,0,100);
-				UpdateMeshBlend();
 			}
 		}
 
@@ -100,14 +81,6 @@ public class MovementControls
 		mAirAmount = Mathf.Clamp(mAirAmount, 0, GlobalVariables.Instance.PLAYER_MAX_AIR);
 
 		return mAirAmount;
-	}
-
-	void UpdateMeshBlend()
-	{
-		for(int i = 0; i< skinnedMeshRenderer.Length;i++)
-		{
-			skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
-		}
 	}
 
 	public void Hover(Rigidbody mRb)
@@ -177,7 +150,7 @@ public class MovementControls
 		plVel.x = Mathf.Clamp (plVel.x, -maxSpeed, maxSpeed);
 
 		// max fall speed
-		plVel.y = Mathf.Max(plVel.y, -mPlayer.mMaxCurrentFallSpeed);
+		plVel.y = Mathf.Clamp(plVel.y, -mPlayer.mMaxCurrentFallSpeed, 10);
 
 		rb.velocity = plVel;
 
@@ -209,15 +182,15 @@ public class MovementControls
 		mHoverActive = true;
 	}
 	
-	void FailHover (Rigidbody mRb)
+	void FailHover ()
 	{
 		Vector3 vel = UnityEngine.Random.insideUnitCircle;
 		vel.z = 0;
 		vel.Normalize();
-		mRb.velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
+		mPlayer.GetComponent<Rigidbody>().velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
 
 		mHoverFailed = true;
-		mHoverFailedT = Time.time + 1.0f;
+		mHoverFailedT = Time.time + GlobalVariables.Instance.PLAYER_HOVER_FAILED_TIME;
 	}
 
 	void StopHover ()

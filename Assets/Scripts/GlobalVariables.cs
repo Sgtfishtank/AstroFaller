@@ -27,6 +27,7 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_MIN_HOVER_SPEED 				= 1.5f;
 	public float PLAYER_HOVER_FAILED_FORCE				= 10;
 	public float PLAYER_HORIZONTAL_MOVESPEED_HOVER_FACTOR = 0.5f;
+	public float PLAYER_HOVER_FAILED_TIME				= 0.45f;
 	public float PLAYER_MINMAX_X						= 5;
 	public int   PLAYER_MAX_LIFE						= 3		;
 	public float PLAYER_MAX_AIR							= 10;
