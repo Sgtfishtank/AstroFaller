@@ -57,6 +57,7 @@ public class Player : MonoBehaviour
 		
 		// init compoments
 		mRb = GetComponent<Rigidbody>();
+		mAntenLensFlare = GetComponentInChildren<LensFlare>();
 		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
 		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
 		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
@@ -103,7 +104,7 @@ public class Player : MonoBehaviour
 	{
 		if(mDashCDTime < Time.time)
 		{
-			ani.SetTrigger("Burst");
+			mAni.SetTrigger("Burst");
 			mDash.SetActive(true);
 			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 			mfp.Dash();
