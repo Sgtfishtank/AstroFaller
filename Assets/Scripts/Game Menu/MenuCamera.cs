@@ -69,7 +69,8 @@ public class MenuCamera : MonoBehaviour
 		
 		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
 		
-		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 10);
+		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 15);
+
 		
 		//GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
 
