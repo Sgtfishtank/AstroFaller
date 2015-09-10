@@ -103,6 +103,7 @@ public class WorldGen : MonoBehaviour
 		}
 		
 		mSegmentsTimesGenerated[index]++;
+		newSeg.transform.parent = transform;
 		return newSeg;
 	}
 

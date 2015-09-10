@@ -79,8 +79,11 @@ public class AstroidRemove : MonoBehaviour {
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mpl.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			Instantiate(mCollisionEffect1,coll.contacts[0].point,Quaternion.identity);
-			Instantiate(mCollisionEffect2,coll.contacts[0].point,Quaternion.identity);
+			GameObject eff1 = (GameObject)GameObject.Instantiate(mCollisionEffect1, coll.contacts[0].point, Quaternion.identity);
+			GameObject eff2 = (GameObject)GameObject.Instantiate(mCollisionEffect2, coll.contacts[0].point, Quaternion.identity);
+
+			eff1.transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+			eff2.transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
 		}
 	}
 
