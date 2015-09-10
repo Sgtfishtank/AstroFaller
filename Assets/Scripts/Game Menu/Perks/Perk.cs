@@ -9,8 +9,6 @@ public abstract class Perk : MonoBehaviour
 		Left = 1,
 		Right = 2
 	}
-	
-	public abstract void Init();
 
 	public abstract bool UnlockPart (PerkPart perkPart);
 

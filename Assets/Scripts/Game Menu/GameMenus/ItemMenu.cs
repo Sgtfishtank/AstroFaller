@@ -14,6 +14,11 @@ public class ItemMenu : GameMenu
 	private bool mFocused;
 	private Item mCurrentItem;
 
+	void Awake() 
+	{
+		mItems = GetComponentsInChildren<Item> ();
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,18 +39,6 @@ public class ItemMenu : GameMenu
 		}
 	}
 
-	public override void Init() 
-	{
-		mItems = GetComponentsInChildren<Item> ();
-		for (int i = 0; i < mItems.Length; i++) 
-		{
-			mItems[i].Init();
-		}
-		
-		mFocused = false;
-		enabled = false;
-	}
-	
 	public override void Focus()
 	{
 		mFocused = true;
@@ -56,6 +49,11 @@ public class ItemMenu : GameMenu
 	{
 		mFocused = false;
 		enabled = false;
+		
+		if (mCurrentItem != null)
+		{
+			CloseBuyItemMenu ();
+		}
 	}
 	
 	public override bool IsFocused ()
@@ -81,6 +79,7 @@ public class ItemMenu : GameMenu
 		{
 			mCurrentItem.UnlockItem();
 			CloseBuyItemMenu ();
+			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
 	}
 	
@@ -97,13 +96,12 @@ public class ItemMenu : GameMenu
 		{
 			mCurrentItem.UnlockItem();
 			CloseBuyItemMenu ();
+			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
 	}
 
 	void OpenBuyItemMenu(int index)
 	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons ();
-
 		mCurrentItem = mItems[index];
 		
 		// cannot unlock more - ABORT! ABORT!!
@@ -114,46 +112,63 @@ public class ItemMenu : GameMenu
 		}
 
 		MenuCamera.Instance.PopupBuyMenu().Open();
-
-		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 	
 	void CloseBuyItemMenu()
 	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons ();
-
 		mCurrentItem = null;
-
-		MainGameMenu.Instance.UpdateMenusAndButtons ();
+		MenuCamera.Instance.PopupBuyMenu().Close();
 	}
-
+	
 	public void BuyUlimitedAirItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+		
 		OpenBuyItemMenu(UNLIMITED_AIR_INDEX);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyShockwaveItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
 		OpenBuyItemMenu(SHOCKWAVE_INDEX);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyBoltMagnetItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
 		OpenBuyItemMenu(BOLTS_MAGNETS_INDEX);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyForceFieldItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
 		OpenBuyItemMenu(FORCE_FIELD_INDEX);
 	}
 	
 	public void BuyBoltMultiplierItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
 		OpenBuyItemMenu(BOLTS_MULTIPLIER_INDEX);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyRocketThrustItem()
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+
 		OpenBuyItemMenu(ROCKET_THRUST_INDEX);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 }

@@ -25,7 +25,7 @@ public class PlayerData : MonoBehaviour
 	}
 
 	public int mBolts;
-	private int mCrystals;
+	public int mCrystals;
 	private int mTotalBolts;
 	private int mTotalCrystals;
 	private int mTotalDistance;

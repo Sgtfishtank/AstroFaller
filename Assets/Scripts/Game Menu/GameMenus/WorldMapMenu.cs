@@ -22,6 +22,20 @@ public class WorldMapMenu : GameMenu
 	// Use this for initialization
 	void Start () 
 	{
+		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
+		
+		for (int i = 0; i < mLevels.Length; i++) 
+		{
+			mLevels[i].Init();
+			
+			UnlockCriteria[] criterias = mLevels[i].GetComponents<UnlockCriteria>();
+			for (int j = 0; j < criterias.Length; j++) 
+			{
+				criterias[j].Init();
+			}
+		}
+		
+		CheckLevels();
 	}
 	
 	// Update is called once per frame
@@ -117,24 +131,6 @@ public class WorldMapMenu : GameMenu
 		}
 	}
 
-	public override void Init() 
-	{
-		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
-
-		for (int i = 0; i < mLevels.Length; i++) 
-		{
-			mLevels[i].Init();
-
-			UnlockCriteria[] criterias = mLevels[i].GetComponents<UnlockCriteria>();
-			for (int j = 0; j < criterias.Length; j++) 
-			{
-				criterias[j].Init();
-			}
-		}
-
-		CheckLevels();
-	}
-	
 	public override void Focus()
 	{
 		mFocused = true;

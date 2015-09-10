@@ -37,13 +37,24 @@ public class AudioManager : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-	
+	}
+
+	public void CopyState(AudioManager mOtherAudioManager)
+	{
+		// hack set master state
+		mOtherAudioManager.mMasterLevel = mMasterLevel;
+		mOtherAudioManager.mMuteMaster = mMuteMaster;
+
+		// normal set rest of state
+		mOtherAudioManager.MusicLevel(mMusicLevel);
+		mOtherAudioManager.SoundsLevel(mSoundsLevel);
+		mOtherAudioManager.MuteMusic(mMuteMusic);
+		mOtherAudioManager.MuteSounds(mMuteSounds);
 	}
 	
 	public void MusicLevel(float level)
@@ -63,6 +74,36 @@ public class AudioManager : MonoBehaviour
 		mMasterLevel = level;
 		UpdateSoundsLevel();
 		UpdateMusicLevel();
+	}
+	
+	public float GetMusicLevel()
+	{
+		return mMusicLevel;
+	}
+	
+	public float GetSoundsLevel()
+	{
+		return mSoundsLevel;
+	}
+	
+	public float GetMasterLevel()
+	{
+		return mMasterLevel;
+	}
+
+	public bool IsMuteMusic()
+	{
+		return mMuteMusic;
+	}
+	
+	public bool IsMuteSounds()
+	{
+		return mMuteSounds;
+	}
+	
+	public bool IsMuteMaster()
+	{
+		return mMuteMaster;
 	}
 
 	public void MuteMusic(bool mute)
@@ -151,21 +192,6 @@ public class AudioManager : MonoBehaviour
 			mPlayingMusicEvents[i].setVolume(mMusicLevel * mMasterLevel);
 		}
 	}
-
-	public void PlayMusicOnce(FMOD.Studio.EventInstance fmodEvent)
-	{
-		StartMusic(fmodEvent);
-	}
-
-	public void PlayMusic(FMOD.Studio.EventInstance fmodEvent)
-	{
-		if (!mPlayingMusicEvents.Contains(fmodEvent))
-		{
-			mPlayingMusicEvents.Add(fmodEvent);
-		}
-
-		StartMusic(fmodEvent);
-	}
 	
 	void StartMusic(FMOD.Studio.EventInstance fmodEvent)
 	{
@@ -173,24 +199,93 @@ public class AudioManager : MonoBehaviour
 		{
 			return;
 		}
-
+		
 		fmodEvent.setVolume(mMasterLevel * mSoundsLevel);
 		fmodEvent.start ();
+	}
+	
+	void StartSound(FMOD.Studio.EventInstance fmodEvent)
+	{
+		if (mMuteMaster || mMuteSounds)
+		{
+			return;
+		}
+		
+		fmodEvent.setVolume(mMasterLevel * mSoundsLevel);
+		fmodEvent.start();
+	}
+
+	// music
+	public void PlayMusicOnce(FMOD.Studio.EventInstance fmodEvent)
+	{
+		if (fmodEvent == null)
+		{
+			print("ERROR! Audio missing.");
+			return;
+		}
+		
+		StartMusic(GetEventCopy(fmodEvent));
+	}
+
+	public void PlayMusic(FMOD.Studio.EventInstance fmodEvent)
+	{
+		if (fmodEvent == null)
+		{
+			print("ERROR! Audio missing.");
+			return;
+		}
+
+		if (!mPlayingMusicEvents.Contains(fmodEvent))
+		{
+			mPlayingMusicEvents.Add(fmodEvent);
+		}
+
+		StartMusic(fmodEvent);
 	}
 
 	public void StopMusic(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
 	{
+		if (fmodEvent == null)
+		{
+			print("ERROR! Audio missing.");
+			return;
+		}
+
 		mPlayingMusicEvents.Remove(fmodEvent);
 		fmodEvent.stop (stopMode);
 	}
 
+	// sound
 	public void PlaySoundOnce(FMOD.Studio.EventInstance fmodEvent)
 	{
-		StartSound(fmodEvent);
+		if (fmodEvent == null)
+		{
+			print("ERROR! Audio missing.");
+			return;
+		}
+
+		StartSound(GetEventCopy(fmodEvent));
 	}
-	
+
+	public FMOD.Studio.EventInstance GetEventCopy(FMOD.Studio.EventInstance fmodEvent)
+	{
+		FMOD.Studio.EventDescription ev;
+		fmodEvent.getDescription (out ev);
+
+		string path;
+		ev.getPath (out path);
+
+		return  FMOD_StudioSystem.instance.GetEvent(path);
+	}
+
 	public void PlaySound(FMOD.Studio.EventInstance fmodEvent)
 	{
+		if (fmodEvent == null)
+		{
+			print("ERROR! Audio missing.");
+			return;
+		}
+
 		if (!mPlayingSoundEvents.Contains(fmodEvent))
 		{
 			mPlayingSoundEvents.Add(fmodEvent);
@@ -199,19 +294,14 @@ public class AudioManager : MonoBehaviour
 		StartSound(fmodEvent);
 	}
 
-	void StartSound(FMOD.Studio.EventInstance fmodEvent)
+	public void StopSound(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
 	{
-		if (mMuteMaster || mMuteSounds)
+		if (fmodEvent == null)
 		{
+			print("ERROR! Audio missing.");
 			return;
 		}
 
-		fmodEvent.setVolume(mMasterLevel * mSoundsLevel);
-		fmodEvent.start();
-	}
-
-	public void StopSound(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
-	{
 		mPlayingSoundEvents.Remove(fmodEvent);
 		fmodEvent.stop(stopMode);
 	}

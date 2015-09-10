@@ -73,7 +73,7 @@ public class GUICanvas : MonoBehaviour
 		mButtonPresss = transform.GetComponentsInChildren<ButtonPress>();
 		mButtons = GetComponentsInChildren<Button>();
 
-		ShowButtons (false);
+		ShowButtons (true);
 	}
 
 	// Use this for initialization
@@ -352,6 +352,27 @@ public class GUICanvas : MonoBehaviour
 	public void MusicLevel()
 	{
 		AudioManager.Instance.MusicLevel(mMusicButtons.transform.Find("Slider").GetComponent<Slider>().value);
+	}
+	
+	public void AcceptOptions()
+	{
+		MainGameMenu.Instance.ShowOptions (false, true);
+	}
+	
+	public void CancelOptions()
+	{
+		MainGameMenu.Instance.ShowOptions (false, false);
+	}
+
+	//
+	public void UpdateOptions()
+	{
+		mMusicButtons.transform.Find("Mute").GetComponent<Toggle>().isOn = AudioManager.Instance.IsMuteMusic();
+		mSoundButtons.transform.Find("Mute").GetComponent<Toggle>().isOn = AudioManager.Instance.IsMuteSounds();
+		mMasterButtons.transform.Find("Mute").GetComponent<Toggle>().isOn = AudioManager.Instance.IsMuteMaster();
+		mMusicButtons.transform.Find("Slider").GetComponent<Slider>().value = AudioManager.Instance.GetMusicLevel();
+		mSoundButtons.transform.Find("Slider").GetComponent<Slider>().value = AudioManager.Instance.GetSoundsLevel();
+		mMasterButtons.transform.Find("Slider").GetComponent<Slider>().value = AudioManager.Instance.GetMasterLevel();
 	}
 
 	// toggle menu buttons

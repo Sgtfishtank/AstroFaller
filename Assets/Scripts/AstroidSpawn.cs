@@ -63,6 +63,8 @@ public class AstroidSpawn : MonoBehaviour {
 			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
 			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed)));
 			mAstroids.Add(instace);
+			
+			instace.transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
 		}
 	}
 

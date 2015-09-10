@@ -8,14 +8,14 @@ public class UnlimitedAirItem : Item
 	private bool mUnlocked;
 	private int mItemLevel;
 	
+	void Awake() 
+	{
+		GlobalVariables.Instance.Instanciate (mPrefab, transform, 2.593437f);
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
-	}
-
-	public override void Init()
-	{
-		GlobalVariables.Instance.Instanciate (mPrefab, transform, 2.593437f);
 	}
 
 	// Update is called once per frame
