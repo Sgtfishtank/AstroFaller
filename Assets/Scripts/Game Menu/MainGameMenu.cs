@@ -35,11 +35,15 @@ public class MainGameMenu : MonoBehaviour
 	private bool mShowPopupCraftingMenu = false;
 	private bool mShowPopupAchievementsMenu = false;
 
+	private AudioManager mSettingAudioManagerBackup;
+
 	private FMOD.Studio.EventInstance fmodMusic;
 	private FMOD.Studio.EventInstance fmodSwipe;
 
 	void Awake() 
 	{
+		mSettingAudioManagerBackup = GetComponent<AudioManager> ();
+
 		mBackground = GameObject.Instantiate (mBackgroundPrefab);
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
@@ -51,10 +55,6 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		for (int i = 0; i < mGameMenus.Length; i++) 
-		{
-			mGameMenus[i].Init();
-		}
 	}
 
 	// Update is called once per frame
@@ -208,9 +208,27 @@ public class MainGameMenu : MonoBehaviour
 
 	public void ToggleOptions ()
 	{
-		bool active = mShowOptionsMenu;
+		ShowOptions (!mShowOptionsMenu, false);
+	}
+
+	public void ShowOptions(bool show, bool apply)
+	{
 		ResetAllMenusAndButtons();
-		mShowOptionsMenu = !active;
+
+		mShowOptionsMenu = show;
+
+		// if show -> backup current state 
+		// if not show -> if apply -> revert current state to backup state
+		if (mShowOptionsMenu) 
+		{
+			AudioManager.Instance.CopyState (mSettingAudioManagerBackup);
+		}
+		else if ((!mShowOptionsMenu) && apply) 
+		{
+			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
+			GUICanvas.Instance.UpdateOptions();
+		}
+
 		UpdateMenusAndButtons ();
 	}
 

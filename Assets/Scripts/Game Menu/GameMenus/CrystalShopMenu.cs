@@ -14,10 +14,6 @@ public class CrystalShopMenu : GameMenu
 	void Update () 
 	{
 	}
-
-	public override void Init() 
-	{
-	}
 	
 	public override void Focus()
 	{

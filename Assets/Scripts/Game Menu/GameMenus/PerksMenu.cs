@@ -12,6 +12,11 @@ public class PerksMenu : GameMenu
 	private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
 
+	void Awake()
+	{
+		mPerks = GetComponentsInChildren<Perk> ();
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -30,18 +35,6 @@ public class PerksMenu : GameMenu
 			
 			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
 		}
-	}
-
-	public override void Init() 
-	{
-		mPerks = GetComponentsInChildren<Perk> ();
-		for (int i = 0; i < mPerks.Length; i++) 
-		{
-			mPerks[i].Init();
-		}
-		
-		mFocused = false;
-		enabled = false;
 	}
 	
 	public override void Focus()

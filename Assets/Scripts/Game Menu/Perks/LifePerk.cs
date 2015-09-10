@@ -14,31 +14,31 @@ public class LifePerk : Perk
 	private	GameObject mLeft4;
 	private	GameObject mMain5;
 	
-	// Use this for initialization
-	void Start () 
+	void Awake ()
 	{
-		
-	}
-	
-	public override void Init()
-	{
-		if (mPerkName.Length < 1)
-		{
-			mPerkName = gameObject.name;
-		}
-		
 		GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
-
+		
 		mTitleText = transform.Find ("Life/Life+ text").GetComponent<TextMesh> ();
 		mRight3 = transform.Find ("Life/perks_air 3").gameObject;
 		mLeft4 = transform.Find ("Life/perks_air 4").gameObject;
 		mMain5 = transform.Find ("Life/perks_air 5").gameObject;
 		
+		if (mPerkName.Length < 1)
+		{
+			mPerkName = gameObject.name;
+		}
+		
 		mRight3.SetActive (false);
 		mLeft4.SetActive (false);
 		mMain5.SetActive (false);
 	}
-	
+
+	// Use this for initialization
+	void Start () 
+	{
+		
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{

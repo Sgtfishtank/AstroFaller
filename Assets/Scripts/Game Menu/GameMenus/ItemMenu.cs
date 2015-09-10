@@ -14,6 +14,11 @@ public class ItemMenu : GameMenu
 	private bool mFocused;
 	private Item mCurrentItem;
 
+	void Awake() 
+	{
+		mItems = GetComponentsInChildren<Item> ();
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,18 +39,6 @@ public class ItemMenu : GameMenu
 		}
 	}
 
-	public override void Init() 
-	{
-		mItems = GetComponentsInChildren<Item> ();
-		for (int i = 0; i < mItems.Length; i++) 
-		{
-			mItems[i].Init();
-		}
-		
-		mFocused = false;
-		enabled = false;
-	}
-	
 	public override void Focus()
 	{
 		mFocused = true;
