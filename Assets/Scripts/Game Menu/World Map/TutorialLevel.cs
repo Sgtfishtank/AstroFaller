@@ -15,6 +15,19 @@ public class TutorialLevel : PlayableLevel
 	private	GameObject mPlayButton;
 	private	GameObject mTutorial;
 
+	void Awake () 
+	{
+		mTutorial = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
+		mTutorial.transform.name = "tutorial";
+		
+		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 0.75f);
+		mPlayButton.transform.name = "PlayLevelButton";
+		
+		mTitleText = mTutorial.transform.Find ("level name text").GetComponent<TextMesh> ();
+		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
+		mFrame = mTutorial.transform.Find ("small_frame").GetComponent<MeshRenderer> ();
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -22,16 +35,8 @@ public class TutorialLevel : PlayableLevel
 	
 	public override void Init()
 	{
-		mTutorial = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
-		mTutorial.transform.name = "tutorial";
-
-		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 0.75f);
-		mPlayButton.transform.name = "PlayLevelButton";
 		mPlayButton.SetActive (false);
 
-		mTitleText = mTutorial.transform.Find ("level name text").GetComponent<TextMesh> ();
-		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
-		mFrame = mTutorial.transform.Find ("small_frame").GetComponent<MeshRenderer> ();
 		mPictureImage.enabled = false;
 		
 		// add default

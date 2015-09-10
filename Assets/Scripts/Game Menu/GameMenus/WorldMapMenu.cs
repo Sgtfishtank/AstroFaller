@@ -4,15 +4,20 @@ using System.Collections;
 public class WorldMapMenu : GameMenu 
 {
 	public LevelBase[] mLevels;
-	//public GameObject mLevel;
-
-	private float mScrollValue = 0;
-	private int mCurrentLevelFocusIndex = 0;
-	private LevelBase mCurrentLevel = null;
+	private float mScrollValue;
+	private int mCurrentLevelFocusIndex;
+	private LevelBase mCurrentLevel;
 	private GameObject mLevelsScroller;
-	private bool mFocused = false;
-	private bool mLevelOpen = false;
-	public bool mPlayLevelPhase = false;
+	public bool mFocused;
+	public bool mLevelOpen;
+	public bool mPlayLevelPhase;
+
+	void Awake () 
+	{
+		mLevelsScroller = transform.Find("Levels").gameObject;
+		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
+
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -95,7 +100,7 @@ public class WorldMapMenu : GameMenu
 				PlayLevel();
 			}
 			
-			//setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
+			setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
 			
 			for (int i = 0; i < mLevels.Length; i++) 
 			{
@@ -114,9 +119,6 @@ public class WorldMapMenu : GameMenu
 
 	public override void Init() 
 	{
-		mLevelsScroller = transform.Find("Levels").gameObject;
-		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
-
 		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 
 		for (int i = 0; i < mLevels.Length; i++) 
@@ -249,6 +251,7 @@ public class WorldMapMenu : GameMenu
 		mCurrentLevel = mLevels [mCurrentLevelFocusIndex];
 		if ((!mCurrentLevel.IsPlayable()) || (!mCurrentLevel.IsUnlocked()))
 		{
+			print("Not playable");
 			return;
 		}
 

@@ -28,7 +28,7 @@ public class MainGameMenu : MonoBehaviour
 	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
-	private GameMenu mCurrentGameMenu;
+	public GameMenu mCurrentGameMenu;
 	private int mCurrentGameMenuIndex;
 	private bool mShowHelpMenu = false;
 	private bool mShowOptionsMenu = false;
@@ -122,6 +122,19 @@ public class MainGameMenu : MonoBehaviour
 
 	public void UpdateMenusAndButtons()
 	{
+		if (mCurrentGameMenu != null) 
+		{
+			bool focusCurrent = !(mShowOptionsMenu || mShowPopupCraftingMenu || mShowHelpMenu || mShowPopupAchievementsMenu);
+			if (focusCurrent && (!mCurrentGameMenu.IsFocused())) 
+			{
+				mCurrentGameMenu.Focus ();
+			} 
+			else if ((!focusCurrent) && (mCurrentGameMenu.IsFocused()))
+			{
+				mCurrentGameMenu.Unfocus ();
+			}
+		}
+
 		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
@@ -133,7 +146,7 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
 		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
-		bool showBack = (!mGameMenus [WORLD_MAP_MENU_INDEX].IsFocused () && (mCurrentGameMenu != null));
+		bool showBack = (mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu);
 		MenuCamera.Instance.ShowBackButton(showBack);
 		GUICanvas.Instance.ShowWorldMapButton(showBack);
 
