@@ -21,10 +21,12 @@ public class InGame : MonoBehaviour
 	public GameObject mAstroidSpawnPrefab;
 	public GameObject mDirectionalLightPrefab;
 	public GameObject mPerfectDistanceMidPrefab;
+	public GameObject mDeathMenuPrefab;
 	//public GameObject mPerfectDistanceBoxPrefab;
 	
 	public Player mPlayer;
 	public AstroidSpawn mAstroidSpawn;
+	public GameObject mDeathMenu;
 	private string mCurrentLevel;
 	
 	public float mUsualShiftkingRailgun = 0;
@@ -72,6 +74,15 @@ public class InGame : MonoBehaviour
 			dirLightObj.name = mDirectionalLightPrefab.name;
 		}
 		mDirectionalLight = dirLightObj;
+
+		GameObject deathMenuObj = GameObject.Find ("pop_up_menu_results");
+		if(deathMenuObj == null)
+		{
+			deathMenuObj = GameObject.Instantiate(mDirectionalLightPrefab);
+			deathMenuObj.name = mDirectionalLightPrefab.name;
+		}
+		mDeathMenu = deathMenuObj;
+		mDeathMenu.SetActive (false);
 		
 		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
 
@@ -178,8 +189,8 @@ public class InGame : MonoBehaviour
 		mPerfectDistanceMid.transform.position -= new Vector3 (0, shift, 0);
 		//mPerfectDistanceBoxL.transform.position -= new Vector3 (0, shift, -10);
 		//mPerfectDistanceBoxR.transform.position -= new Vector3 (0, shift, -10);
-		
-		InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
+		if (!mPlayer.isDead ())
+			InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
 	
 	void ShowComponents(bool show)

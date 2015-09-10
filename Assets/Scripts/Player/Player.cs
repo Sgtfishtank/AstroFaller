@@ -324,9 +324,19 @@ public class Player : MonoBehaviour
 			mIsDead = true;
 
 			mRb.velocity = new Vector2(0, 0);
-			gameObject.SetActive(false);
+			InGame.Instance.mDeathMenu.SetActive(true);
 
-			DepositData();
+			Vector3 a = gameObject.transform.position;
+			a.x = 0;
+			a.y -= 5;
+			a.z = InGame.Instance.mDeathMenu.transform.position.z;
+			InGame.Instance.mDeathMenu.transform.position = a;
+
+
+
+			//gameObject.SetActive(false);
+
+			Invoke("DepositData",0.1f);
 		}
 	}
 

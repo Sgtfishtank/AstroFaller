@@ -23,7 +23,9 @@ public class FollowPlayer : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		UpdatePosition();
+		if(!InGame.Instance.mPlayer.isDead())
+			UpdatePosition();
+
 
 		if(mDash)
 		{
