@@ -18,7 +18,6 @@ public class MainGameMenu : MonoBehaviour
 		}
 	}
 
-	//public GameMenu mStartMenu;
 	public GameObject mBackgroundPrefab;
 	public GameObject mBackground;
 
@@ -29,12 +28,15 @@ public class MainGameMenu : MonoBehaviour
 
 	private GameMenu[] mGameMenus;
 	public GameMenu mCurrentGameMenu;
-	private int mCurrentGameMenuIndex;
+	private GameMenu mNextGameMenu;
+
 	private bool mShowHelpMenu = false;
-	private bool mShowOptionsMenu = false;
 	private bool mShowPopupCraftingMenu = false;
 	private bool mShowPopupAchievementsMenu = false;
 
+	private bool mMenuChangePhase;
+	
+	private bool mShowOptionsMenu = false;
 	private AudioManager mSettingAudioManagerBackup;
 
 	private FMOD.Studio.EventInstance fmodMusic;
@@ -50,6 +52,8 @@ public class MainGameMenu : MonoBehaviour
 
 		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
 		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
+
+		mCurrentGameMenu = mGameMenus [0];
 	}
 
 	// Use this for initialization
@@ -60,16 +64,12 @@ public class MainGameMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (mCurrentGameMenu == null)
+		if (mMenuChangePhase)
 		{
 			if (!MenuCamera.Instance.IsMoving())
 			{
 				EndChangeGameMenu();
 			}
-		}
-		else 
-		{
-
 		}
 	}
 	
@@ -112,8 +112,8 @@ public class MainGameMenu : MonoBehaviour
 
 		ResetAllMenusAndButtons ();
 
-		mCurrentGameMenuIndex = menuIndex;
-		mCurrentGameMenu = mGameMenus[mCurrentGameMenuIndex];
+		mNextGameMenu = null;
+		mCurrentGameMenu = mGameMenus[menuIndex];
 		mCurrentGameMenu.gameObject.SetActive (true);
 		mCurrentGameMenu.Focus();
 
@@ -122,9 +122,9 @@ public class MainGameMenu : MonoBehaviour
 
 	public void UpdateMenusAndButtons()
 	{
-		if (mCurrentGameMenu != null) 
+		if (!mMenuChangePhase) 
 		{
-			bool focusCurrent = !(mShowOptionsMenu || mShowPopupCraftingMenu || mShowHelpMenu || mShowPopupAchievementsMenu);
+			bool focusCurrent = !(mShowOptionsMenu || mShowHelpMenu);
 			if (focusCurrent && (!mCurrentGameMenu.IsFocused())) 
 			{
 				mCurrentGameMenu.Focus ();
@@ -146,7 +146,7 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
 		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
-		bool showBack = (mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu);
+		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
 		GUICanvas.Instance.ShowWorldMapButton(showBack);
 
@@ -265,6 +265,8 @@ public class MainGameMenu : MonoBehaviour
 		}
 
 		mCurrentGameMenu.BuyWithBolts();
+		
+		UpdateMenusAndButtons ();
 	}
 	
 	public void BuyWithCrystals()
@@ -276,41 +278,39 @@ public class MainGameMenu : MonoBehaviour
 		}
 
 		mCurrentGameMenu.BuyWithCrystals();
+		
+		UpdateMenusAndButtons ();
 	}
 
 	void StartChangeGameMenu (int index)
 	{
 		ResetAllMenusAndButtons ();
 
-		for (int i = 0; i < mGameMenus.Length; i++) 
-		{
-			mGameMenus[i].Unfocus();
-		}
-		mCurrentGameMenu = null;
+		mMenuChangePhase = true;
+		mNextGameMenu = mGameMenus[index];
 
-		mCurrentGameMenuIndex = index;
-		MenuCamera.Instance.StartMenuMove (mGameMenus [mCurrentGameMenuIndex].gameObject);
+		mCurrentGameMenu.Unfocus();
+		mNextGameMenu.gameObject.SetActive (true);
 
-		mGameMenus [index].gameObject.SetActive (true);
-		UpdateMenusAndButtons();
-
+		MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
 		AudioManager.Instance.PlaySound (fmodSwipe);
+
+		UpdateMenusAndButtons();
 	}
 	
 	void EndChangeGameMenu ()
 	{
-		mCurrentGameMenu = mGameMenus [mCurrentGameMenuIndex];
-		mCurrentGameMenu.Focus();
-
-		for (int i = 0; i < mGameMenus.Length; i++) 
-		{
-			mGameMenus[i].gameObject.SetActive (false);
-		}
-		mCurrentGameMenu.gameObject.SetActive (true);
-
-		UpdateMenusAndButtons();
+		mMenuChangePhase = false;
+	
+		mCurrentGameMenu.gameObject.SetActive (false);
+		mNextGameMenu.Focus();
 		
+		mCurrentGameMenu = mNextGameMenu;
+		mNextGameMenu = null;
+
 		AudioManager.Instance.StopSound(fmodSwipe, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		
+		UpdateMenusAndButtons();
 	}
 
 	public GameObject GUIObject (string name)

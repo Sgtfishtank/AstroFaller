@@ -46,20 +46,15 @@ public class AudioManager : MonoBehaviour
 
 	public void CopyState(AudioManager mOtherAudioManager)
 	{
+		// hack set master state
 		mOtherAudioManager.mMasterLevel = mMasterLevel;
-		mOtherAudioManager.mMusicLevel = mMusicLevel;
-		mOtherAudioManager.mSoundsLevel = mSoundsLevel;
 		mOtherAudioManager.mMuteMaster = mMuteMaster;
-		mOtherAudioManager.mMuteSounds = mMuteSounds;
-		mOtherAudioManager.mMuteMusic = mMuteMusic;
 
-		if (mOtherAudioManager.enabled) 
-		{
-			mOtherAudioManager.UpdateMusicLevel();
-			mOtherAudioManager.UpdateSoundsLevel();
-			mOtherAudioManager.UpdateMuteSounds();
-			mOtherAudioManager.UpdateMuteMusic();
-		}
+		// normal set rest of state
+		mOtherAudioManager.MusicLevel(mMusicLevel);
+		mOtherAudioManager.SoundsLevel(mSoundsLevel);
+		mOtherAudioManager.MuteMusic(mMuteMusic);
+		mOtherAudioManager.MuteSounds(mMuteSounds);
 	}
 	
 	public void MusicLevel(float level)

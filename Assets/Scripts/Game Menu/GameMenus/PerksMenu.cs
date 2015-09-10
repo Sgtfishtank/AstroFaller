@@ -48,7 +48,10 @@ public class PerksMenu : GameMenu
 		mFocused = false;
 		enabled = false;
 
-		CloseBuyPerkMenu ();
+		if (mCurrentPerk != null)
+		{
+			CloseBuyPerkMenu ();
+		}
 	}
 	
 	public override bool IsFocused ()
@@ -75,6 +78,7 @@ public class PerksMenu : GameMenu
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
 			CloseBuyPerkMenu();
+			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
 	}
 	
@@ -92,13 +96,13 @@ public class PerksMenu : GameMenu
 		{
 			mCurrentPerk.UnlockPart(mCurrentPerkPart);
 			CloseBuyPerkMenu();
+			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
+
 	}
 
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons ();
-
 		mCurrentPerk = mPerks[index];
 		mCurrentPerkPart = perkPart;
 
@@ -110,30 +114,38 @@ public class PerksMenu : GameMenu
 		}
 
 		MenuCamera.Instance.PopupBuyMenu().Open();
-
-		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 	
 	void CloseBuyPerkMenu()
 	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons ();
 		mCurrentPerk = null;
-
-		MainGameMenu.Instance.UpdateMenusAndButtons ();
+		MenuCamera.Instance.PopupBuyMenu().Close();
 	}
 
 	public void BuyAirPerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+		
 		OpenBuyPerkMenu(AIR_PERK_INDEX, pp);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyLifePerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+		
 		OpenBuyPerkMenu(LIFE_PERK_INDEX, pp);
+		
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
 	public void BuyBurstPerk (Perk.PerkPart pp)
 	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons();
+		
 		OpenBuyPerkMenu(BURST_PERK_INDEX, pp);
+
+		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 }
