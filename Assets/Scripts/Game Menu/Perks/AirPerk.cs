@@ -5,7 +5,7 @@ public class AirPerk : Perk
 {
 	public string mPerkName;
 	public GameObject mPrefab;
-	
+
 	private bool mMainUnlocked;
 	private bool mLeftUnlocked;
 	private bool mRightUnlocked;
@@ -53,6 +53,7 @@ public class AirPerk : Perk
 			if (!mMainUnlocked)
 			{
 				mMainUnlocked = true;
+				PlayerData.Instance.mAirPerkUnlockedLevel = 1;
 				mMain5.SetActive(true);
 				return true;
 			}
@@ -61,14 +62,16 @@ public class AirPerk : Perk
 			if (mMainUnlocked && (!mLeftUnlocked))
 			{
 				mLeftUnlocked = true;
+				PlayerData.Instance.mAirPerkUnlockedLevel = 2;
 				mLeft4.SetActive(true);
 				return true;
 			}
 			break;
 		case PerkPart.Right:
-			if (mMainUnlocked && (!mRightUnlocked))
+			if (mMainUnlocked && mLeftUnlocked && (!mRightUnlocked))
 			{
 				mRightUnlocked = true;
+				PlayerData.Instance.mAirPerkUnlockedLevel = 3;
 				mRight3.SetActive(true);
 				return true;
 			}
@@ -90,7 +93,7 @@ public class AirPerk : Perk
 		case PerkPart.Left:
 			return mMainUnlocked && mLeftUnlocked;
 		case PerkPart.Right:
-			return mMainUnlocked && mRightUnlocked;
+			return mMainUnlocked && mLeftUnlocked && mRightUnlocked;
 		default:
 			print("Error part in IsPartUnlocked: " + perkPart);
 			break;
@@ -108,7 +111,7 @@ public class AirPerk : Perk
 		case PerkPart.Left:
 			return mMainUnlocked && (!mLeftUnlocked);
 		case PerkPart.Right:
-			return mMainUnlocked && (!mRightUnlocked);
+			return mMainUnlocked && mLeftUnlocked && (!mRightUnlocked);
 		default:
 			print("Error part in CanUnlockPart: " + perkPart);
 			break;

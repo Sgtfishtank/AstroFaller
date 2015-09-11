@@ -70,15 +70,15 @@ public class MovementControls
 		}
 
 		// drain and clamp air amount
-		if (IsHovering() && mPlayer.mUseAirDrain)
+		if (IsHovering() && mPlayer.DrainAir())
 		{
 			mAirAmount -= GlobalVariables.Instance.PLAYER_AIR_DRAIN * Time.deltaTime;
 		}
-		else if (mPlayer.mUseAirReg)
+		else if ((!IsHovering()) && mPlayer.RegAir())
 		{
 			mAirAmount += GlobalVariables.Instance.PLAYER_AIR_REG * Time.deltaTime;
 		}
-		mAirAmount = Mathf.Clamp(mAirAmount, 0, GlobalVariables.Instance.PLAYER_MAX_AIR);
+		mAirAmount = Mathf.Clamp(mAirAmount, 0, PlayerData.Instance.MaxAirTime());
 
 		return mAirAmount;
 	}

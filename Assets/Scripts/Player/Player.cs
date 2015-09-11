@@ -38,7 +38,9 @@ public class Player : MonoBehaviour
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
-
+	
+	private float mLastDmgTime;
+	private bool mLastDmgGetLife;
 	private float blendSpeed = 400f;
 	private float blendOne = 0;
 
@@ -69,11 +71,7 @@ public class Player : MonoBehaviour
 		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
 		
 		// reset air
-		mAirAmount = GlobalVariables.Instance.PLAYER_MAX_AIR;
-		
 		mDash = transform.Find("Burst_Trail").gameObject;
-
-		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
 
 		// put at level start position, if any
 		mIsDead = false;
@@ -90,10 +88,12 @@ public class Player : MonoBehaviour
 
 	public void StartGame()
 	{
+		mAirAmount = PlayerData.Instance.MaxAirTime();
+
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
 		mPerfectDistanceCollected = 0;
-		mLife = GlobalVariables.Instance.PLAYER_MAX_LIFE;
+		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
@@ -109,9 +109,9 @@ public class Player : MonoBehaviour
 			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 			mfp.Dash();
 			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-			mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
-			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED,0);
-			mDashCDTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_CD;
+			mDashTime = Time.time + PlayerData.Instance.BurstDelay();
+			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
+			mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
 		}
 	}
 	
@@ -147,7 +147,13 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
-		
+
+		if (mLastDmgGetLife && (mLastDmgTime < Time.time))
+		{
+			mLastDmgGetLife = false;
+			mLife++;
+		}
+
 		if ((mMovementControls.IsHovering()) && (blendOne < 100))
 		{
 			blendOne = Mathf.Clamp(blendOne + (blendSpeed * Time.deltaTime), 0, 100);
@@ -231,9 +237,12 @@ public class Player : MonoBehaviour
 		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
 		{
 			mLastDmgCollider = coll.collider;
+			mLastDmgTime = Time.time + 3.0f;
+			mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
 			UpdatePerfectDistance();
 			PlayerDamage(1);
+
 		}
 	}
 
@@ -249,6 +258,17 @@ public class Player : MonoBehaviour
 		{
 			//PlayerDamage(1);
 		}
+	}
+	
+	public bool DrainAir()
+	{
+		bool unlimitedAir = (PlayerData.Instance.UnlimitedAirOneLife() && (mLife == 1));
+		return (mUseAirDrain && (!unlimitedAir));
+	}
+
+	public bool RegAir()
+	{
+		return mUseAirReg;
 	}
 
 	public int colectedBolts()

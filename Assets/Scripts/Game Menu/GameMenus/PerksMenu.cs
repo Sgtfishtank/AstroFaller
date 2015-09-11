@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PerksMenu : GameMenu 
 {
-	private int AIR_PERK_INDEX = 2;
-	private int LIFE_PERK_INDEX = 1;
+	private int AIR_PERK_INDEX = 1;
+	private int LIFE_PERK_INDEX = 2;
 	private int BURST_PERK_INDEX = 0;
 
 	private Perk[] mPerks;

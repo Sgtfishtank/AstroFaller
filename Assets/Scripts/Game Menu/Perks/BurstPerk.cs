@@ -53,6 +53,7 @@ public class BurstPerk : Perk
 			if (!mMainUnlocked)
 			{
 				mMainUnlocked = true;
+				PlayerData.Instance.mBurstPerkUnlockedLevel = 1;
 				mMain5.SetActive(true);
 				return true;
 			}
@@ -61,6 +62,7 @@ public class BurstPerk : Perk
 			if (mMainUnlocked && (!mLeftUnlocked))
 			{
 				mLeftUnlocked = true;
+				PlayerData.Instance.mBurstPerkUnlockedLevel = 2;
 				mLeft4.SetActive(true);
 				return true;
 			}
@@ -69,6 +71,7 @@ public class BurstPerk : Perk
 			if (mMainUnlocked && (!mRightUnlocked))
 			{
 				mRightUnlocked = true;
+				PlayerData.Instance.mBurstPerkUnlockedLevel = 3;
 				mRight3.SetActive(true);
 				return true;
 			}

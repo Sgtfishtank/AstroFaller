@@ -30,6 +30,10 @@ public class PlayerData : MonoBehaviour
 	private int mTotalCrystals;
 	private int mTotalDistance;
 
+	public int mAirPerkUnlockedLevel;
+	public int mLifePerkUnlockedLevel;
+	public int mBurstPerkUnlockedLevel;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -38,6 +42,90 @@ public class PlayerData : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+	}
+
+	// air
+	public float MaxAirTime()
+	{
+		switch (mAirPerkUnlockedLevel) 
+		{
+		case 0:
+			return GlobalVariables.Instance.PLAYER_MAX_AIR;
+		case 1:
+			return GlobalVariables.Instance.PLAYER_MAX_AIR + GlobalVariables.Instance.AIR_PERK_MAIN_LEVELS[1];
+		case 2: case 3:
+			return GlobalVariables.Instance.PLAYER_MAX_AIR + GlobalVariables.Instance.AIR_PERK_MAIN_LEVELS[1] + GlobalVariables.Instance.AIR_PERK_LEFT_LEVELS[1];
+		default:
+			print("error air perk max air " + mAirPerkUnlockedLevel);
+			return GlobalVariables.Instance.PLAYER_MAX_AIR;
+		}
+	}
+
+	public bool UnlimitedAirOneLife()
+	{
+		return (mAirPerkUnlockedLevel == 3);
+	}
+
+	// burst
+	public float BurstDelay()
+	{
+		float distance = GlobalVariables.Instance.PLAYER_DASH_SPEED / GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
+
+		switch (mBurstPerkUnlockedLevel) 
+		{
+		case 0:
+			distance += 0;
+			break;
+		case 1:
+			distance += GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS[1];
+			break;
+		case 2: case 3:
+			distance += GlobalVariables.Instance.BURST_PERK_MAIN_LEVELS[1] + GlobalVariables.Instance.BURST_PERK_LEFT_LEVELS[1];
+			break;
+		default:
+			distance += 0;
+			print("error burst perk max BURST " + mBurstPerkUnlockedLevel);
+			break;
+		}
+
+		float delay = distance / GlobalVariables.Instance.PLAYER_DASH_SPEED;
+		return delay;
+	}
+
+	public float BurstCooldown()
+	{
+		switch (mBurstPerkUnlockedLevel) 
+		{
+		case 0: case 1: case 2: 
+			return GlobalVariables.Instance.PLAYER_DASH_CD;
+		case 3:
+			return GlobalVariables.Instance.PLAYER_DASH_CD - GlobalVariables.Instance.BURST_PERK_RIGHT_LEVELS[1];
+		default:
+			print("error burst perk BurstCooldown " + mBurstPerkUnlockedLevel);
+			return GlobalVariables.Instance.PLAYER_DASH_CD;
+		}
+	}
+
+	// life
+	public int MaxLife ()
+	{
+		switch (mLifePerkUnlockedLevel) 
+		{
+		case 0:
+			return GlobalVariables.Instance.PLAYER_MAX_LIFE;
+		case 1:
+			return GlobalVariables.Instance.PLAYER_MAX_LIFE + GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS[1];
+		case 2: case 3:
+			return GlobalVariables.Instance.PLAYER_MAX_LIFE + GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS[1] + GlobalVariables.Instance.LIFE_PERK_LEFT_LEVELS[1];
+		default:
+			print("error life perk MaxLife " + mLifePerkUnlockedLevel);
+			return GlobalVariables.Instance.PLAYER_MAX_LIFE;
+		}
+	}
+
+	public bool RegenerateLifeAfterHit()
+	{
+		return (mLifePerkUnlockedLevel == 3);
 	}
 
 	public int bolts()
