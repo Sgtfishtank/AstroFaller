@@ -138,8 +138,9 @@ public class InGame : MonoBehaviour
 		}
 	}
 
-	void StartGame ()
+	public void StartGame ()
 	{
+		mWorldGen.DespawnSegments();
 		mPlayer.StartGame();
 		
 		mStartTime = Time.time;

@@ -36,6 +36,7 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mMasterButtons;
 	private GameObject mSoundButtons;
 	private GameObject mMusicButtons;
+	private GameObject mDeathMenu;
 
 	private Image mFadeImage;
 	public bool mShowDebugGUI;
@@ -65,6 +66,8 @@ public class GUICanvas : MonoBehaviour
 		mSoundButtons = mOptionButtons.transform.Find("Sounds").gameObject;
 		mMusicButtons = mOptionButtons.transform.Find("Music").gameObject;
 		mOptionButtons.SetActive (true);
+		mDeathMenu = GameObject.Find("DeathMenu");
+		mDeathMenu.SetActive(false);
 
 		//assign all in game buttons
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
@@ -321,6 +324,8 @@ public class GUICanvas : MonoBehaviour
 	{
 		WorldGen.Instance.Disable();
 		MainGameMenu.Instance.Enable(0);
+		mDeathMenu.SetActive(false);
+		InGame.Instance.mDeathMenu.SetActive(false);
 	}
 
 	// options
@@ -464,5 +469,15 @@ public class GUICanvas : MonoBehaviour
 	public ButtonPress PlayButton()
 	{
 		return mPlayLevelButton.GetComponent<ButtonPress>();
+	}
+	public void setEnableDeathMenu(bool a)
+	{
+		mDeathMenu.SetActive(a);
+	}
+	public void restart()
+	{
+		InGame.Instance.mDeathMenu.SetActive(false);
+		mDeathMenu.SetActive(false);
+		InGame.Instance.StartGame();
 	}
 }

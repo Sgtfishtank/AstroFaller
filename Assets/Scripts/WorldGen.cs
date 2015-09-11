@@ -107,7 +107,7 @@ public class WorldGen : MonoBehaviour
 		return newSeg;
 	}
 
-	void DespawnSegments() 
+	public void DespawnSegments() 
 	{
 		if (mNextSegment != null)
 		{

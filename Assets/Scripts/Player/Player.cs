@@ -89,6 +89,8 @@ public class Player : MonoBehaviour
 	public void StartGame()
 	{
 		mAirAmount = PlayerData.Instance.MaxAirTime();
+		mRb.isKinematic = false;
+		mIsDead = false;
 
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
@@ -342,13 +344,14 @@ public class Player : MonoBehaviour
 		if(!mInvulnerable && !mIsDead)
 		{
 			mIsDead = true;
-
+			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
 			InGame.Instance.mDeathMenu.SetActive(true);
+			GUICanvas.Instance.setEnableDeathMenu(true);
 
 			Vector3 a = gameObject.transform.position;
 			a.x = 0;
-			a.y -= 5;
+			a.y = InGameCamera.Instance.transform.position.y +3.5f;
 			a.z = InGame.Instance.mDeathMenu.transform.position.z;
 			InGame.Instance.mDeathMenu.transform.position = a;
 

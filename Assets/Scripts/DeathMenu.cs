@@ -6,7 +6,11 @@ public class DeathMenu : MonoBehaviour
 	TextMesh[] mTexts;
 	Player mPlayer;
 	// Use this for initialization
-	void Start ()
+	void Start()
+	{
+
+	}
+	void OnEnable ()
 	{
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
 		mPlayer = InGame.Instance.mPlayer;

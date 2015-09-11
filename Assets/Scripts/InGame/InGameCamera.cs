@@ -48,7 +48,7 @@ public class InGameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		mBoltsText.text = InGame.Instance.Player().colectedBolts() + " B";
+		mBoltsText.text = InGame.Instance.Player().colectedBolts().ToString();
 		mDistnceText.text = InGame.Instance.Player().distance() + " M";
 		mBoxesText.text = InGame.Instance.Player().CollectedPerfectDistances() + " $";
 	}
