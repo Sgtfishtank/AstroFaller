@@ -317,6 +317,18 @@ public class MainGameMenu : MonoBehaviour
 	{
 		switch (name) 
 		{
+		case "RocketThrust":
+			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
+		case "UnlimitedAir":
+			return ItemsMenu().transform.Find("Unlimited Air/item_unlimitedair/item_unlimitedair").gameObject;
+		case "Shockwave":
+			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
+		case "ForceField":
+			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
+		case "BoltMagnet":
+			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
+		case "BoltMultiplier":
+			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
 		default:
 			return null;
 		}

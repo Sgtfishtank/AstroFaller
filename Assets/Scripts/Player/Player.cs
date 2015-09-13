@@ -66,7 +66,10 @@ public class Player : MonoBehaviour
 		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
-		
+
+		mInflateSound.setVolume(100);
+		mDeflateSound.setVolume(100);
+
 		// init internal scrips
 		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
 		

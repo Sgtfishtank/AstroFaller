@@ -8,13 +8,9 @@ public class AstroidSpawn : MonoBehaviour {
 	public GameObject[] mAstroidTypes;
 	public  List<GameObject> mAstroids;
 
-	private int mMaxAstroids;
-	private float mCd;
-	private float mRotationSpeed;
-
-	private int index;
-	private GameObject mPlayerObj;
+	private Player mPlayer;
 	private Rigidbody mPlRigid;
+
 	private float mLastSpawn = 0;
 
 	void Awake ()
@@ -24,21 +20,21 @@ public class AstroidSpawn : MonoBehaviour {
 
 	void Start ()
 	{
-
+		mPlayer = WorldGen.Instance.Player();
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
-		mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
-		mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
-		mPlayerObj = WorldGen.Instance.Player().gameObject;
-		mPlRigid = mPlayerObj.GetComponentInChildren<Rigidbody>();
+		int mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
+		float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
+		float mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 
-		if(Time.time > mLastSpawn+mCd && mAstroids.Count < mMaxAstroids)
+		mPlRigid = mPlayer.GetComponent<Rigidbody>();
+
+		if((Time.time > (mLastSpawn + mCd)) && (mAstroids.Count < mMaxAstroids))
 		{
-			mLastSpawn = Time.time +mCd;
+			mLastSpawn = Time.time + mCd;
 			int x = UnityEngine.Random.Range(0,2)*2-1;
 			float y = UnityEngine.Random.Range(-25,8);
 			int astroid = UnityEngine.Random.Range(0,3);
@@ -46,13 +42,13 @@ public class AstroidSpawn : MonoBehaviour {
 
 			//Spawn astroid
 			GameObject instace = Instantiate(mAstroidTypes[astroid],
-			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayerObj.transform.position.y + y , 0),
+			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayer.transform.position.y + y , 0),
 			                                 angel) as GameObject;
 
 			//add velocity
 			Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
 
-			Vector3 targetVel = mPlayerObj.transform.position - instace.transform.position;
+			Vector3 targetVel = mPlayer.transform.position - instace.transform.position;
 			targetVel.y += mPlRigid.velocity.y;
 
 			instace.GetComponent<Rigidbody>().velocity = Vector3.Lerp(targetVel, randVel, Random.value);
@@ -78,8 +74,16 @@ public class AstroidSpawn : MonoBehaviour {
 
 	public void RemoveAstroid(GameObject g)
 	{
-		//GameObject t = mAstroids.Find(x => x.gameObject == g);
 		mAstroids.Remove(g);
 		Destroy(g);
+	}
+
+	public void RemoveAllAstroids ()
+	{
+		for (int i = 0; i < mAstroids.Count; i++) 
+		{
+			Destroy(mAstroids[i]);
+		}
+		mAstroids.Clear ();
 	}
 }
