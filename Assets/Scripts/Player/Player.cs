@@ -100,6 +100,7 @@ public class Player : MonoBehaviour
 		mPlaying = true;
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
 		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
+		mAntenLensFlare.color = Color.green;
 	}
 
 	public void Dash()
@@ -384,21 +385,15 @@ public class Player : MonoBehaviour
 
 
 			//gameObject.SetActive(false);
-
-			Invoke("DepositData",0.1f);
+			DepositData();
 		}
 	}
 
 	public void DepositData()
 	{
 		PlayerData.Instance.depositBolts(colectedBolts());
-		mBoltsCollected = 0;
-		
 		PlayerData.Instance.depositCrystals(colectedCrystals());
-		mCrystalsCollected = 0;
-		
 		PlayerData.Instance.depositDistance(distance());
-		mStartYValue = CenterPosition().y;
 	}
 
 	public void ShiftBack (float shift)

@@ -49,7 +49,7 @@ public class InGameCamera : MonoBehaviour
 	void Update () 
 	{
 		mBoltsText.text = InGame.Instance.Player().colectedBolts().ToString();
-		mDistnceText.text = InGame.Instance.Player().distance() + " M";
-		mBoxesText.text = InGame.Instance.Player().CollectedPerfectDistances() + " $";
+		mDistnceText.text = InGame.Instance.Player().distance().ToString();
+		mBoxesText.text = InGame.Instance.Player().CollectedPerfectDistances().ToString();
 	}
 }
