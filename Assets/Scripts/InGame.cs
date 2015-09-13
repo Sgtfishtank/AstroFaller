@@ -42,8 +42,6 @@ public class InGame : MonoBehaviour
 	private WorldGen mBgGen;
 
 	private GameObject mPerfectDistanceMid;
-	//private GameObject mPerfectDistanceBoxL;
-	//private GameObject mPerfectDistanceBoxR;
 
 	void Awake()
 	{
@@ -78,8 +76,8 @@ public class InGame : MonoBehaviour
 		GameObject deathMenuObj = GameObject.Find ("pop_up_menu_results");
 		if(deathMenuObj == null)
 		{
-			deathMenuObj = GameObject.Instantiate(mDirectionalLightPrefab);
-			deathMenuObj.name = mDirectionalLightPrefab.name;
+			deathMenuObj = GameObject.Instantiate(mDeathMenuPrefab);
+			deathMenuObj.name = mDeathMenuPrefab.name;
 		}
 		mDeathMenu = deathMenuObj;
 		mDeathMenu.SetActive (false);
@@ -87,8 +85,6 @@ public class InGame : MonoBehaviour
 		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
 
 		mPerfectDistanceMid = GameObject.Instantiate (mPerfectDistanceMidPrefab);
-		//mPerfectDistanceBoxL = GameObject.Instantiate (mPerfectDistanceBoxPrefab);
-		//mPerfectDistanceBoxR = GameObject.Instantiate (mPerfectDistanceBoxPrefab);
 	}
 	
 	public Player Player ()
@@ -146,9 +142,7 @@ public class InGame : MonoBehaviour
 		mStartTime = Time.time;
 		
 		mPerfectDistanceMid.gameObject.SetActive (true);
-		//mPerfectDistanceBoxL.gameObject.SetActive (true);
-		//mPerfectDistanceBoxR.gameObject.SetActive (true);
-		
+
 		mWorldGen.StartSpawnSegments (mPlayer.transform.position.y - 25);
 	}
 
@@ -171,9 +165,6 @@ public class InGame : MonoBehaviour
 	{
 		float yValue = posY;
 		mPerfectDistanceMid.transform.position = new Vector3 (0, yValue, 0);
-
-		//mPerfectDistanceBoxL.transform.position = new Vector3 (-GlobalVariables.Instance.PLAYER_MINMAX_X, yValue, 0);
-		//mPerfectDistanceBoxR.transform.position = new Vector3 (GlobalVariables.Instance.PLAYER_MINMAX_X, yValue, 0);
 	}
 
 	void ShiftBackWorld()
@@ -188,8 +179,6 @@ public class InGame : MonoBehaviour
 		mAstroidSpawn.ShiftBack(shift);
 
 		mPerfectDistanceMid.transform.position -= new Vector3 (0, shift, 0);
-		//mPerfectDistanceBoxL.transform.position -= new Vector3 (0, shift, -10);
-		//mPerfectDistanceBoxR.transform.position -= new Vector3 (0, shift, -10);
 		if (!mPlayer.isDead ())
 			InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition ();
 	}
@@ -202,8 +191,6 @@ public class InGame : MonoBehaviour
 		GUICanvas.Instance.ShowOptionButtons (false);
 		
 		mPerfectDistanceMid.gameObject.SetActive (false);
-		//mPerfectDistanceBoxL.gameObject.SetActive (false);
-		//mPerfectDistanceBoxR.gameObject.SetActive (false);
 
 		mAstroidSpawn.gameObject.SetActive (false);
 		mDirectionalLight.SetActive (show);
@@ -222,9 +209,7 @@ public class InGame : MonoBehaviour
 		mBgGen.UnloadSegments ();
 
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-		
-		//mPlayer.DepositData();
-		
+
 		mStartTime = -1;
 	}
 	

@@ -132,6 +132,12 @@ public class Player : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		// do nothing if dead
+		if ((mIsDead) || (!mPlaying))
+		{
+			return;
+		}
+
 		// hover physics
 		mMovementControls.Hover(mRb);
 		
@@ -209,13 +215,18 @@ public class Player : MonoBehaviour
 
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.tag == "Bolts")
+		// do nothing if dead
+		if ((mIsDead) || (!mPlaying))
+		{
+			return;
+		}
+
+		if (col.tag == "Bolts")
 		{
 			Instantiate(boltParticles, col.transform.parent.position, Quaternion.identity);
 			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			col.gameObject.SetActive(false);
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
-
 		}
 		else if(col.tag == "BoltCluster")
 		{
@@ -229,6 +240,12 @@ public class Player : MonoBehaviour
 
 	void OnTriggerExit(Collider col)
 	{
+		// do nothing if dead
+		if ((mIsDead) || (!mPlaying))
+		{
+			return;
+		}
+
 		if(col.tag == "SpawnAstroid")
 		{
 			mAS.gameObject.SetActive(false);
@@ -236,15 +253,24 @@ public class Player : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision coll)
 	{
+		// do nothing if dead
+		if ((mIsDead) || (!mPlaying))
+		{
+			return;
+		}
+
 		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
 		{
+
 			mLastDmgCollider = coll.collider;
 			mLastDmgTime = Time.time + 3.0f;
 			mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
 			UpdatePerfectDistance();
-			PlayerDamage(1);
 
+			int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
+			liveslost = Mathf.Max(1, 1);
+			PlayerDamage(liveslost);
 		}
 	}
 
