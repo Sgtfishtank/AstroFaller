@@ -21,6 +21,7 @@ public class InGame : MonoBehaviour
 	public GameObject mAstroidSpawnPrefab;
 	public GameObject mDirectionalLightPrefab;
 	public GameObject mPerfectDistanceMidPrefab;
+	public GameObject mPerfectDistanceParticlesPrefab;
 	public GameObject mDeathMenuPrefab;
 	//public GameObject mPerfectDistanceBoxPrefab;
 	
@@ -163,10 +164,17 @@ public class InGame : MonoBehaviour
 		return mUsualShiftkingRailgun;
 	}
 
-	public void UpdatePerfectDistance (float posY)
+	public void UpdatePerfectDistance (float posY, bool triggerParticles)
 	{
+		if (triggerParticles)
+		{
+			GameObject a = GameObject.Instantiate (mPerfectDistanceParticlesPrefab, mPerfectDistanceParticlesPrefab.transform.position + mPerfectDistanceMid.transform.position, mPerfectDistanceParticlesPrefab.transform.rotation) as GameObject;
+			a.transform.parent = transform.Find("ParticlesGoesHere");
+		}
+
 		float yValue = posY;
 		mPerfectDistanceMid.transform.position = new Vector3 (0, yValue, 0);
+
 	}
 
 	void ShiftBackWorld()

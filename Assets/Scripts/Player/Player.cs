@@ -101,9 +101,9 @@ public class Player : MonoBehaviour
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
-		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
-		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
 		mAntenLensFlare.color = Color.green;
+		
+		UpdatePerfectDistance (false);
 	}
 
 	public void Dash()
@@ -165,6 +165,8 @@ public class Player : MonoBehaviour
 			mLastDmgGetLife = false;
 			mLife++;
 		}
+		
+		LifePerk.UpdatePerkValueAnimation(mAni);
 
 		if ((mMovementControls.IsHovering()) && (blendOne < 100))
 		{
@@ -179,7 +181,7 @@ public class Player : MonoBehaviour
 
 		if (CenterPosition().y < mPerfectDistanceY)
 		{
-			UpdatePerfectDistance();
+			UpdatePerfectDistance(true);
 			mPerfectDistanceCollected++;
 		}
 
@@ -199,7 +201,7 @@ public class Player : MonoBehaviour
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
 
 	}
-	
+
 	void UpdateMeshBlend()
 	{
 		for(int i = 0; i< skinnedMeshRenderer.Length;i++)
@@ -270,7 +272,7 @@ public class Player : MonoBehaviour
 			mLastDmgTime = Time.time + 3.0f;
 			mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
-			UpdatePerfectDistance();
+			UpdatePerfectDistance(false);
 
 			int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
 			liveslost = Mathf.Max(1, 1);
@@ -278,10 +280,10 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	void UpdatePerfectDistance ()
+	void UpdatePerfectDistance (bool triggerParticles)
 	{
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
-		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY);
+		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY, triggerParticles);
 	}
 
 	void OnCollisionExit(Collision coll)
@@ -291,7 +293,7 @@ public class Player : MonoBehaviour
 			//PlayerDamage(1);
 		}
 	}
-	
+
 	public bool DrainAir()
 	{
 		bool unlimitedAir = (PlayerData.Instance.UnlimitedAirOneLife() && (mLife == 1));
@@ -422,7 +424,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	void respawn ()
+	void respawn()
 	{
 	}
 }
