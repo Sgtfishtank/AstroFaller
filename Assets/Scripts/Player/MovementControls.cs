@@ -48,7 +48,6 @@ public class MovementControls
 			{
 				if (mAirAmount > 0)  // hoverfunction
 				{
-					mPlayer.Inflate ();
 					StartHover();
 				}
 			}
@@ -57,7 +56,6 @@ public class MovementControls
 				if (mAirAmount <= 0)
 				{
 					FailHover();
-					mPlayer.Deflate();
 				}
 			}
 		}
@@ -180,6 +178,7 @@ public class MovementControls
 	void StartHover ()
 	{
 		mHoverActive = true;
+		mPlayer.Inflate ();
 	}
 	
 	void FailHover ()
@@ -191,10 +190,16 @@ public class MovementControls
 
 		mHoverFailed = true;
 		mHoverFailedT = Time.time + GlobalVariables.Instance.PLAYER_HOVER_FAILED_TIME;
+		mPlayer.Deflate();
 	}
 
 	void StopHover ()
 	{
+		if (!mHoverFailed)
+		{
+			mPlayer.Deflate();
+		}
+
 		mHoverActive = false;
 		mHoverFailed = false;
 	}

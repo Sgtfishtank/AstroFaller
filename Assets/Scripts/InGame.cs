@@ -140,6 +140,7 @@ public class InGame : MonoBehaviour
 		mPlayer.StartGame();
 		
 		mStartTime = Time.time;
+		mUsualShiftkingRailgun = 0;
 		
 		mPerfectDistanceMid.gameObject.SetActive (true);
 
@@ -228,8 +229,7 @@ public class InGame : MonoBehaviour
 		
 		mPlayer.GetComponent<Rigidbody>().useGravity = true;
 		mPlayer.transform.position = Vector3.zero;
-		
-		mUsualShiftkingRailgun = 0;
+
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
 	}
