@@ -55,7 +55,7 @@ ModelImporter:
     4300014: polySurface16
     4300016: polySurface18
     4300018: polySurface19
-    7400000: Start
+    7400000: Still
     7400002: 1
     7400004: 2
     7400006: 3
@@ -79,7 +79,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Start
+      name: Still
       takeName: Take 001
       firstFrame: 0
       lastFrame: 1

@@ -38,9 +38,6 @@ public class AirPerk : Perk
 		m3p1.SetActive (false);
 		m3p2.SetActive (false);
 		m3p3.SetActive (false);
-		//mRight3 = transform.Find ("perk_air/perks_air 3").gameObject;
-		//mLeft4 = transform.Find ("perk_air/perks_air 4").gameObject;
-		//mMain5 = transform.Find ("perk_air/perks_air 5").gameObject;
 		
 		if (mPerkName.Length < 1)
 		{

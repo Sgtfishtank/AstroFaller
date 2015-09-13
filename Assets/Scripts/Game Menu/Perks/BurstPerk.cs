@@ -10,27 +10,37 @@ public class BurstPerk : Perk
 	private bool mLeftUnlocked;
 	private bool mRightUnlocked;
 	private	TextMesh mTitleText;
-	private	GameObject mRight3;
-	private	GameObject mLeft4;
-	private	GameObject mMain5;
+	//private	GameObject mRight3;
+	//private	GameObject mLeft4;
+	//private	GameObject mMain5;
+	private	Animator mAnimator;
+	private	GameObject m1p;
+	private	GameObject m2p;
+	private	GameObject m3p;
 	
 	void Awake ()
 	{
 		GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
 		
-		mTitleText = transform.Find ("Burst/Burst+ text").GetComponent<TextMesh> ();
-		mRight3 = transform.Find ("Burst/perks_air 3").gameObject;
-		mLeft4 = transform.Find ("Burst/perks_air 4").gameObject;
-		mMain5 = transform.Find ("Burst/perks_air 5").gameObject;
+		mTitleText = transform.Find ("perk_burst/burst_text").GetComponent<TextMesh> ();
+		
+		mAnimator = transform.Find ("perk_burst/Anim_BurstPerk").GetComponent<Animator> ();
+		
+		m1p = mAnimator.transform.Find("middlerocket").gameObject;
+		m2p = mAnimator.transform.Find("middlerocket/group2").gameObject;
+		m3p = mAnimator.transform.Find("perk_burst_3").gameObject;
+		m1p.SetActive (false);
+		m2p.SetActive (false);
+		m3p.SetActive (false);
 		
 		if (mPerkName.Length < 1)
 		{
 			mPerkName = gameObject.name;
 		}
 		
-		mRight3.SetActive (false);
-		mLeft4.SetActive (false);
-		mMain5.SetActive (false);
+		//mRight3.SetActive (false);
+		//mLeft4.SetActive (false);
+		//mMain5.SetActive (false);
 	}
 
 	// Use this for initialization
@@ -44,7 +54,7 @@ public class BurstPerk : Perk
 	{
 		mTitleText.text = mPerkName;
 	}
-
+	
 	public override bool UnlockPart(PerkPart perkPart)
 	{
 		switch (perkPart) 
@@ -53,8 +63,9 @@ public class BurstPerk : Perk
 			if (!mMainUnlocked)
 			{
 				mMainUnlocked = true;
-				PlayerData.Instance.mBurstPerkUnlockedLevel = 1;
-				mMain5.SetActive(true);
+				PlayerData.Instance.mAirPerkUnlockedLevel = 1;
+				mAnimator.SetTrigger("Upgrade");
+				m1p.SetActive(true);
 				return true;
 			}
 			break;
@@ -62,17 +73,19 @@ public class BurstPerk : Perk
 			if (mMainUnlocked && (!mLeftUnlocked))
 			{
 				mLeftUnlocked = true;
-				PlayerData.Instance.mBurstPerkUnlockedLevel = 2;
-				mLeft4.SetActive(true);
+				PlayerData.Instance.mAirPerkUnlockedLevel = 2;
+				mAnimator.SetTrigger("Upgrade");
+				m2p.SetActive(true);
 				return true;
 			}
 			break;
 		case PerkPart.Right:
-			if (mMainUnlocked && (!mRightUnlocked))
+			if (mMainUnlocked && mLeftUnlocked && (!mRightUnlocked))
 			{
 				mRightUnlocked = true;
-				PlayerData.Instance.mBurstPerkUnlockedLevel = 3;
-				mRight3.SetActive(true);
+				PlayerData.Instance.mAirPerkUnlockedLevel = 3;
+				mAnimator.SetTrigger("Upgrade");
+				m3p.SetActive(true);
 				return true;
 			}
 			break;
@@ -80,10 +93,10 @@ public class BurstPerk : Perk
 			print("Error part in UnlockPart: " + perkPart);
 			break;
 		}
-		
+
 		return false;
 	}
-	
+
 	public override bool IsPartUnlocked(PerkPart perkPart)
 	{
 		switch (perkPart) 
