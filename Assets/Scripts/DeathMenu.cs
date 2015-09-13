@@ -5,6 +5,7 @@ public class DeathMenu : MonoBehaviour
 {
 	TextMesh[] mTexts;
 	Player mPlayer;
+	public int boxes;
 	// Use this for initialization
 	void Start()
 	{
@@ -16,11 +17,7 @@ public class DeathMenu : MonoBehaviour
 		mPlayer = InGame.Instance.mPlayer;
 
 		int multi = calculateMultiplier ();
-
-		print (mPlayer.distance ());
-		print (multi.ToString());
-		print (mPlayer.colectedBolts ());
-		print (multi * mPlayer.colectedBolts ());
+		boxes = mPlayer.CollectedPerfectDistances();
 
 		for (int i = 0; i < mTexts.Length; i++)
 		{

@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
 
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
-		mPerfectDistanceCollected = 0;
+		//mPerfectDistanceCollected = 0;
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
@@ -382,9 +382,6 @@ public class Player : MonoBehaviour
 			a.z = InGame.Instance.mDeathMenu.transform.position.z;
 			InGame.Instance.mDeathMenu.transform.position = a;
 
-
-
-			//gameObject.SetActive(false);
 			DepositData();
 		}
 	}
