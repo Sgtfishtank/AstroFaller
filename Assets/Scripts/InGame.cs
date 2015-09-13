@@ -136,6 +136,7 @@ public class InGame : MonoBehaviour
 
 	public void StartGame ()
 	{
+		mAstroidSpawn.RemoveAllAstroids();
 		mWorldGen.DespawnSegments();
 		mPlayer.StartGame();
 		

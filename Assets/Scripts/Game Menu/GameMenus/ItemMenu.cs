@@ -3,12 +3,12 @@ using System.Collections;
 
 public class ItemMenu : GameMenu 
 {
-	private int UNLIMITED_AIR_INDEX = 0;
-	private int SHOCKWAVE_INDEX = 1;
-	private int BOLTS_MAGNETS_INDEX = 2;
+	private int UNLIMITED_AIR_INDEX = 1;
+	private int SHOCKWAVE_INDEX = 2;
+	private int BOLTS_MAGNETS_INDEX = 4;
 	private int FORCE_FIELD_INDEX = 3;
-	private int BOLTS_MULTIPLIER_INDEX = 4;
-	private int ROCKET_THRUST_INDEX = 5;
+	private int BOLTS_MULTIPLIER_INDEX = 5;
+	private int ROCKET_THRUST_INDEX = 0;
 
 	private Item[] mItems;
 	private bool mFocused;
@@ -103,6 +103,7 @@ public class ItemMenu : GameMenu
 	void OpenBuyItemMenu(int index)
 	{
 		mCurrentItem = mItems[index];
+		print ("i " + index + " n " + mCurrentItem.name);
 		
 		// cannot unlock more - ABORT! ABORT!!
 		if (!mCurrentItem.CanUnlockItem())
