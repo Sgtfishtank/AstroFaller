@@ -577,20 +577,19 @@ public class GUICanvas : MonoBehaviour
 			{
 			case 1:
 				a[0].text = value.ToString();
-				a[0].rectTransform.anchoredPosition = findObject("Box 1").anchoredPosition + new Vector2(5.8f,-23);
+				a[0].rectTransform.anchoredPosition = findObject("Box 1").anchoredPosition + new Vector2(5.8f-128,-23);
 				break;
 			case 2:
 				a[1].text = value.ToString();
-				a[1].rectTransform.anchoredPosition = findObject("Box 2").anchoredPosition + new Vector2(5.8f,-23);
-				
+				a[1].rectTransform.anchoredPosition = findObject("Box 2").anchoredPosition + new Vector2(3,-23);
 				break;
 			case 3:
 				a[2].text = value.ToString();
-				a[2].rectTransform.anchoredPosition = findObject("Box 3").anchoredPosition + new Vector2(5.8f,-23);
+				a[2].rectTransform.anchoredPosition = findObject("Box 3").anchoredPosition + new Vector2(2,-23);
 				break;
 			case 4:
 				a[3].text = value.ToString();
-				a[3].rectTransform.anchoredPosition = findObject("Box 4").anchoredPosition + new Vector2(5.8f,-23);
+				a[3].rectTransform.anchoredPosition = findObject("Box 4").anchoredPosition + new Vector2(3,-23);
 				break;
 			default:
 				break;
