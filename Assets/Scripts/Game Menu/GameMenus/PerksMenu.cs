@@ -33,7 +33,7 @@ public class PerksMenu : GameMenu
 			int costBolts = mCurrentPerk.BuyCostBolts();
 			int nextCrystals = mCurrentPerk.BuyCostCrystals();
 			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (mCurrentPerk.name, description, current, next, costBolts, nextCrystals);
 		}
 	}
 	

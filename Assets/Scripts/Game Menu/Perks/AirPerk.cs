@@ -31,7 +31,7 @@ public class AirPerk : Perk
 		m3p1 = mAnimator.transform.Find("polySurface16").gameObject;
 		m3p2 = mAnimator.transform.Find("polySurface18").gameObject;
 		m3p3 = mAnimator.transform.Find("polySurface19").gameObject;
-		m1p.SetActive (false);
+		//m1p.SetActive (false);
 		m2p.SetActive (false);
 		m3p1.SetActive (false);
 		m3p2.SetActive (false);
@@ -58,7 +58,6 @@ public class AirPerk : Perk
 	// Use this for initialization
 	void Start () 
 	{
-		
 	}
 
 	// Update is called once per frame

@@ -35,7 +35,7 @@ public class ItemMenu : GameMenu
 			int costBolts = mCurrentItem.BuyCostBolts();
 			int nextCrystals = mCurrentItem.BuyCostCrystals();
 			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (mCurrentItem.name, description, current, next, costBolts, nextCrystals);
 		}
 	}
 

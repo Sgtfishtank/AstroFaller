@@ -51,11 +51,12 @@ public class PopupBuyMenu : MonoBehaviour
 		Transform[] obs = mObjToBuy.GetComponentsInChildren<Transform>(true);
 		for (int i = 0; i < obs.Length; i++) 
 		{
-			obs[i].gameObject.SetActive(true);
+			//obs[i].gameObject.SetActive(true);
 		}
 
 		mObjToBuy.transform.parent = transform;
-		mObjToBuy.transform.localPosition = new Vector3(0,0,0);
+		mObjToBuy.transform.localPosition = new Vector3(0,3,0);
+		mObjToBuy.transform.localScale *= 0.8f;
 
 		mOpen = true;
 		gameObject.SetActive(true);
@@ -76,8 +77,9 @@ public class PopupBuyMenu : MonoBehaviour
 		return mOpen;
 	}
 
-	public void updateData (string description, string current, string next, int costBolts, int nextCrystals)
+	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
+		mTitleText.text = 
 		mDescriptionText.text = description + "\n" + costBolts + " Bolts";
 		mCurrentText.text = "CURRENT: " + current;
 		mNextText.text = "NEXT: " + next;

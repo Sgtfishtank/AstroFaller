@@ -231,7 +231,7 @@ public class GUICanvas : MonoBehaviour
 			startY += size;
 		}
 
-		GUI.Label (new Rect (startX, startY, 180, size), "Bolts: " + PlayerData.Instance.crystals ());
+		GUI.Label (new Rect (startX, startY, 180, size), "Bolts: " + PlayerData.Instance.bolts());
 		startY += size;
 
 		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals: " + PlayerData.Instance.crystals());

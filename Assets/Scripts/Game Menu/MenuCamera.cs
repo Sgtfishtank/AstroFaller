@@ -46,7 +46,7 @@ public class MenuCamera : MonoBehaviour
 
 	private GameObject mPopupCraftingMenu;
 	private GameObject mPopupAchievementsMenu;
-	private GameObject mHelpMenu;
+	public GameObject[] mHelpMenu = new GameObject[3];
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
 	private GameObject mWorldMapIcon;
@@ -59,7 +59,9 @@ public class MenuCamera : MonoBehaviour
 		mCamera = GetComponent<Camera> ();
 		mBoltsText = transform.Find("Bolts/Total_Bolts_Text").GetComponent<TextMesh>();
 
-		mHelpMenu = transform.Find("Help").gameObject;
+		//mHelpMenu[0] = transform.Find("question_menu_worldmap").gameObject;
+		//mHelpMenu[1] = transform.Find("question_menu_Items").gameObject;
+		//mHelpMenu[2] = transform.Find("question_menu_Items").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
@@ -68,8 +70,11 @@ public class MenuCamera : MonoBehaviour
 
 		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
 		GlobalVariables.Instance.Instanciate (mPopupAchievementsMenuPrefab, mPopupAchievementsMenu.transform, 19);
-		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
+		//GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
 		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 15);
+		mHelpMenu [0].SetActive (false);
+		mHelpMenu [1].SetActive (false);
+		mHelpMenu [2].SetActive (false);
 	}
 
 	// Use this for initialization
@@ -221,7 +226,23 @@ public class MenuCamera : MonoBehaviour
 
 	public void ShowHelpMenu (bool show)
 	{
-		mHelpMenu.SetActive (show);
+		switch (MainGameMenu.Instance.CurrentMenu())
+		{
+		case 0:
+			mHelpMenu[0].SetActive(show);
+			break;
+		case 1:
+			mHelpMenu[1].SetActive(show);
+			break;
+		case 2:
+			mHelpMenu[2].SetActive(show);
+			break;
+		default:
+			break;
+		}
+		//mHelpMenu.SetActive (show);
+
+
 	}
 	
 	public void ShowOptionsMenu (bool show)

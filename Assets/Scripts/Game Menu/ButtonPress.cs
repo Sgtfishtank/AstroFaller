@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
 	public enum PressAction
 	{
@@ -23,6 +23,12 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private Vector3 mBasePosition;
 	private Vector3 mOffset;
 	private float mScale;
+	private FMOD.Studio.EventInstance mPressSound;
+
+	void Awake()
+	{
+		mPressSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuQuestionMark/QuestionMark");
+	}
 
 	void Start()
 	{
@@ -56,6 +62,11 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	public void OnPointerDown (PointerEventData eventData) 
 	{
 		mPressed = true;
+	}
+
+	public void OnPointerClick(PointerEventData eventData) 
+	{
+		AudioManager.Instance.PlaySoundOnce (mPressSound);
 	}
 
 	public bool IsPressed() 

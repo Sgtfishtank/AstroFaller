@@ -22,8 +22,8 @@ public class MainGameMenu : MonoBehaviour
 	public GameObject mBackground;
 
 	private int WORLD_MAP_MENU_INDEX = 0;
-	private int ITEMS_MENU_INDEX = 2;
 	private int PERKS_MENU_INDEX = 1;
+	private int ITEMS_MENU_INDEX = 2;
 	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
@@ -154,6 +154,17 @@ public class MainGameMenu : MonoBehaviour
 		{
 			mGameMenus[i].UpdateMenusAndButtons();
 		}
+	}
+	public int CurrentMenu()
+	{
+		for (int i = 0; i < mGameMenus.Length; i++)
+		{
+			if(mCurrentGameMenu == mGameMenus[i])
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public void ChangeToWorldMapMenu()
@@ -334,6 +345,12 @@ public class MainGameMenu : MonoBehaviour
 	{
 		switch (name) 
 		{
+		case "Button 7":
+			return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
+		case "Button 1":
+			return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
+		case "Button 4":
+			return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
 		case "RocketThrust":
 			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
 		case "UnlimitedAir":
