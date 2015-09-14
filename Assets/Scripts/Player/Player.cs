@@ -109,6 +109,8 @@ public class Player : MonoBehaviour
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
 		mAntenLensFlare.color = Color.green;
+
+		transform.position = new Vector3(0, transform.position.y, 0);
 		
 		UpdatePerfectDistance (false);
 	}
@@ -194,7 +196,8 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetKeyDown(KeyCode.E) && CanDash())
+		if(Input.GetButton("Fire1") && CanDash())
+
 		{
 			Dash();
 		}

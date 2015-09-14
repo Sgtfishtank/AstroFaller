@@ -6,21 +6,29 @@ public class PopupBuyMenu : MonoBehaviour
 	public GameObject mPrefab;
 
 	private bool mOpen;
+	private TextMesh mTitleText;
 	private TextMesh mDescriptionText;
 	private TextMesh mCurrentText;
 	private TextMesh mNextText;
-	private TextMesh mCostBoltsText;
-	private TextMesh mCostCrystalsText;
+	private GameObject mObjToBuy;
+	//private TextMesh mCostBoltsText;
+	//private TextMesh mCostCrystalsText;
 
 	void Awake()
 	{
-		GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
-		
-		mDescriptionText = transform.Find ("Pop-up buy menu/name ext").GetComponent<TextMesh> ();
-		mCurrentText = transform.Find ("Pop-up buy menu/info text 1").GetComponent<TextMesh> ();
-		mNextText = transform.Find ("Pop-up buy menu/info text 2").GetComponent<TextMesh> ();
-		mCostBoltsText = transform.Find ("Pop-up buy menu/buy text 1").GetComponent<TextMesh> ();
-		mCostCrystalsText = transform.Find ("Pop-up buy menu/buy text 2").GetComponent<TextMesh> ();
+		GameObject a = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+		a.transform.localScale = mPrefab.transform.localScale;
+		a.transform.localPosition = mPrefab.transform.localPosition;
+		a.transform.rotation = mPrefab.transform.rotation;
+
+		a = a.transform.Find ("Texts").gameObject;
+
+		mTitleText = a.transform.Find ("Name_Text").GetComponent<TextMesh> ();
+		mDescriptionText = a.transform.Find ("Description_Text").GetComponent<TextMesh> ();
+		mCurrentText = a.transform.Find ("Current_description").GetComponent<TextMesh> ();
+		mNextText = a.transform.Find ("Next_Description").GetComponent<TextMesh> ();
+		//mCostBoltsText = a.transform.Find ("buy text 1").GetComponent<TextMesh> ();
+		//mCostCrystalsText = a.transform.Find ("buy text 2").GetComponent<TextMesh> ();
 
 		mOpen = false;
 	}
@@ -36,8 +44,20 @@ public class PopupBuyMenu : MonoBehaviour
 	{
 	}
 
-	public void Open()
+	public void Open(GameObject prefab)
 	{
+		mObjToBuy = GameObject.Instantiate(prefab);
+
+		Transform[] obs = mObjToBuy.GetComponentsInChildren<Transform>(true);
+		for (int i = 0; i < obs.Length; i++) 
+		{
+			//obs[i].gameObject.SetActive(true);
+		}
+
+		mObjToBuy.transform.parent = transform;
+		mObjToBuy.transform.localPosition = new Vector3(0,3,0);
+		mObjToBuy.transform.localScale *= 0.8f;
+
 		mOpen = true;
 		gameObject.SetActive(true);
 
@@ -46,6 +66,7 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Close()
 	{
+		Destroy (mObjToBuy);
 		mOpen = false;
 		gameObject.SetActive(false);
 		GUICanvas.Instance.ShowPopupBuyButton (false);
@@ -56,12 +77,13 @@ public class PopupBuyMenu : MonoBehaviour
 		return mOpen;
 	}
 
-	public void updateData (string description, string current, string next, int costBolts, int nextCrystals)
+	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
-		mDescriptionText.text = description;
+		mTitleText.text = 
+		mDescriptionText.text = description + "\n" + costBolts + " Bolts";
 		mCurrentText.text = "CURRENT: " + current;
 		mNextText.text = "NEXT: " + next;
-		mCostBoltsText.text = costBolts + " B";
-		mCostCrystalsText.text = nextCrystals + " C";
+		//mCostBoltsText.text = costBolts + " B";
+		//mCostCrystalsText.text = nextCrystals + " C";
 	}
 }

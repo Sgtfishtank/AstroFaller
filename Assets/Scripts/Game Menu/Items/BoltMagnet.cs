@@ -5,6 +5,7 @@ public class BoltMagnet : Item
 {
 	public GameObject mPrefab;
 	public GameObject mObj;
+	private GameObject mObjMesh;
 	
 	private bool mUnlocked;
 	private int mItemLevel;
@@ -15,6 +16,8 @@ public class BoltMagnet : Item
 		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
 		mObj.transform.localPosition = mPrefab.transform.localPosition;
 
+		mObjMesh = mObj.transform.Find("item_boltmagnet").gameObject;
+
 		mObjParts = new GameObject[1 + GlobalVariables.Instance.ITEMS_MAX_LEVEL - GlobalVariables.Instance.ITEMS_START_LEVEL];
 		mObjParts[0] = mObj.transform.Find("buy_orb " + 1).gameObject;
 		mObjParts[1] = mObj.transform.Find("buy_orb " + 2).gameObject;
@@ -22,6 +25,11 @@ public class BoltMagnet : Item
 		mObjParts[0].SetActive(false);
 		mObjParts[1].SetActive(false);
 		mObjParts[2].SetActive(false);
+	}
+
+	public override GameObject PreviewObject ()
+	{
+		return mObjMesh;
 	}
 
 	// Use this for initialization

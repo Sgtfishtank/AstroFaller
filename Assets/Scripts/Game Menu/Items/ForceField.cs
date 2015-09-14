@@ -4,7 +4,8 @@ using System.Collections;
 public class ForceField : Item 
 {
 	public GameObject mPrefab;
-
+	
+	private GameObject mObjMesh;
 	private GameObject mObj;
 	private bool mUnlocked;
 	private int mItemLevel;
@@ -14,6 +15,7 @@ public class ForceField : Item
 	{
 		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
 		mObj.transform.localPosition = mPrefab.transform.localPosition;
+		mObjMesh = mObj.transform.Find("item_shield").gameObject;
 		mObjParts = new GameObject[3];
 		for (int i = 0; i < mObjParts.Length; i++) 
 		{
@@ -21,6 +23,11 @@ public class ForceField : Item
 			mObjParts[i].SetActive(false);
 		}
 
+	}
+	
+	public override GameObject PreviewObject ()
+	{
+		return mObjMesh;
 	}
 
 	// Use this for initialization
