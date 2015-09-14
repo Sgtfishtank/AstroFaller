@@ -63,7 +63,7 @@ public class Level : PlayableLevel
 		}
 		else
 		{
-			mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
+			mTotalDistanceText.text = mTotalDistance.ToString();
 		}
 	}
 	

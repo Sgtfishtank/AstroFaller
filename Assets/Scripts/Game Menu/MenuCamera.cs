@@ -51,11 +51,14 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mWorldMapButton;
 	private GameObject mWorldMapIcon;
 	private GameObject mOptionsIcon;
+	private TextMesh mBoltsText;
 	private Camera mCamera;
 	
 	void Awake()
 	{
 		mCamera = GetComponent<Camera> ();
+		mBoltsText = transform.Find("Bolts/Total_Bolts_Text").GetComponent<TextMesh>();
+
 		mHelpMenu = transform.Find("Help").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
@@ -77,6 +80,7 @@ public class MenuCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		mBoltsText.text = PlayerData.Instance.bolts().ToString();
 		Vector3 mCameraOffset = GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 		if (mMoving) 
 		{

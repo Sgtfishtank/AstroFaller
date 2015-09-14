@@ -9,7 +9,7 @@ public class PerksMenu : GameMenu
 
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
-	private Perk.PerkPart mCurrentPerkPart;
+	//private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
 
 	void Awake()
@@ -104,7 +104,7 @@ public class PerksMenu : GameMenu
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
 		mCurrentPerk = mPerks[index];
-		mCurrentPerkPart = perkPart;
+		//mCurrentPerkPart = perkPart;
 
 		// alredy unlocked or cannot unlock - ABORT! ABORT!!
 		if ((mCurrentPerk.IsPartUnlocked()) || (!mCurrentPerk.CanUnlockPart()))

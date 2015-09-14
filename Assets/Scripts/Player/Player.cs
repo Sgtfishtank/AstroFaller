@@ -90,6 +90,8 @@ public class Player : MonoBehaviour
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mDash.SetActive(false);
+
+		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 	}
 
 	public void StartGame()
@@ -113,17 +115,14 @@ public class Player : MonoBehaviour
 
 	public void Dash()
 	{
-		if(mDashCDTime < Time.time)
-		{
-			mAni.SetTrigger("Burst");
-			mDash.SetActive(true);
-			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
-			mfp.Dash();
-			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-			mDashTime = Time.time + PlayerData.Instance.BurstDelay();
-			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
-			mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
-		}
+		mAni.SetTrigger("Burst");
+		mDash.SetActive(true);
+		AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
+		mfp.Dash();
+		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
+		mDashTime = Time.time + PlayerData.Instance.BurstDelay();
+		mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
+		mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
 	}
 	
 	public void Inflate()
@@ -137,6 +136,11 @@ public class Player : MonoBehaviour
 		mAni.SetBool("Hover", false);
 		mAni.CrossFade("Chubby_Tumblin", 0.1f, 0, UnityEngine.Random.value);
 		AudioManager.Instance.PlaySoundOnce(mDeflateSound);
+	}
+
+	public bool CanDash ()
+	{
+		return (mDashCDTime < Time.time);
 	}
 
 	void FixedUpdate()
@@ -190,7 +194,7 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Input.GetKeyDown(KeyCode.E) && CanDash())
 		{
 			Dash();
 		}
@@ -354,6 +358,11 @@ public class Player : MonoBehaviour
 	public bool isDead ()
 	{
 		return mIsDead;
+	}
+
+	public void PlayerHeal (int heal)
+	{
+		mLife = Math.Min(mLife + heal, PlayerData.Instance.MaxLife());
 	}
 	
 	public void PlayerDamage(int dmg)

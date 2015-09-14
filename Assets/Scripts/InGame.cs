@@ -27,7 +27,7 @@ public class InGame : MonoBehaviour
 	public Player mPlayer;
 	public AstroidSpawn mAstroidSpawn;
 	public GameObject mDeathMenu;
-	private string mCurrentLevel;
+	private int mCurrentLevel;
 	
 	public float mUsualShiftkingRailgun = 0;
 	
@@ -101,7 +101,12 @@ public class InGame : MonoBehaviour
 	
 	public int CurrentLevel()
 	{
-		return 1;
+		return mCurrentLevel;
+	}
+
+	public DeathMenu DeathMenu()
+	{
+		return mDeathMenu.GetComponent<DeathMenu>();
 	}
 
 	// Use this for initialization
@@ -233,12 +238,12 @@ public class InGame : MonoBehaviour
 	
 	public void Enable(int levelIndex)
 	{
-		mCurrentLevel = "Level" + levelIndex;
+		mCurrentLevel = levelIndex;
 
 		ShowComponents(true);
 		
 		mBgGen.LoadSegments("Parralax", 830, 100);
-		mWorldGen.LoadSegments("Level" + InGame.Instance.CurrentLevel(), 50, -1);
+		mWorldGen.LoadSegments("Level" + levelIndex, 50, -1);
 
 		mBgGen.StartSpawnSegments(0);
 
@@ -247,5 +252,18 @@ public class InGame : MonoBehaviour
 
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
+	}
+
+	public GameObject GUIObject (string name)
+	{
+		switch (name) 
+		{
+		case "Restart":
+			return mDeathMenu.transform.Find("button_1_base").gameObject;
+		case "MainMenu":
+			return mDeathMenu.transform.Find("button_2_base").gameObject;
+		default:
+			return null;
+		}
 	}
 }
