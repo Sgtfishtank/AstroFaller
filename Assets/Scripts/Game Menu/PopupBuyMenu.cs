@@ -79,10 +79,10 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
-		mTitleText.text = 
+		mTitleText.text = title;
 		mDescriptionText.text = description + "\n" + costBolts + " Bolts";
-		mCurrentText.text = "CURRENT: " + current;
-		mNextText.text = "NEXT: " + next;
+		mCurrentText.text = current;
+		mNextText.text = next;
 		//mCostBoltsText.text = costBolts + " B";
 		//mCostCrystalsText.text = nextCrystals + " C";
 	}
