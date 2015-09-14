@@ -88,7 +88,10 @@ ModelImporter:
     4300024: middlerockettop
     4300026: middlerocketspinn
     4300028: polySurface15
-    7400000: Take 001
+    7400000: Still
+    7400002: 1
+    7400004: 2
+    7400006: 3
     9500000: //RootNode
     13700000: middlerocketspinn
     13700002: polySurface15
@@ -107,7 +110,279 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Still
+      takeName: Take 001
+      firstFrame: 143
+      lastFrame: 144
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: middlerocket
+        weight: 1
+      - path: middlerocket/group2
+        weight: 1
+      - path: middlerocket/group2/polySurface15
+        weight: 1
+      - path: middlerocket/middlerocketbottom
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface7
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface8
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface9
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface10
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface12
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface13
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface14
+        weight: 1
+      - path: middlerocket/middlerocketspinn
+        weight: 1
+      - path: middlerocket/middlerockettop
+        weight: 1
+      - path: perk_burst_3
+        weight: 1
+      - path: perk_burst_3/polySurface17
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface18
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface19
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface20
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface21
+        weight: 1
+      - path: perk_burst_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 1
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 47
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: middlerocket
+        weight: 1
+      - path: middlerocket/group2
+        weight: 1
+      - path: middlerocket/group2/polySurface15
+        weight: 1
+      - path: middlerocket/middlerocketbottom
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface7
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface8
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface9
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface10
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface12
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface13
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface14
+        weight: 1
+      - path: middlerocket/middlerocketspinn
+        weight: 1
+      - path: middlerocket/middlerockettop
+        weight: 1
+      - path: perk_burst_3
+        weight: 1
+      - path: perk_burst_3/polySurface17
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface18
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface19
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface20
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface21
+        weight: 1
+      - path: perk_burst_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 2
+      takeName: Take 001
+      firstFrame: 48
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: middlerocket
+        weight: 1
+      - path: middlerocket/group2
+        weight: 1
+      - path: middlerocket/group2/polySurface15
+        weight: 1
+      - path: middlerocket/middlerocketbottom
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface7
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface8
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface9
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface10
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface12
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface13
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface14
+        weight: 1
+      - path: middlerocket/middlerocketspinn
+        weight: 1
+      - path: middlerocket/middlerockettop
+        weight: 1
+      - path: perk_burst_3
+        weight: 1
+      - path: perk_burst_3/polySurface17
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface18
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface19
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface20
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface21
+        weight: 1
+      - path: perk_burst_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 3
+      takeName: Take 001
+      firstFrame: 96
+      lastFrame: 144
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: middlerocket
+        weight: 1
+      - path: middlerocket/group2
+        weight: 1
+      - path: middlerocket/group2/polySurface15
+        weight: 1
+      - path: middlerocket/middlerocketbottom
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface7
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface8
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface9
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface10
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface12
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface13
+        weight: 1
+      - path: middlerocket/middlerocketbottom/polySurface14
+        weight: 1
+      - path: middlerocket/middlerocketspinn
+        weight: 1
+      - path: middlerocket/middlerockettop
+        weight: 1
+      - path: perk_burst_3
+        weight: 1
+      - path: perk_burst_3/polySurface17
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface18
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface19
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface20
+        weight: 1
+      - path: perk_burst_3/polySurface17/polySurface21
+        weight: 1
+      - path: perk_burst_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []

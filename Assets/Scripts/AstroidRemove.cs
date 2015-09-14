@@ -1,34 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AstroidRemove : MonoBehaviour {
-
-	public int xSize;
+public class AstroidRemove : MonoBehaviour 
+{
 	public GameObject mWarningPrefab;
-	public GameObject mWarning;
 	public GameObject mCollisionEffect1;
 	public GameObject mCollisionEffect2;
-
+	
+	private GameObject mWarning;
 	private Player mpl;
 	private AstroidSpawn mAstroidSpawn;
-	public float mHideTime = 2;
 	private float mHideT;
-
+	private Rigidbody mRb;
 	private FMOD.Studio.EventInstance mClash;
+
+	void Awake()
+	{
+		mRb = GetComponent<Rigidbody> ();
+
+		mClash = FMOD_StudioSystem.instance.GetEvent ("event:/Sounds/AsteroidColision/AsteroidColision");
+		
+		mWarning = GlobalVariables.Instance.Instanciate (mWarningPrefab, null, 0.05f);
+
+		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
+	}
 
 	// Use this for initialization
 	void Start ()
 	{
-		mClash = FMOD_StudioSystem.instance.GetEvent ("event:/Sounds/AsteroidColision/AsteroidColision");
-		
-		mWarning = GlobalVariables.Instance.Instanciate (mWarningPrefab, null, 0.05f);
-		
-		mWarning.SetActive (true);
-
 		mpl = WorldGen.Instance.Player();
 		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
-
-		mHideT = Time.time + mHideTime;
 	}
 	
 	// Update is called once per frame
@@ -39,30 +40,28 @@ public class AstroidRemove : MonoBehaviour {
 			Destroy(mWarning);
 			mAstroidSpawn.RemoveAstroid(gameObject);
 		}
-
-		if (!mWarning.activeSelf)
+		
+		if (mWarning.activeSelf)
 		{
-			return;
+			UpdateWarning ();
 		}
+	}
 
-		GameObject ast = gameObject;
-		Player ply = WorldGen.Instance.Player();
-		
-		//Vector3 diff = ply.CenterPosition() - ast.GetComponent<Rigidbody>().position;
-		
-		Vector3 plVel = ply.GetComponent<Rigidbody> ().velocity;
-		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, ast.GetComponent<Rigidbody>().velocity - new Vector3(0, plVel.y, 0));
+	void UpdateWarning ()
+	{
+		Vector3 plVel = mpl.Rigidbody().velocity;
+		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, mRb.velocity - new Vector3(0, plVel.y, 0));
 		mWarning.transform.rotation = rot * Quaternion.Euler (0, 0, 90);
 		
-		Vector3 a = InGameCamera.Instance.GetComponent<Camera>().WorldToScreenPoint(ast.transform.position);
-
+		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(transform.position);
+		
 		a.z = 1;
-
-		if (((ast.transform.position.x < 0) && (a.x > 10)) || ((ast.transform.position.x > 0) && (a.x < Screen.width - 10)) || (mHideT < Time.time))
+		
+		if (((transform.position.x < 0) && (a.x > 10)) || ((transform.position.x > 0) && (a.x < Screen.width - 10)) || (mHideT < Time.time))
 		{
 			mWarning.SetActive(false);
 		}
-		else if (ast.transform.position.x < 0)
+		else if (transform.position.x < 0)
 		{
 			a.x = 10;
 		}
@@ -70,8 +69,8 @@ public class AstroidRemove : MonoBehaviour {
 		{
 			a.x = Screen.width - 10;
 		}
-
-		mWarning.transform.position = InGameCamera.Instance.GetComponent<Camera> ().ScreenToWorldPoint(a);
+		
+		mWarning.transform.position = InGameCamera.Instance.Camera().ScreenToWorldPoint(a);
 	}
 
 	void OnCollisionEnter(Collision coll)

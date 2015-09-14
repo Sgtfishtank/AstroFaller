@@ -21,8 +21,8 @@ public class InGame : MonoBehaviour
 	public GameObject mAstroidSpawnPrefab;
 	public GameObject mDirectionalLightPrefab;
 	public GameObject mPerfectDistanceMidPrefab;
+	public GameObject mPerfectDistanceParticlesPrefab;
 	public GameObject mDeathMenuPrefab;
-	//public GameObject mPerfectDistanceBoxPrefab;
 	
 	public Player mPlayer;
 	public AstroidSpawn mAstroidSpawn;
@@ -32,6 +32,7 @@ public class InGame : MonoBehaviour
 	public float mUsualShiftkingRailgun = 0;
 	
 	private FMOD.Studio.EventInstance fmodMusic;
+	private FMOD.Studio.EventInstance fmodPerfect;
 	
 	public bool mIntroPhase;
 	public float mIntroPhaseT;
@@ -82,7 +83,8 @@ public class InGame : MonoBehaviour
 		mDeathMenu = deathMenuObj;
 		mDeathMenu.SetActive (false);
 		
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
+		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/AsteroidMusicPrototype/AsteroidMusicPrototyp");
+		fmodPerfect = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/PerfectDistance/PerfectDistance");
 
 		mPerfectDistanceMid = GameObject.Instantiate (mPerfectDistanceMidPrefab);
 	}
@@ -127,6 +129,11 @@ public class InGame : MonoBehaviour
 		}
 		else
 		{
+			if (mPlayer.isDead())
+			{
+				AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			}
+
 			if (mPlayer.transform.position.y < -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL)
 			{
 				ShiftBackWorld();
@@ -136,6 +143,8 @@ public class InGame : MonoBehaviour
 
 	public void StartGame ()
 	{
+		AudioManager.Instance.PlayMusic(fmodMusic);
+		mAstroidSpawn.RemoveAllAstroids();
 		mWorldGen.DespawnSegments();
 		mPlayer.StartGame();
 		
@@ -162,10 +171,18 @@ public class InGame : MonoBehaviour
 		return mUsualShiftkingRailgun;
 	}
 
-	public void UpdatePerfectDistance (float posY)
+	public void UpdatePerfectDistance (float posY, bool triggerParticles)
 	{
+		if (triggerParticles)
+		{
+			GameObject a = GameObject.Instantiate (mPerfectDistanceParticlesPrefab, mPerfectDistanceParticlesPrefab.transform.position + mPerfectDistanceMid.transform.position, mPerfectDistanceParticlesPrefab.transform.rotation) as GameObject;
+			a.transform.parent = transform.Find("ParticlesGoesHere");
+			AudioManager.Instance.PlaySoundOnce(fmodPerfect);
+		}
+
 		float yValue = posY;
 		mPerfectDistanceMid.transform.position = new Vector3 (0, yValue, 0);
+
 	}
 
 	void ShiftBackWorld()
@@ -225,8 +242,6 @@ public class InGame : MonoBehaviour
 
 		mBgGen.StartSpawnSegments(0);
 
-		AudioManager.Instance.PlayMusic(fmodMusic);
-		
 		mPlayer.GetComponent<Rigidbody>().useGravity = true;
 		mPlayer.transform.position = Vector3.zero;
 

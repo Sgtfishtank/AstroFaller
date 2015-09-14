@@ -51,42 +51,27 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mWorldMapButton;
 	private GameObject mWorldMapIcon;
 	private GameObject mOptionsIcon;
-
+	private Camera mCamera;
+	
 	void Awake()
 	{
+		mCamera = GetComponent<Camera> ();
 		mHelpMenu = transform.Find("Help").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
 		mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
-		//mPlayText = transform.Find("PlayText").gameObject;
-		//mPlayTutorial = transform.Find("PlayTutorial").gameObject;
-		mMoving = false;
-		
-		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
-		
-		GlobalVariables.Instance.Instanciate (mPopupAchievementsMenuPrefab, mPopupAchievementsMenu.transform, 19);
-		
-		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
-		
-		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 15);
-
-		
-		//GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayText.transform, 1);
-
-		//GlobalVariables.Instance.Instanciate (mPlayButtonPrefab, mPlayTutorial.transform, 1);
-		
 		mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyMenu>();
+
+		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
+		GlobalVariables.Instance.Instanciate (mPopupAchievementsMenuPrefab, mPopupAchievementsMenu.transform, 19);
+		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
+		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 15);
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		/*ShowHelpMenu(false);
-		ShowOptionsMenu(false);
-		ShowBackButton(false);
-		ShowPopupCraftingMenu(false);
-		ShowPopupAchievementsMenu(false);*/
 	}
 	
 	// Update is called once per frame
@@ -177,6 +162,11 @@ public class MenuCamera : MonoBehaviour
 		}
 
 		return mMovingT;
+	}
+	
+	public Camera Camera()
+	{
+		return mCamera;
 	}
 
 	public void StartMenuMove(GameObject menuPosition)

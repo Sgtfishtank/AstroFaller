@@ -34,7 +34,9 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_AIR_DRAIN						= 10;
 	public float PLAYER_AIR_REG							= 10;
 
+	// other
 	public int PERFECT_DISTANCE_SIZE					= 10;
+	public float ASTEROID_WARNING_MAX_SHOW_TIME			= 2;
 
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;

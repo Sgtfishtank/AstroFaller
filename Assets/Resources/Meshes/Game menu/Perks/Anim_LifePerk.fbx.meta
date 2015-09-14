@@ -116,7 +116,10 @@ ModelImporter:
     4300036: polySurface27
     4300038: polySurface29
     4300040: polySurface30
-    7400000: Take 001
+    7400000: Still
+    7400002: 1
+    7400004: 2
+    7400006: 3
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -133,7 +136,303 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Still
+      takeName: Take 001
+      firstFrame: 144
+      lastFrame: 145
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: arm
+        weight: 1
+      - path: arm/polySurface32
+        weight: 1
+      - path: arm/polySurface32/polySurface38
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface27
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28/polySurface39
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface29
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface30
+        weight: 1
+      - path: box
+        weight: 1
+      - path: box/perklife_01_box
+        weight: 1
+      - path: box/polySurface5
+        weight: 1
+      - path: box/polySurface6
+        weight: 1
+      - path: box/polySurface7
+        weight: 1
+      - path: box/polySurface8
+        weight: 1
+      - path: box/polySurface9
+        weight: 1
+      - path: shelf
+        weight: 1
+      - path: shelf/polySurface22
+        weight: 1
+      - path: shelf/polySurface22/polySurface11
+        weight: 1
+      - path: shelf/polySurface22/polySurface12
+        weight: 1
+      - path: shelf/polySurface22/polySurface17
+        weight: 1
+      - path: shelf/polySurface22/polySurface19
+        weight: 1
+      - path: shelf/polySurface22/polySurface21
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 1
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 145
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: arm
+        weight: 1
+      - path: arm/polySurface32
+        weight: 1
+      - path: arm/polySurface32/polySurface38
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface27
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28/polySurface39
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface29
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface30
+        weight: 1
+      - path: box
+        weight: 1
+      - path: box/perklife_01_box
+        weight: 1
+      - path: box/polySurface5
+        weight: 1
+      - path: box/polySurface6
+        weight: 1
+      - path: box/polySurface7
+        weight: 1
+      - path: box/polySurface8
+        weight: 1
+      - path: box/polySurface9
+        weight: 1
+      - path: shelf
+        weight: 1
+      - path: shelf/polySurface22
+        weight: 1
+      - path: shelf/polySurface22/polySurface11
+        weight: 1
+      - path: shelf/polySurface22/polySurface12
+        weight: 1
+      - path: shelf/polySurface22/polySurface17
+        weight: 1
+      - path: shelf/polySurface22/polySurface19
+        weight: 1
+      - path: shelf/polySurface22/polySurface21
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 2
+      takeName: Take 001
+      firstFrame: 48
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: arm
+        weight: 1
+      - path: arm/polySurface32
+        weight: 1
+      - path: arm/polySurface32/polySurface38
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface27
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28/polySurface39
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface29
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface30
+        weight: 1
+      - path: box
+        weight: 1
+      - path: box/perklife_01_box
+        weight: 1
+      - path: box/polySurface5
+        weight: 1
+      - path: box/polySurface6
+        weight: 1
+      - path: box/polySurface7
+        weight: 1
+      - path: box/polySurface8
+        weight: 1
+      - path: box/polySurface9
+        weight: 1
+      - path: shelf
+        weight: 1
+      - path: shelf/polySurface22
+        weight: 1
+      - path: shelf/polySurface22/polySurface11
+        weight: 1
+      - path: shelf/polySurface22/polySurface12
+        weight: 1
+      - path: shelf/polySurface22/polySurface17
+        weight: 1
+      - path: shelf/polySurface22/polySurface19
+        weight: 1
+      - path: shelf/polySurface22/polySurface21
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: 3
+      takeName: Take 001
+      firstFrame: 96
+      lastFrame: 145
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: arm
+        weight: 1
+      - path: arm/polySurface32
+        weight: 1
+      - path: arm/polySurface32/polySurface38
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface27
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface28/polySurface39
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface29
+        weight: 1
+      - path: arm/polySurface32/polySurface38/polySurface31/polySurface30
+        weight: 1
+      - path: box
+        weight: 1
+      - path: box/perklife_01_box
+        weight: 1
+      - path: box/polySurface5
+        weight: 1
+      - path: box/polySurface6
+        weight: 1
+      - path: box/polySurface7
+        weight: 1
+      - path: box/polySurface8
+        weight: 1
+      - path: box/polySurface9
+        weight: 1
+      - path: shelf
+        weight: 1
+      - path: shelf/polySurface22
+        weight: 1
+      - path: shelf/polySurface22/polySurface11
+        weight: 1
+      - path: shelf/polySurface22/polySurface12
+        weight: 1
+      - path: shelf/polySurface22/polySurface17
+        weight: 1
+      - path: shelf/polySurface22/polySurface19
+        weight: 1
+      - path: shelf/polySurface22/polySurface21
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []

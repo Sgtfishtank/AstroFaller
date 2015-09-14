@@ -5,12 +5,21 @@ public class ForceField : Item
 {
 	public GameObject mPrefab;
 
+	private GameObject mObj;
 	private bool mUnlocked;
 	private int mItemLevel;
+	private GameObject[] mObjParts;
 	
 	void Awake() 
 	{
-		GlobalVariables.Instance.Instanciate (mPrefab, transform, 2.593437f);
+		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+		mObjParts = new GameObject[3];
+		for (int i = 0; i < mObjParts.Length; i++) 
+		{
+			mObjParts[i] = mObj.transform.Find("buy_orb " + (i + 1)).gameObject;
+			mObjParts[i].SetActive(false);
+		}
+
 	}
 
 	// Use this for initialization
@@ -30,17 +39,19 @@ public class ForceField : Item
 		{
 			mUnlocked = true;
 			mItemLevel = Mathf.Min(GlobalVariables.Instance.ITEMS_START_LEVEL, GlobalVariables.Instance.ITEMS_MAX_LEVEL);
+			mObjParts[0].SetActive(true);
 			return true;
 		}
 		else if (mItemLevel < GlobalVariables.Instance.ITEMS_MAX_LEVEL)
 		{
 			mItemLevel++;
+			mObjParts[mItemLevel - GlobalVariables.Instance.ITEMS_START_LEVEL].SetActive(true);
 			return true;
 		}
 		
 		return false;	
 	}
-	
+
 	public override bool IsUnlocked()
 	{
 		return mUnlocked;

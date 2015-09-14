@@ -37,6 +37,8 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mSoundButtons;
 	private GameObject mMusicButtons;
 	private GameObject mDeathMenu;
+	private GameObject mRewardMenu;
+	private GameObject mRewardTextMenu;
 
 	private Image mFadeImage;
 	public bool mShowDebugGUI;
@@ -67,14 +69,16 @@ public class GUICanvas : MonoBehaviour
 		mMusicButtons = mOptionButtons.transform.Find("Music").gameObject;
 		mOptionButtons.SetActive (true);
 		mDeathMenu = GameObject.Find("DeathMenu");
+		mRewardMenu = GameObject.Find("Rewards");
+		mRewardTextMenu = GameObject.Find("RewardText");
 		mDeathMenu.SetActive(false);
 
 		//assign all in game buttons
 		mInGameButtons = transform.Find ("InGameButtons").gameObject;
 		mBackToMenuButton = mInGameButtons.transform.Find ("BackToMenuButton").gameObject;
-		
-		mButtonPresss = transform.GetComponentsInChildren<ButtonPress>();
-		mButtons = GetComponentsInChildren<Button>();
+
+		mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
+		mButtons = GetComponentsInChildren<Button>(true);
 
 		ShowButtons (true);
 	}
@@ -82,12 +86,15 @@ public class GUICanvas : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		/*
 		AudioManager.Instance.MuteMusic(mMusicButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
 		AudioManager.Instance.MuteSounds(mSoundButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
 		AudioManager.Instance.MuteMaster(mMasterButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
 		AudioManager.Instance.MusicLevel(mMusicButtons.transform.Find("Slider").GetComponent<Slider>().value);
 		AudioManager.Instance.SoundsLevel(mSoundButtons.transform.Find("Slider").GetComponent<Slider>().value);
 		AudioManager.Instance.MasterLevel(mMasterButtons.transform.Find("Slider").GetComponent<Slider>().value);
+		*/
+		UpdateOptions ();
 
 		for (int i = 0; i < mButtonPresss.Length; i++) 
 		{
@@ -325,6 +332,7 @@ public class GUICanvas : MonoBehaviour
 		WorldGen.Instance.Disable();
 		MainGameMenu.Instance.Enable(0);
 		mDeathMenu.SetActive(false);
+		mRewardMenu.SetActive(false);
 		InGame.Instance.mDeathMenu.SetActive(false);
 	}
 
@@ -473,11 +481,57 @@ public class GUICanvas : MonoBehaviour
 	public void setEnableDeathMenu(bool a)
 	{
 		mDeathMenu.SetActive(a);
+
 	}
 	public void restart()
 	{
 		InGame.Instance.mDeathMenu.SetActive(false);
 		mDeathMenu.SetActive(false);
+		mRewardMenu.SetActive(false);
 		InGame.Instance.StartGame();
+	}
+	public void perfectDistanceReward(int pos)
+	{
+		int box = InGame.Instance.mPlayer.CollectedPerfectDistances();
+
+		int value = 0;
+
+		Text[] a = mRewardTextMenu.GetComponents<Text>();
+		RectTransform[] b = mRewardMenu.GetComponentsInChildren<RectTransform>();
+
+
+		if (box < 4)
+		{
+			value = UnityEngine.Random.Range(20,51);
+			switch (pos)
+			{
+			case 1:
+				a[1].text = value.ToString();
+				a[1].rectTransform.anchoredPosition = b[1].anchoredPosition;
+				break;
+			case 2:
+				a[2].text = value.ToString();
+				a[2].rectTransform.anchoredPosition = b[2].anchoredPosition;
+				
+				break;
+			case 3:
+				a[3].text = value.ToString();
+				a[3].rectTransform.anchoredPosition = b[3].anchoredPosition;
+				break;
+			case 4:
+				a[4].text = value.ToString();
+				a[4].rectTransform.anchoredPosition = b[4].anchoredPosition;
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < box; i++)
+			{
+				value += UnityEngine.Random.Range(20,51);
+			}
+		}
 	}
 }

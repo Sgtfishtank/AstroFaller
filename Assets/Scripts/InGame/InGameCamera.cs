@@ -22,9 +22,11 @@ public class InGameCamera : MonoBehaviour
 	private TextMesh mDistnceText;
 	private TextMesh mBoltsText;
 	private TextMesh mBoxesText;
+	private Camera mCamera;
 
 	void Awake()
 	{
+		mCamera = GetComponent<Camera> ();
 		mBoltsText = transform.Find ("UI/Bolt_Count_text").GetComponent<TextMesh> ();
 		mDistnceText = transform.Find ("UI/Distance_Text").GetComponent<TextMesh> ();
 		mBoxesText = transform.Find ("UI/Perfect_Distance_Boxes/Amount_Of_Boxes_Text").GetComponent<TextMesh> ();
@@ -51,5 +53,10 @@ public class InGameCamera : MonoBehaviour
 		mBoltsText.text = InGame.Instance.Player().colectedBolts().ToString();
 		mDistnceText.text = InGame.Instance.Player().distance().ToString();
 		mBoxesText.text = InGame.Instance.Player().CollectedPerfectDistances().ToString();
+	}
+
+	public Camera Camera()
+	{
+		return mCamera;
 	}
 }

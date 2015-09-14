@@ -284,6 +284,23 @@ public class MainGameMenu : MonoBehaviour
 
 	void StartChangeGameMenu (int index)
 	{
+		if (mCurrentGameMenu == mGameMenus[index])
+		{
+			if (mMenuChangePhase)
+			{
+				// switch
+				GameMenu a = mNextGameMenu;
+				mNextGameMenu = mCurrentGameMenu;
+				mCurrentGameMenu = a;
+				MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
+				return;
+			}
+			else
+			{
+				return; // don't move if already there
+			}
+		}
+
 		ResetAllMenusAndButtons ();
 
 		mMenuChangePhase = true;
@@ -317,6 +334,18 @@ public class MainGameMenu : MonoBehaviour
 	{
 		switch (name) 
 		{
+		case "RocketThrust":
+			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
+		case "UnlimitedAir":
+			return ItemsMenu().transform.Find("Unlimited Air/item_unlimitedair/item_unlimitedair").gameObject;
+		case "Shockwave":
+			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
+		case "ForceField":
+			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
+		case "BoltsMagnet":
+			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
+		case "BoltsMultiplier":
+			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
 		default:
 			return null;
 		}

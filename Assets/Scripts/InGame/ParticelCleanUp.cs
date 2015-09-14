@@ -1,21 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ParticelCleanUp : MonoBehaviour {
+public class ParticelCleanUp : MonoBehaviour 
+{
 
-	private ParticleSystem mPS;
+	private ParticleSystem[] mPSs;
 	// Use this for initialization
 	void Start ()
 	{
-		mPS = gameObject.GetComponentInChildren<ParticleSystem>();	
+		mPSs = gameObject.GetComponentsInChildren<ParticleSystem>();	
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(mPS.isStopped)
+		for (int i = 0; i < mPSs.Length; i++) 
 		{
-			Destroy(gameObject);
+			if (!mPSs[i].isStopped)
+			{
+				return;
+			}
 		}
+
+		Destroy(gameObject);
 	}
 }

@@ -5,32 +5,49 @@ public class AirPerk : Perk
 {
 	public string mPerkName;
 	public GameObject mPrefab;
-
+	
+	private GameObject mObj;
 	private bool mMainUnlocked;
 	private bool mLeftUnlocked;
 	private bool mRightUnlocked;
 	private	TextMesh mTitleText;
-	private	GameObject mRight3;
-	private	GameObject mLeft4;
-	private	GameObject mMain5;
+	private	Animator mAnimator;
+	private	GameObject m1p;
+	private	GameObject m2p;
+	private	GameObject m3p1;
+	private	GameObject m3p2;
+	private	GameObject m3p3;
+	public GameObject[] mObjParts;
 
 	void Awake ()
 	{
-		GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
 
-		mTitleText = transform.Find ("Air/Air+ text").GetComponent<TextMesh> ();
-		mRight3 = transform.Find ("Air/perks_air 3").gameObject;
-		mLeft4 = transform.Find ("Air/perks_air 4").gameObject;
-		mMain5 = transform.Find ("Air/perks_air 5").gameObject;
+		mTitleText = mObj.transform.Find ("air_text").GetComponent<TextMesh> ();
+		mAnimator = mObj.transform.Find ("Anim_AirPerk").GetComponent<Animator> ();
 		
+		m1p = mAnimator.transform.Find("perk_air_1").gameObject;
+		m2p = mAnimator.transform.Find("perk_airBS2").gameObject;
+		m3p1 = mAnimator.transform.Find("polySurface16").gameObject;
+		m3p2 = mAnimator.transform.Find("polySurface18").gameObject;
+		m3p3 = mAnimator.transform.Find("polySurface19").gameObject;
+		m1p.SetActive (false);
+		m2p.SetActive (false);
+		m3p1.SetActive (false);
+		m3p2.SetActive (false);
+		m3p3.SetActive (false);
+
+		mObjParts = new GameObject[3];
+		for (int i = 0; i < mObjParts.Length; i++) 
+		{
+			mObjParts[i] = mObj.transform.Find("upgrade_air/buy_orb " + (i + 1)).gameObject;
+			mObjParts[i].SetActive(false);
+		}
+
 		if (mPerkName.Length < 1)
 		{
 			mPerkName = gameObject.name;
 		}
-
-		mRight3.SetActive (false);
-		mLeft4.SetActive (false);
-		mMain5.SetActive (false);
 	}
 
 	// Use this for initialization
@@ -45,8 +62,9 @@ public class AirPerk : Perk
 		mTitleText.text = mPerkName;
 	}
 	
-	public override bool UnlockPart(PerkPart perkPart)
+	public override bool UnlockPart()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -54,7 +72,10 @@ public class AirPerk : Perk
 			{
 				mMainUnlocked = true;
 				PlayerData.Instance.mAirPerkUnlockedLevel = 1;
-				mMain5.SetActive(true);
+				//mAnimator.SetTrigger("Upgrade");
+				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
+				mObjParts[0].SetActive(true);
+				m1p.SetActive(true);
 				return true;
 			}
 			break;
@@ -63,7 +84,10 @@ public class AirPerk : Perk
 			{
 				mLeftUnlocked = true;
 				PlayerData.Instance.mAirPerkUnlockedLevel = 2;
-				mLeft4.SetActive(true);
+				//mAnimator.SetTrigger("Upgrade");
+				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
+				mObjParts[1].SetActive(true);
+				m2p.SetActive(true);
 				return true;
 			}
 			break;
@@ -72,7 +96,12 @@ public class AirPerk : Perk
 			{
 				mRightUnlocked = true;
 				PlayerData.Instance.mAirPerkUnlockedLevel = 3;
-				mRight3.SetActive(true);
+				//mAnimator.SetTrigger("Upgrade");
+				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
+				mObjParts[2].SetActive(true);
+				m3p3.SetActive(true);
+				m3p1.SetActive(true);
+				m3p2.SetActive(true);
 				return true;
 			}
 			break;
@@ -84,8 +113,9 @@ public class AirPerk : Perk
 		return false;
 	}
 	
-	public override bool IsPartUnlocked(PerkPart perkPart)
+	public override bool IsPartUnlocked()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -102,8 +132,9 @@ public class AirPerk : Perk
 		return false;
 	}
 	
-	public override bool CanUnlockPart(Perk.PerkPart perkPart)
+	public override bool CanUnlockPart()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -120,8 +151,9 @@ public class AirPerk : Perk
 		return false;
 	}
 	
-	public override int BuyCostBolts(PerkPart perkPart)
+	public override int BuyCostBolts()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -138,8 +170,9 @@ public class AirPerk : Perk
 		return -1;
 	}
 	
-	public override int BuyCostCrystals(PerkPart perkPart)
+	public override int BuyCostCrystals()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -156,8 +189,9 @@ public class AirPerk : Perk
 		return -1;
 	}
 
-	public override string BuyDescription(PerkPart perkPart)
+	public override string BuyDescription()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -174,8 +208,9 @@ public class AirPerk : Perk
 		return "---";
 	}
 	
-	public override string BuyCurrent(PerkPart perkPart)
+	public override string BuyCurrent()
 	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
@@ -192,8 +227,27 @@ public class AirPerk : Perk
 		return "---";
 	}
 	
-	public override string BuyNext(PerkPart perkPart)
+	public PerkPart GetNextPerkPart()
 	{
+		if (!mMainUnlocked) 
+		{
+			return PerkPart.Main;
+		}
+		else if( mMainUnlocked && (!mLeftUnlocked))
+		{
+			return PerkPart.Left;
+		}
+		else if (mMainUnlocked && mLeftUnlocked && (!mRightUnlocked))
+		{
+			return PerkPart.Right;
+		}
+
+		return PerkPart.Main;
+	}
+
+	public override string BuyNext()
+	{
+		PerkPart perkPart = GetNextPerkPart();
 		switch (perkPart) 
 		{
 		case PerkPart.Main:
