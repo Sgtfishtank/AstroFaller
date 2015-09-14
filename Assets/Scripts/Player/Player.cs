@@ -97,11 +97,13 @@ public class Player : MonoBehaviour
 
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
-		//mPerfectDistanceCollected = 0;
+		mPerfectDistanceCollected = 0;
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
 		mAntenLensFlare.color = Color.green;
+
+		transform.position = new Vector3(0, transform.position.y, 0);
 		
 		UpdatePerfectDistance (false);
 	}
@@ -185,7 +187,7 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Input.GetButton("Fire1"))
 		{
 			Dash();
 		}
