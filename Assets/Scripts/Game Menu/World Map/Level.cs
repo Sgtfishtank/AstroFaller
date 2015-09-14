@@ -57,11 +57,11 @@ public class Level : PlayableLevel
 	{
 		mTitleText.text = mLevelName;
 
-		if (!mUnlocked)
+		//if (!mUnlocked)
 		{
-			mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
+			//mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
 		}
-		else
+		//else
 		{
 			mTotalDistanceText.text = mTotalDistance.ToString();
 		}
@@ -130,7 +130,17 @@ public class Level : PlayableLevel
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 
 		{
-			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+			Color x = textMeshes[i].color;
+			x.a = focusLevel;
+			textMeshes[i].color = x;
+		}
+		
+		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
+		for (int i = 0; i < rextMeshes.Length; i++) 
+		{
+			Color x = rextMeshes[i].material.color;
+			x.a = focusLevel;
+			rextMeshes[i].material.color = x;
 		}
 	}
 
