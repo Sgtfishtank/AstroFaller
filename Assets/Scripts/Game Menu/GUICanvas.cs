@@ -28,10 +28,8 @@ public class GUICanvas : MonoBehaviour
 	private GameObject mPerkButtons;
 	private GameObject mIconButtons;
 	private GameObject mPlayLevelButton;
-	
 	private GameObject mInGameButtons;
 	private GameObject mBackToMenuButton;
-
 	private GameObject mOptionButtons;
 	private GameObject mMasterButtons;
 	private GameObject mSoundButtons;
@@ -41,8 +39,10 @@ public class GUICanvas : MonoBehaviour
 	public GameObject mRewardTextMenu;
 
 	private Image mFadeImage;
+
 	public bool mShowDebugGUI;
 	private bool mShowButtons;
+	private int mDebugGUISizeY;
 
 	private Button[] mButtons;
 	private ButtonPress[] mButtonPresss;
@@ -83,20 +83,12 @@ public class GUICanvas : MonoBehaviour
 		mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
 		mButtons = GetComponentsInChildren<Button>(true);
 
-		ShowButtons (true);
+		ShowButtons (false);
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		/*
-		AudioManager.Instance.MuteMusic(mMusicButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
-		AudioManager.Instance.MuteSounds(mSoundButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
-		AudioManager.Instance.MuteMaster(mMasterButtons.transform.Find("Mute").GetComponent<Toggle>().isOn);
-		AudioManager.Instance.MusicLevel(mMusicButtons.transform.Find("Slider").GetComponent<Slider>().value);
-		AudioManager.Instance.SoundsLevel(mSoundButtons.transform.Find("Slider").GetComponent<Slider>().value);
-		AudioManager.Instance.MasterLevel(mMasterButtons.transform.Find("Slider").GetComponent<Slider>().value);
-		*/
 		UpdateOptions ();
 
 		for (int i = 0; i < mButtonPresss.Length; i++) 
@@ -149,9 +141,51 @@ public class GUICanvas : MonoBehaviour
 	{
 		if (mShowDebugGUI)
 		{
+			Player pl = InGame.Instance.Player();
+
+			if (Input.GetKeyDown(KeyCode.I))
+			{
+				pl.mInvulnerable = !pl.mInvulnerable;
+			}
+			
+			if (Input.GetKeyDown(KeyCode.D))
+			{
+				pl.Dash();
+			}
+			
+			if (Input.GetKeyDown(KeyCode.Plus))
+			{
+				pl.PlayerHeal(1);
+			}
+			
+			if (Input.GetKeyDown(KeyCode.Minus))
+			{
+				pl.PlayerDamage(1);
+			}
+			
+			if (Input.GetKeyDown(KeyCode.O))
+			{
+				pl.mUseAirReg = !pl.mUseAirReg;
+			}
+
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				pl.mUseAirDrain = !pl.mUseAirDrain;
+			}
+
 			if (Input.GetKeyDown(KeyCode.B))
 			{
 				ShowButtons(!mShowButtons);
+			}
+
+			if (Input.GetKeyDown(KeyCode.K))
+			{
+				PlayerData.Instance.depositBolts(999);
+			}
+
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				PlayerData.Instance.withdrawBolts(PlayerData.Instance.bolts());
 			}
 		}
 
@@ -163,6 +197,7 @@ public class GUICanvas : MonoBehaviour
 			{
 				ShowButtons(false);
 			}
+			InGame.Instance.Player().mInvulnerable = false;
 		}
 	}
 
@@ -175,38 +210,46 @@ public class GUICanvas : MonoBehaviour
 
 		int startX = 10;
 		int startY = 10;
+		int size = 20;
 
-		GUI.Box(new Rect(10, 10, 200, 200), "Debug Window");
+		GUI.Box(new Rect(10, 10, 200, mDebugGUISizeY - startY), "Debug Window");
 	 	startX += 10;
-		startY += 24;
-		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Time on level: " + WorldGen.Instance.LevelRunTime());
-		startY += 24;
+		startY += size;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts on level: " + WorldGen.Instance.Player().colectedBolts());
-		startY += 24;
+		if (InGame.Instance.gameObject.activeInHierarchy) 
+		{
+			GUI.Label (new Rect (startX, startY, 180, size), "Level: " + InGame.Instance.CurrentLevel ());
+			startY += size;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals on level: " + WorldGen.Instance.Player().colectedCrystals());
-		startY += 24;
-		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Distance on level: " + WorldGen.Instance.Player().distance());
-		startY += 24;
+			GUI.Label (new Rect (startX, startY, 180, size), "Time on level: " + WorldGen.Instance.LevelRunTime ());
+			startY += size;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts: " + PlayerData.Instance.crystals());
-		startY += 24;
-		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals: " + PlayerData.Instance.crystals());
-		startY += 24;
-		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Bolts Totla: " + PlayerData.Instance.totalBolts());
-		startY += 24;
-		
-		GUI.Label (new Rect(startX, startY, 180, 24), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
-		startY += 24;
+			GUI.Label (new Rect (startX, startY, 180, size), "Bolts on level: " + WorldGen.Instance.Player ().colectedBolts ());
+			startY += size;
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Distance total: " + PlayerData.Instance.totalDistance());
-		startY += 24;
+			GUI.Label (new Rect (startX, startY, 180, size), "Cyrstals on level: " + WorldGen.Instance.Player ().colectedCrystals ());
+			startY += size;
 		
+			GUI.Label (new Rect (startX, startY, 180, size), "Distance on level: " + WorldGen.Instance.Player ().distance ());
+			startY += size;
+		}
+
+		GUI.Label (new Rect (startX, startY, 180, size), "Bolts: " + PlayerData.Instance.bolts());
+		startY += size;
+
+		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals: " + PlayerData.Instance.crystals());
+		startY += size;
+		
+		GUI.Label (new Rect(startX, startY, 180, size), "Bolts Total: " + PlayerData.Instance.totalBolts());
+		startY += size;
+		
+		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
+		startY += size;
+
+		GUI.Label (new Rect(startX, startY, 180, size), "Distance total: " + PlayerData.Instance.totalDistance());
+		startY += size;
+		
+
 		GUI.Label (new Rect(startX, startY, 180, 24), "Air: " + InGame.Instance.Player().airAmount());
 		startY += 24;
 		
@@ -220,6 +263,10 @@ public class GUICanvas : MonoBehaviour
 		
 		GUI.Label (new Rect(startX, startY, 180, 24), "FPS: " + (int)mFps);
 		startY += 24;
+
+
+		mDebugGUISizeY = startY;
+
 	}
 
 	public void SetFadeColor(Color col)
@@ -478,6 +525,11 @@ public class GUICanvas : MonoBehaviour
 		if (ret == null)
 		{
 			ret = MainGameMenu.Instance.GUIObject(name);
+		}
+
+		if (ret == null)
+		{
+			ret = InGame.Instance.GUIObject(name);
 		}
 
 		if (ret == null) 

@@ -9,7 +9,7 @@ public class PerksMenu : GameMenu
 
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
-	private Perk.PerkPart mCurrentPerkPart;
+	//private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
 
 	void Awake()
@@ -27,13 +27,13 @@ public class PerksMenu : GameMenu
 	{
 		if (MenuCamera.Instance.PopupBuyMenu().IsOpen ()) 
 		{
-			string description = mCurrentPerk.BuyDescription (mCurrentPerkPart);
-			string current = mCurrentPerk.BuyCurrent (mCurrentPerkPart);
-			string next = mCurrentPerk.BuyNext (mCurrentPerkPart);
-			int costBolts = mCurrentPerk.BuyCostBolts(mCurrentPerkPart);
-			int nextCrystals = mCurrentPerk.BuyCostCrystals(mCurrentPerkPart);
+			string description = mCurrentPerk.BuyDescription ();
+			string current = mCurrentPerk.BuyCurrent ();
+			string next = mCurrentPerk.BuyNext ();
+			int costBolts = mCurrentPerk.BuyCostBolts();
+			int nextCrystals = mCurrentPerk.BuyCostCrystals();
 			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (mCurrentPerk.name, description, current, next, costBolts, nextCrystals);
 		}
 	}
 	
@@ -73,10 +73,10 @@ public class PerksMenu : GameMenu
 			return;
 		}
 		
-		int cost = mCurrentPerk.BuyCostBolts(mCurrentPerkPart);
+		int cost = mCurrentPerk.BuyCostBolts();
 		if (PlayerData.Instance.withdrawBolts(cost))
 		{
-			mCurrentPerk.UnlockPart(mCurrentPerkPart);
+			mCurrentPerk.UnlockPart();
 			CloseBuyPerkMenu();
 			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
@@ -91,10 +91,10 @@ public class PerksMenu : GameMenu
 			return;
 		}
 		
-		int cost = mCurrentPerk.BuyCostCrystals(mCurrentPerkPart);
+		int cost = mCurrentPerk.BuyCostCrystals();
 		if (PlayerData.Instance.withdrawCrystals(cost))
 		{
-			mCurrentPerk.UnlockPart(mCurrentPerkPart);
+			mCurrentPerk.UnlockPart();
 			CloseBuyPerkMenu();
 			MainGameMenu.Instance.UpdateMenusAndButtons();
 		}
@@ -104,16 +104,16 @@ public class PerksMenu : GameMenu
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
 		mCurrentPerk = mPerks[index];
-		mCurrentPerkPart = perkPart;
+		//mCurrentPerkPart = perkPart;
 
 		// alredy unlocked or cannot unlock - ABORT! ABORT!!
-		if ((mCurrentPerk.IsPartUnlocked(perkPart)) || (!mCurrentPerk.CanUnlockPart(perkPart)))
+		if ((mCurrentPerk.IsPartUnlocked()) || (!mCurrentPerk.CanUnlockPart()))
 		{
 			mCurrentPerk = null;
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open();
+		MenuCamera.Instance.PopupBuyMenu().Open(mCurrentPerk.PreviewObject());
 	}
 	
 	void CloseBuyPerkMenu()

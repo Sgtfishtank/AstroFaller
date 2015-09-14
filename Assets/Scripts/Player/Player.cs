@@ -51,6 +51,8 @@ public class Player : MonoBehaviour
 	private FMOD.Studio.EventInstance mDeflateSound;
 	public LensFlare mAntenLensFlare;
 	
+	private FMOD.Studio.EventInstance fmodDeathMusic;
+
 	// Use this for initialization
 	void Awake() 
 	{
@@ -66,6 +68,7 @@ public class Player : MonoBehaviour
 		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
+		fmodDeathMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/Scrapscoremusic/ScrapScoreMusic");
 
 		mInflateSound.setVolume(100);
 		mDeflateSound.setVolume(100);
@@ -87,10 +90,14 @@ public class Player : MonoBehaviour
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mDash.SetActive(false);
+
+		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 	}
 
 	public void StartGame()
 	{
+		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.IMMEDIATE);
+
 		mAirAmount = PlayerData.Instance.MaxAirTime();
 		mRb.isKinematic = false;
 		mIsDead = false;
@@ -110,17 +117,14 @@ public class Player : MonoBehaviour
 
 	public void Dash()
 	{
-		if(mDashCDTime < Time.time)
-		{
-			mAni.SetTrigger("Burst");
-			mDash.SetActive(true);
-			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
-			mfp.Dash();
-			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-			mDashTime = Time.time + PlayerData.Instance.BurstDelay();
-			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
-			mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
-		}
+		mAni.SetTrigger("Burst");
+		mDash.SetActive(true);
+		AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
+		mfp.Dash();
+		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
+		mDashTime = Time.time + PlayerData.Instance.BurstDelay();
+		mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
+		mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
 	}
 	
 	public void Inflate()
@@ -134,6 +138,11 @@ public class Player : MonoBehaviour
 		mAni.SetBool("Hover", false);
 		mAni.CrossFade("Chubby_Tumblin", 0.1f, 0, UnityEngine.Random.value);
 		AudioManager.Instance.PlaySoundOnce(mDeflateSound);
+	}
+
+	public bool CanDash ()
+	{
+		return (mDashCDTime < Time.time);
 	}
 
 	void FixedUpdate()
@@ -187,7 +196,8 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetButton("Fire1"))
+		if(Input.GetButton("Fire1") && CanDash())
+
 		{
 			Dash();
 		}
@@ -282,6 +292,11 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public Rigidbody Rigidbody()
+	{
+		return mRb;
+	}
+
 	void UpdatePerfectDistance (bool triggerParticles)
 	{
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
@@ -347,6 +362,11 @@ public class Player : MonoBehaviour
 	{
 		return mIsDead;
 	}
+
+	public void PlayerHeal (int heal)
+	{
+		mLife = Math.Min(mLife + heal, PlayerData.Instance.MaxLife());
+	}
 	
 	public void PlayerDamage(int dmg)
 	{
@@ -377,6 +397,7 @@ public class Player : MonoBehaviour
 	{
 		if(!mInvulnerable && !mIsDead)
 		{
+			AudioManager.Instance.PlayMusic(fmodDeathMusic);
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);

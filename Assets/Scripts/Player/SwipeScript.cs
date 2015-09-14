@@ -78,7 +78,10 @@ public class SwipeScript : MonoBehaviour
 							else
 							{
 								// MOVE DOWN
-								mPlayer.Dash();
+								if (mPlayer.CanDash())
+								{
+									mPlayer.Dash();
+								}
 							}
 						}
 						

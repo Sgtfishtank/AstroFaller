@@ -3,6 +3,8 @@ using System.Collections;
 
 public abstract class Perk : MonoBehaviour 
 {
+	public abstract GameObject PreviewObject();
+
 	public enum PerkPart
 	{
 		Main = 0,
@@ -10,19 +12,19 @@ public abstract class Perk : MonoBehaviour
 		Right = 2
 	}
 
-	public abstract bool UnlockPart (PerkPart perkPart);
+	public abstract bool UnlockPart ();
 
-	public abstract bool IsPartUnlocked (PerkPart perkPart);
+	public abstract bool IsPartUnlocked ();
 	
-	public abstract string BuyDescription (PerkPart perkPart);
+	public abstract string BuyDescription ();
 	
-	public abstract string BuyCurrent (PerkPart perkPart);
+	public abstract string BuyCurrent ();
 	
-	public abstract string BuyNext (PerkPart perkPart);
+	public abstract string BuyNext ();
 	
-	public abstract int BuyCostBolts(PerkPart perkPart);
+	public abstract int BuyCostBolts();
 
-	public abstract int BuyCostCrystals(PerkPart perkPart);
+	public abstract int BuyCostCrystals();
 
-	public abstract bool CanUnlockPart(Perk.PerkPart perkPart);
+	public abstract bool CanUnlockPart();
 }

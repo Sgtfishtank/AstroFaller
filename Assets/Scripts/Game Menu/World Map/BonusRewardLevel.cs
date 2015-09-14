@@ -52,23 +52,23 @@ public class BonusRewardLevel : LevelBase
 		switch (mRewardType)
 		{
 		case RewardType.Bolts:
-			if (!mUnlocked)
+			//if (!mUnlocked)
 			{
-				mRewardText.text = "Locked. Requierd distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
+				//mRewardText.text = "Locked. Requierd distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
 			}
-			else 
+			//else 
 			{
-				mRewardText.text = GlobalVariables.Instance.BonusRewardBolts(mLevelName) + " bolts rewarded";
+				mRewardText.text = GlobalVariables.Instance.BonusRewardBolts(mLevelName) + "";
 			}
 			break;
 		case RewardType.Crystals:
-			if (!mUnlocked)
+			//if (!mUnlocked)
 			{
-				mRewardText.text = "Locked. Requierd distance: " + GlobalVariables.Instance.DistanceCritera(mLevelName);
+				//mRewardText.text = "Locked. Requierd distance: " + GlobalVariables.Instance.DistanceCritera(mLevelName);
 			}
-			else 
+			//else 
 			{
-				mRewardText.text = GlobalVariables.Instance.BonusRewardCrystals(mLevelName) + " crystals rewarded";
+				mRewardText.text = GlobalVariables.Instance.BonusRewardCrystals(mLevelName) + "";
 			}
 			break;
 		default:
@@ -124,7 +124,17 @@ public class BonusRewardLevel : LevelBase
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 
 		{
-			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+			Color x = textMeshes[i].color;
+			x.a = focusLevel;
+			textMeshes[i].color = x;
+		}
+		
+		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
+		for (int i = 0; i < rextMeshes.Length; i++) 
+		{
+			Color x = rextMeshes[i].material.color;
+			x.a = focusLevel;
+			rextMeshes[i].material.color = x;
 		}
 	}
 }

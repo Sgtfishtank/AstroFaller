@@ -22,8 +22,8 @@ public class MainGameMenu : MonoBehaviour
 	public GameObject mBackground;
 
 	private int WORLD_MAP_MENU_INDEX = 0;
-	private int ITEMS_MENU_INDEX = 2;
 	private int PERKS_MENU_INDEX = 1;
+	private int ITEMS_MENU_INDEX = 2;
 	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
@@ -155,6 +155,17 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].UpdateMenusAndButtons();
 		}
 	}
+	public int CurrentMenu()
+	{
+		for (int i = 0; i < mGameMenus.Length; i++)
+		{
+			if(mCurrentGameMenu == mGameMenus[i])
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	public void ChangeToWorldMapMenu()
 	{
@@ -284,6 +295,23 @@ public class MainGameMenu : MonoBehaviour
 
 	void StartChangeGameMenu (int index)
 	{
+		if (mCurrentGameMenu == mGameMenus[index])
+		{
+			if (mMenuChangePhase)
+			{
+				// switch
+				GameMenu a = mNextGameMenu;
+				mNextGameMenu = mCurrentGameMenu;
+				mCurrentGameMenu = a;
+				MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
+				return;
+			}
+			else
+			{
+				return; // don't move if already there
+			}
+		}
+
 		ResetAllMenusAndButtons ();
 
 		mMenuChangePhase = true;
@@ -317,6 +345,12 @@ public class MainGameMenu : MonoBehaviour
 	{
 		switch (name) 
 		{
+		case "Button 7":
+			return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
+		case "Button 1":
+			return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
+		case "Button 4":
+			return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
 		case "RocketThrust":
 			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
 		case "UnlimitedAir":
@@ -325,9 +359,9 @@ public class MainGameMenu : MonoBehaviour
 			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
 		case "ForceField":
 			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
-		case "BoltMagnet":
+		case "BoltsMagnet":
 			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
-		case "BoltMultiplier":
+		case "BoltsMultiplier":
 			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
 		default:
 			return null;
