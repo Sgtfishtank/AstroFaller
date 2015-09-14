@@ -265,12 +265,12 @@ public class MenuCamera : MonoBehaviour
 			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_2").gameObject;
 		case "CrystalStoreButton":
 			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_3").gameObject;
-		case "BoltsButton":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
-		case "CrystalsButton 1":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
-		case "BackToMenuButton":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
+		//case "BoltsButton":
+			//return mPopupBuyMenu.transform.Find("polySurface11").gameObject;
+		//case "CrystalsButton 1":
+		//	return transform.Find("polySurface11").gameObject;
+		//case "BackToMenuButton":
+			//	return null;
 		case "SettingsYes":
 			return transform.Find("Options/settings_pop_up/Button_1").gameObject;
 		case "SettingsNo":

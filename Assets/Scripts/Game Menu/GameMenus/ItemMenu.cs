@@ -112,7 +112,7 @@ public class ItemMenu : GameMenu
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open();
+		MenuCamera.Instance.PopupBuyMenu().Open(mItems[index].PreviewObject());
 	}
 	
 	void CloseBuyItemMenu()

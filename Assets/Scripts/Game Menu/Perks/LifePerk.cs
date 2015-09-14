@@ -44,6 +44,11 @@ public class LifePerk : Perk
 			mPerkName = gameObject.name;
 		}
 	}
+	
+	public override GameObject PreviewObject ()
+	{
+		return mAnimator.gameObject;
+	}
 
 	// Use this for initialization
 	void Start () 

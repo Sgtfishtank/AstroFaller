@@ -3,6 +3,8 @@ using System.Collections;
 
 public abstract class Perk : MonoBehaviour 
 {
+	public abstract GameObject PreviewObject();
+
 	public enum PerkPart
 	{
 		Main = 0,
