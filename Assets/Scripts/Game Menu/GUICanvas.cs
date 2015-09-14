@@ -621,6 +621,7 @@ public class GUICanvas : MonoBehaviour
 		}
 		mRewardMenu.GetComponent<DeathmenuButtons>().disableSpecific(pos);
 		InGame.Instance.mDeathMenu.GetComponent<DeathMenu>().removeBox(pos);
+		PlayerData.Instance.depositBolts(value);
 	}
 	private RectTransform findObject(string name)
 	{
