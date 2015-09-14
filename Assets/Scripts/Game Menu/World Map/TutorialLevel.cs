@@ -106,6 +106,9 @@ public class TutorialLevel : PlayableLevel
 		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		
+		mPlayButton.transform.localPosition += GUICanvas.Instance.PlayButton().PositionOffset();
+		mPlayButton.transform.localScale = Vector3.one * 0.84f * GUICanvas.Instance.PlayButton().ScaleFactor();
 
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 

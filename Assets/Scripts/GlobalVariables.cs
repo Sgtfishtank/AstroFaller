@@ -231,19 +231,19 @@ public class GlobalVariables : MonoBehaviour
 			return ASTEROID_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 2": 
 			return ASTEROID_BONUS_2_CRITERA_DISTANCE;
-		case "cosmic storm level": 
+		case "Cosmic storm": 
 			return COSMIC_LEVEL_CRITERA_DISTANCE;
 		case "bonus 3": 
 			return COSMIC_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 4":
 			return COSMIC_BONUS_2_CRITERA_DISTANCE;
-		case "satellite graveyard level":
+		case "satellite graveyard":
 			return SATELITE_LEVEL_CRITERA_DISTANCE;
 		case "bonus 5":
 			return SATELITE_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 6":
 			return SATELITE_BONUS_2_CRITERA_DISTANCE;
-		case "black hole level":
+		case "black hole":
 			return BLACK_HOLE_LEVEL_CRITERA_DISTANCE;
 		default:
 			print("Error in DistanceCritera " + levelName);

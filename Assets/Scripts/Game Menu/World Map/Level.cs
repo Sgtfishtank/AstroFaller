@@ -123,7 +123,6 @@ public class Level : PlayableLevel
 		mFrame2.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
-		
 
 		mPlayButton.transform.localPosition += GUICanvas.Instance.PlayButton().PositionOffset();
 		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.PlayButton().ScaleFactor();
