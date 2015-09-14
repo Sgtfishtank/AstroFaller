@@ -13,6 +13,7 @@ public class UnlimitedAirItem : Item
 	void Awake() 
 	{
 		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+		mObj.transform.localPosition = mPrefab.transform.localPosition;
 		mObjParts = new GameObject[1 + GlobalVariables.Instance.ITEMS_MAX_LEVEL - GlobalVariables.Instance.ITEMS_START_LEVEL];
 		mObjParts[0] = mObj.transform.Find("buy_orb " + 1).gameObject;
 		mObjParts[1] = mObj.transform.Find("buy_orb " + 2).gameObject;

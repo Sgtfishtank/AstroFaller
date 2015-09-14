@@ -13,6 +13,7 @@ public class ForceField : Item
 	void Awake() 
 	{
 		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
+		mObj.transform.localPosition = mPrefab.transform.localPosition;
 		mObjParts = new GameObject[3];
 		for (int i = 0; i < mObjParts.Length; i++) 
 		{

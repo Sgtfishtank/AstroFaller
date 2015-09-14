@@ -245,6 +245,8 @@ public class GlobalVariables : MonoBehaviour
 			return SATELITE_BONUS_2_CRITERA_DISTANCE;
 		case "black hole":
 			return BLACK_HOLE_LEVEL_CRITERA_DISTANCE;
+		case "Alien Territory":
+			return ASTEROID_BONUS_1_CRITERA_DISTANCE;
 		default:
 			print("Error in DistanceCritera " + levelName);
 			break;
