@@ -22,6 +22,7 @@ public class WorldGen : MonoBehaviour
 	private float mNoiseFactor;
 
 	private Player mPlayer;
+	private int mA;
 
 	void Awake()
 	{

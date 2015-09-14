@@ -284,6 +284,23 @@ public class MainGameMenu : MonoBehaviour
 
 	void StartChangeGameMenu (int index)
 	{
+		if (mCurrentGameMenu == mGameMenus[index])
+		{
+			if (mMenuChangePhase)
+			{
+				// switch
+				GameMenu a = mNextGameMenu;
+				mNextGameMenu = mCurrentGameMenu;
+				mCurrentGameMenu = a;
+				MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
+				return;
+			}
+			else
+			{
+				return; // don't move if already there
+			}
+		}
+
 		ResetAllMenusAndButtons ();
 
 		mMenuChangePhase = true;
@@ -325,9 +342,9 @@ public class MainGameMenu : MonoBehaviour
 			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
 		case "ForceField":
 			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
-		case "BoltMagnet":
+		case "BoltsMagnet":
 			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
-		case "BoltMultiplier":
+		case "BoltsMultiplier":
 			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
 		default:
 			return null;
