@@ -248,11 +248,25 @@ public class GUICanvas : MonoBehaviour
 
 		GUI.Label (new Rect(startX, startY, 180, size), "Distance total: " + PlayerData.Instance.totalDistance());
 		startY += size;
-		
 
-		GUI.Label (new Rect(startX, startY, 180, 24), "Air: " + InGame.Instance.Player().airAmount());
-		startY += 24;
-		
+		if (InGame.Instance.Player().gameObject.activeInHierarchy) 
+		{
+			GUI.Label (new Rect (startX, startY, 180, size), "Player Air: " + InGame.Instance.Player ().airAmount ());
+			startY += size;
+			
+			GUI.Label (new Rect (startX, startY, 180, size), "Player HP: " + InGame.Instance.Player ().mLife);
+			startY += size;
+			
+			GUI.Label (new Rect (startX, startY, 180, size), "Player Invurable: " + InGame.Instance.Player ().mInvulnerable);
+			startY += size;
+			
+			GUI.Label (new Rect (startX, startY, 180, size), "Player Reg Air: " + InGame.Instance.Player ().mUseAirReg);
+			startY += size;
+			
+			GUI.Label (new Rect (startX, startY, 180, size), "Player Drain Air: " + InGame.Instance.Player ().mUseAirDrain);
+			startY += size;
+		}
+
 		mF++;
 		if (mFT < Time.time)
 		{
@@ -261,8 +275,8 @@ public class GUICanvas : MonoBehaviour
 			mF = 0;
 		}
 		
-		GUI.Label (new Rect(startX, startY, 180, 24), "FPS: " + (int)mFps);
-		startY += 24;
+		GUI.Label (new Rect(startX, startY, 180, size), "FPS: " + (int)mFps);
+		startY += size;
 
 
 		mDebugGUISizeY = startY;

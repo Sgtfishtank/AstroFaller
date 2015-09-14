@@ -10,9 +10,15 @@ public class DeathMenu : MonoBehaviour
 	public GameObject puff;
 	public float mCalcT;
 	public float mCalcDuration = 2f;
+	
+	private FMOD.Studio.EventInstance mDisDown;
+	private FMOD.Studio.EventInstance mCoinUp;
+	private bool runSound; 
 
 	void Awake()
 	{
+		mDisDown = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerBolts/TickerBolts");
+		mCoinUp = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerDistance/TickerDistance");
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
 	}
 
@@ -30,6 +36,16 @@ public class DeathMenu : MonoBehaviour
 		setBoxes();
 	}
 	
+	void OnDisable()
+	{
+		if (runSound)
+		{
+			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			runSound = false;
+		}
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -41,6 +57,19 @@ public class DeathMenu : MonoBehaviour
 
 		float deltaT = 1f - ((mCalcT + 0.8f - Time.time) / mCalcDuration);
 		deltaT = Mathf.Clamp01(deltaT);
+
+		if ((!runSound) && (deltaT > 0))
+		{
+			AudioManager.Instance.PlaySound(mCoinUp);
+			AudioManager.Instance.PlaySound(mDisDown);
+			runSound = true;
+		}
+		else if (runSound && (deltaT >= 1))
+		{
+			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			runSound = true;
+		}
 
 		float multi = (int)(Mathf.Lerp(1, calculateMultiplier(), deltaT) * 100f);
 		int dis = (int)Mathf.Lerp(mPlayer.distance(), 0, deltaT);
