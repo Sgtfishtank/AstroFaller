@@ -113,6 +113,7 @@ public class Player : MonoBehaviour
 		transform.position = new Vector3(0, transform.position.y, 0);
 		
 		UpdatePerfectDistance (false);
+		mAS.gameObject.SetActive (false);
 	}
 
 	public void Dash()

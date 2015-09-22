@@ -120,7 +120,7 @@ public class DeathMenu : MonoBehaviour
 			break;
 		case 2:
 			mBoxObj[0].transform.localPosition = new Vector3(0.77f,-2.56f,0);
-			mBoxObj[1].transform.localPosition = new Vector3(-0.47f,-2.56f,0);
+			mBoxObj[1].transform.localPosition = new Vector3(-0.77f,-2.56f,0);
 			break;
 		case 3:
 			mBoxObj[0].transform.localPosition = new Vector3(1.14f,-2.56f,0);
