@@ -34,7 +34,8 @@ public class Player : MonoBehaviour
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public int mPerfectDistanceCollected;
-	public GameObject boltParticles;
+	public GameObject boltParticlePrefab;
+	public GameObject[] boltParticles;
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
@@ -82,6 +83,14 @@ public class Player : MonoBehaviour
 		// put at level start position, if any
 		mIsDead = false;
 		mPlaying = false;
+
+		boltParticles = new GameObject[10];
+		for (int i = 0; i < boltParticles.Length; i++) 
+		{
+			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			boltParticles[i].gameObject.SetActive(false);
+			boltParticles[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+		}
 	}
 
 	// Use this for initialization
@@ -242,9 +251,15 @@ public class Player : MonoBehaviour
 
 		if (col.tag == "Bolts")
 		{
-			Instantiate(boltParticles, col.transform.parent.position, Quaternion.identity);
-			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+			int index = PickBoltEffect();
+			if (index != -1) 
+			{
+				boltParticles[index].SetActive(true);
+				boltParticles[index].transform.position = col.transform.parent.position;
+			}
+
 			col.gameObject.SetActive(false);
+			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
 		}
 		else if(col.tag == "BoltCluster")
@@ -255,6 +270,19 @@ public class Player : MonoBehaviour
 		{
 			mAS.gameObject.SetActive(true);
 		}
+	}
+	
+	int PickBoltEffect()
+	{
+		for (int i = 0; i < boltParticles.Length; i++) 
+		{
+			if (!boltParticles[i].activeSelf) 
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 
 	void OnTriggerExit(Collider col)

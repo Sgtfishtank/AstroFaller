@@ -6,6 +6,8 @@ public class AstroidRemove : MonoBehaviour
 	public GameObject mWarningPrefab;
 	public GameObject mCollisionEffect1;
 	public GameObject mCollisionEffect2;
+	public GameObject[] mCollisionEffects1;
+	public GameObject[] mCollisionEffects2;
 	
 	private GameObject mWarning;
 	private Player mpl;
@@ -23,6 +25,18 @@ public class AstroidRemove : MonoBehaviour
 		mWarning = GlobalVariables.Instance.Instanciate (mWarningPrefab, null, 0.05f);
 
 		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
+
+		mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
+		mCollisionEffects2 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
+		for (int i = 0; i < mCollisionEffects1.Length; i++)
+		{
+			mCollisionEffects1[i] = (GameObject)GameObject.Instantiate(mCollisionEffect1);
+			mCollisionEffects2[i] = (GameObject)GameObject.Instantiate(mCollisionEffect2);
+			mCollisionEffects1[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+			mCollisionEffects2[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+			mCollisionEffects1[i].gameObject.SetActive(false);
+			mCollisionEffects2[i].gameObject.SetActive(false);
+		}
 	}
 
 	// Use this for initialization
@@ -37,7 +51,7 @@ public class AstroidRemove : MonoBehaviour
 	{
 		if (OutOfBound())
 		{
-			Destroy(mWarning);
+			mWarning.SetActive(false);
 			mAstroidSpawn.RemoveAstroid(gameObject);
 		}
 		
@@ -78,12 +92,30 @@ public class AstroidRemove : MonoBehaviour
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mpl.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			GameObject eff1 = (GameObject)GameObject.Instantiate(mCollisionEffect1, coll.contacts[0].point, Quaternion.identity);
-			GameObject eff2 = (GameObject)GameObject.Instantiate(mCollisionEffect2, coll.contacts[0].point, Quaternion.identity);
-
-			eff1.transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-			eff2.transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+			int index  = PickCollisionEffect();
+			if (index != -1) 
+			{
+				mCollisionEffects1[index].SetActive(true);
+				mCollisionEffects2[index].SetActive(true);
+				mCollisionEffects1[index].transform.position = coll.contacts[0].point;
+				mCollisionEffects2[index].transform.position = coll.contacts[0].point;
+				mCollisionEffects1[index].transform.rotation = Quaternion.identity;
+				mCollisionEffects2[index].transform.rotation = Quaternion.identity;
+			}
 		}
+	}
+
+	int PickCollisionEffect()
+	{
+		for (int i = 0; i < mCollisionEffects1.Length; i++) 
+		{
+			if (!mCollisionEffects1[i].activeSelf) 
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	public bool OutOfBound()

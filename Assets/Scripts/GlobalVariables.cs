@@ -10,7 +10,8 @@ public class GlobalVariables : MonoBehaviour
 	public float ASTROID_SPAWN_SPAWNRATE 				= 5f   ;
 	public float ASTROID_SPAWN_XOFFSET					= 10f  ; 
 	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f ;
-	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5    ;
+	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5;
+	public int	 ASTROID_SPAWN_MAX_PARTICLES			= 3;
 
 	/*----------------------------------------Player----------------------------------------*/
 
