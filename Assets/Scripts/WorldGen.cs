@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class WorldGen : MonoBehaviour
 {
@@ -100,6 +101,13 @@ public class WorldGen : MonoBehaviour
 		Segment newSeg = segmentPrefab;
 		newSeg.transform.position = pos;
 		newSeg.gameObject.SetActive(true);
+
+		GameObject[] bolts = newSeg.GetComponentsInChildren<Transform>(true).Where(x => x.tag == "Bolts").Select(x => x.gameObject).ToArray();
+
+		for (int i = 0; i < bolts.Length; i++) 
+		{
+			bolts[i].SetActive(true);
+		}
 
 		/*if (mNoiseFactor > 0)
 		{
