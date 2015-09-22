@@ -96,7 +96,7 @@ public class WorldGen : MonoBehaviour
 		Segment segmentPrefab = mSegments[index];
 		float segSize = mOffset * segmentPrefab.mLength;
 		mCurrentPos -= segSize;
-		Vector3 pos = new Vector3 (0, mCurrentPos + (segSize * 0.5f), 0);
+		Vector3 pos = new Vector3 (0, mCurrentPos + (segSize * 0.5f), segmentPrefab.transform.position.z);
 		Segment newSeg = segmentPrefab;
 		newSeg.transform.position = pos;
 		newSeg.gameObject.SetActive(true);
@@ -163,8 +163,8 @@ public class WorldGen : MonoBehaviour
 		mSegments = new Segment[s.Length*2];
 		for (int i = 0; i < s.Length; i++)
 		{
-			GameObject g1 = Instantiate(s[i].gameObject, new Vector3(0,100,0), Quaternion.identity) as GameObject;
-			GameObject g2 = Instantiate(s[i].gameObject, new Vector3(0,100,0), Quaternion.identity) as GameObject;
+			GameObject g1 = Instantiate(s[i].gameObject, new Vector3(0,100,s[i].transform.position.z), Quaternion.identity) as GameObject;
+			GameObject g2 = Instantiate(s[i].gameObject, new Vector3(0,100,s[i].transform.position.z), Quaternion.identity) as GameObject;
 			//print(g1.GetComponent<Segment>() == null);
 			mSegments[i*2] = g1.GetComponent<Segment>();
 			mSegments[i*2].gameObject.SetActive(false);
