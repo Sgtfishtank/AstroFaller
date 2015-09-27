@@ -181,7 +181,6 @@ public class WorldGen : MonoBehaviour
 			mSegments[i*2].transform.parent = transform;
 			mSegments[i*2+1].transform.parent = transform;
 		}
-		print(mSegments[1] == null);
 
 		mSegmentWeightDynamic = new int[s.Length];
 		mSegmentsTimesGenerated = new int[s.Length];

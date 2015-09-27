@@ -113,24 +113,34 @@ public class InGame : MonoBehaviour
 	void Start () 
 	{
 	}
-	
+	private float startdelay = -1;
 	// Update is called once per frame
 	void Update () 
 	{
 		if (mIntroPhase)
 		{
+			if(startdelay == -1)
+			{
+				startdelay = Time.time+3.0f;
+				print(startdelay);
+
+			}
+			if(startdelay > Time.time)
+			{
+				return;
+			}
 			mIntroPhaseT = Mathf.Clamp01(mIntroPhaseT + (Time.deltaTime / GlobalVariables.Instance.WORLD_GEN_INTRO_TIME));
 			
 			Color fadeColor = Color.black;
 			fadeColor.a = 1f - mIntroPhaseT;
 			GUICanvas.Instance.SetFadeColor(fadeColor);
-			
-			if (mIntroPhaseT >= 1f)
-			{
-				GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
-				mIntroPhase = false;
-				StartGame();
-			}
+
+				if (mIntroPhaseT >= 1f)
+				{
+					GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
+					mIntroPhase = false;
+					StartGame();
+				}
 		}
 		else
 		{
