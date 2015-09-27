@@ -61,7 +61,7 @@ public class PopupBuyMenu : MonoBehaviour
 		mOpen = true;
 		gameObject.SetActive(true);
 
-		GUICanvas.Instance.ShowPopupBuyButton (true);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (true);
 	}
 
 	public void Close()
@@ -69,7 +69,7 @@ public class PopupBuyMenu : MonoBehaviour
 		Destroy (mObjToBuy);
 		mOpen = false;
 		gameObject.SetActive(false);
-		GUICanvas.Instance.ShowPopupBuyButton (false);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
 	}
 
 	public bool IsOpen ()

@@ -76,10 +76,9 @@ public class MainGameMenu : MonoBehaviour
 	void ShowComponents(bool show)
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
-		GUICanvas.Instance.ShowInGameButtons(show);
-		
+
 		GUICanvas.Instance.ShowMenuButtons(show);
-		GUICanvas.Instance.ShowIconButtons(show);
+		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(show);
 		
 		if (mBackground != null) 
 		{
@@ -109,6 +108,8 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].gameObject.SetActive (false);
 			mGameMenus[i].Unfocus();
 		}
+		
+		GUICanvas.Instance.MenuGUICanvas().SetFadeColor(Color.clear);
 
 		ResetAllMenusAndButtons ();
 
@@ -141,14 +142,14 @@ public class MainGameMenu : MonoBehaviour
 		GUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
 
 		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
-		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupCraftingButton(mShowPopupCraftingMenu);
 
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
-		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
-		GUICanvas.Instance.ShowWorldMapButton(showBack);
+		GUICanvas.Instance.MenuGUICanvas().ShowWorldMapButton(showBack);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -237,7 +238,7 @@ public class MainGameMenu : MonoBehaviour
 		else if ((!mShowOptionsMenu) && apply) 
 		{
 			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
-			GUICanvas.Instance.UpdateOptions();
+			GUICanvas.Instance.OptionsGUICanvas().UpdateOptions();
 		}
 
 		UpdateMenusAndButtons ();

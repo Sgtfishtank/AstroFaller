@@ -53,7 +53,7 @@ public class WorldMapMenu : GameMenu
 			{
 				Color fadeColor = Color.black;
 				fadeColor.a = MenuCamera.Instance.MovingT();
-				GUICanvas.Instance.SetFadeColor(fadeColor);
+				GUICanvas.Instance.MenuGUICanvas().SetFadeColor(fadeColor);
 			}
 		}
 		else 
@@ -152,7 +152,7 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvas.Instance.showPlayLevelButton(mFocused && (!mPlayLevelPhase));
+		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!mPlayLevelPhase));
 	}
 
 	public LevelBase CurrentLevel()
@@ -295,8 +295,8 @@ public class WorldMapMenu : GameMenu
 	void StartPlayLevelPhase ()
 	{
 		mPlayLevelPhase = true;
-		GUICanvas.Instance.ShowIconButtons(false);
-		GUICanvas.Instance.showPlayLevelButton (false);
+		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(false);
+		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
 }

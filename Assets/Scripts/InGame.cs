@@ -133,14 +133,15 @@ public class InGame : MonoBehaviour
 			
 			Color fadeColor = Color.black;
 			fadeColor.a = 1f - mIntroPhaseT;
-			GUICanvas.Instance.SetFadeColor(fadeColor);
 
-				if (mIntroPhaseT >= 1f)
-				{
-					GUICanvas.Instance.SetFadeColor(new Color(0, 0, 0, 0));
-					mIntroPhase = false;
-					StartGame();
-				}
+			GUICanvas.Instance.InGameGUICanvas().SetFadeColor(fadeColor);
+			
+			if (mIntroPhaseT >= 1f)
+			{
+				GUICanvas.Instance.InGameGUICanvas().SetFadeColor(new Color(0, 0, 0, 0));
+				mIntroPhase = false;
+				StartGame();
+			}
 		}
 		else
 		{
@@ -220,7 +221,6 @@ public class InGame : MonoBehaviour
 	{
 		InGameCamera.Instance.gameObject.SetActive (show);
 		GUICanvas.Instance.ShowInGameButtons(show);
-		GUICanvas.Instance.ShowBackToMenuButton(show);
 		GUICanvas.Instance.ShowOptionButtons (false);
 		
 		mPerfectDistanceMid.gameObject.SetActive (false);
@@ -262,6 +262,7 @@ public class InGame : MonoBehaviour
 
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
+		GUICanvas.Instance.InGameGUICanvas().SetFadeColor(Color.black);
 	}
 
 	public GameObject GUIObject (string name)
