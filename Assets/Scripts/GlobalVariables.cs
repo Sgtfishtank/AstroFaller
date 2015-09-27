@@ -18,6 +18,7 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_DASH_CD							 = 10f  ;
 	public int   BOLT_VALUE								 = 1	;
 	public int   BOLT_CLUSTER_VALUE						 = 1	;
+	public float BOLT_TEXT_SHOW_TIME					= 5;
 	public float PLAYER_HORIZONTAL_MOVESPEED			= 1000f;
 	public float PLAYER_HORIZONTAL_MOVESPEED_KEYBORD	= 1000f;
 	public float PLAYER_VERTICAL_SPEED_FALLOF			= 2f ;

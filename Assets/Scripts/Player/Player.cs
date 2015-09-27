@@ -29,7 +29,10 @@ public class Player : MonoBehaviour
 	
 	private bool doShift = false;
 	private float shiftAmount;
-	
+
+	public ParticelCleanUp[] mPickupTexts;
+	public GameObject mPickupTextPrefab;
+
 	public int mLife;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
@@ -70,17 +73,10 @@ public class Player : MonoBehaviour
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
 		fmodDeathMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/Scrapscoremusic/ScrapScoreMusic");
-
+		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
+		mDash = transform.Find("Burst_Trail").gameObject;
 		mInflateSound.setVolume(100);
 		mDeflateSound.setVolume(100);
-
-		// init internal scrips
-		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
-		
-		// reset air
-		mDash = transform.Find("Burst_Trail").gameObject;
-
-		// put at level start position, if any
 		mIsDead = false;
 		mPlaying = false;
 
@@ -90,6 +86,15 @@ public class Player : MonoBehaviour
 			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
 			boltParticles[i].gameObject.SetActive(false);
 			boltParticles[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+		}
+
+		mPickupTexts = new ParticelCleanUp[10];
+		for (int i = 0; i < mPickupTexts.Length; i++) 
+		{
+			GameObject obj = Instantiate(mPickupTextPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			mPickupTexts[i] = obj.GetComponent<ParticelCleanUp>();
+			mPickupTexts[i].gameObject.SetActive(false);
+			mPickupTexts[i].transform.parent = InGame.Instance.transform;
 		}
 	}
 
@@ -186,7 +191,7 @@ public class Player : MonoBehaviour
 			mLastDmgGetLife = false;
 			mLife++;
 		}
-		
+
 		LifePerk.UpdatePerkValueAnimation(mAni);
 
 		if ((mMovementControls.IsHovering()) && (blendOne < 100))
@@ -207,7 +212,6 @@ public class Player : MonoBehaviour
 		}
 
 		if(Input.GetButton("Fire1") && CanDash())
-
 		{
 			Dash();
 		}
@@ -260,6 +264,13 @@ public class Player : MonoBehaviour
 
 			col.gameObject.SetActive(false);
 			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+
+			int index2 = PickPuckupText();
+			if (index2 != -1)
+			{
+				mPickupTexts[index2].Activate(col.transform.parent.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
+			}
+
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
 		}
 		else if(col.tag == "BoltCluster")
@@ -277,6 +288,19 @@ public class Player : MonoBehaviour
 		for (int i = 0; i < boltParticles.Length; i++) 
 		{
 			if (!boltParticles[i].activeSelf) 
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+
+	int PickPuckupText ()
+	{
+		for (int i = 0; i < mPickupTexts.Length; i++) 
+		{
+			if (!mPickupTexts[i].gameObject.activeSelf) 
 			{
 				return i;
 			}
