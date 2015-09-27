@@ -9,7 +9,7 @@ public class PerksMenu : GameMenu
 
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
-	private Perk.PerkPart mCurrentPerkPart;
+	//private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
 
 	void Awake()
@@ -33,7 +33,7 @@ public class PerksMenu : GameMenu
 			int costBolts = mCurrentPerk.BuyCostBolts();
 			int nextCrystals = mCurrentPerk.BuyCostCrystals();
 			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (mCurrentPerk.name, description, current, next, costBolts, nextCrystals);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class PerksMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{		
-		GUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		GUICanvas.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && false && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()
@@ -104,7 +104,7 @@ public class PerksMenu : GameMenu
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
 		mCurrentPerk = mPerks[index];
-		mCurrentPerkPart = perkPart;
+		//mCurrentPerkPart = perkPart;
 
 		// alredy unlocked or cannot unlock - ABORT! ABORT!!
 		if ((mCurrentPerk.IsPartUnlocked()) || (!mCurrentPerk.CanUnlockPart()))
@@ -113,7 +113,7 @@ public class PerksMenu : GameMenu
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open();
+		MenuCamera.Instance.PopupBuyMenu().Open(mCurrentPerk.PreviewObject());
 	}
 	
 	void CloseBuyPerkMenu()

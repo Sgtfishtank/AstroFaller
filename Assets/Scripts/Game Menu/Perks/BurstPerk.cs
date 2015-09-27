@@ -28,7 +28,7 @@ public class BurstPerk : Perk
 		m1p = mAnimator.transform.Find("middlerocket").gameObject;
 		m2p = mAnimator.transform.Find("middlerocket/group2").gameObject;
 		m3p = mAnimator.transform.Find("perk_burst_3").gameObject;
-		m1p.SetActive (false);
+		//m1p.SetActive (false);
 		m2p.SetActive (false);
 		m3p.SetActive (false);
 		
@@ -44,11 +44,15 @@ public class BurstPerk : Perk
 			mPerkName = gameObject.name;
 		}
 	}
+	
+	public override GameObject PreviewObject ()
+	{
+		return mAnimator.gameObject;
+	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		
 	}
 
 	// Update is called once per frame

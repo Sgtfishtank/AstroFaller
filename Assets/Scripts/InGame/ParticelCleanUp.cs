@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ParticelCleanUp : MonoBehaviour 
 {
+	public bool mDeactiveInstead;
 
 	private ParticleSystem[] mPSs;
 	// Use this for initialization
@@ -22,6 +23,13 @@ public class ParticelCleanUp : MonoBehaviour
 			}
 		}
 
-		Destroy(gameObject);
+		if (mDeactiveInstead)
+		{
+			gameObject.SetActive(false);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
 	}
 }

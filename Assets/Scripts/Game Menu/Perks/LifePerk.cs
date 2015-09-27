@@ -28,7 +28,7 @@ public class LifePerk : Perk
 		m1p = mAnimator.transform.Find("box").gameObject;
 		m2p = mAnimator.transform.Find("arm").gameObject;
 		m3p = mAnimator.transform.Find("shelf").gameObject;
-		m1p.SetActive (false);
+		//m1p.SetActive (false);
 		m2p.SetActive (false);
 		m3p.SetActive (false);
 		
@@ -44,11 +44,15 @@ public class LifePerk : Perk
 			mPerkName = gameObject.name;
 		}
 	}
+	
+	public override GameObject PreviewObject ()
+	{
+		return mAnimator.gameObject;
+	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		
 	}
 
 	// Update is called once per frame

@@ -34,7 +34,8 @@ public class Player : MonoBehaviour
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public int mPerfectDistanceCollected;
-	public GameObject boltParticles;
+	public GameObject boltParticlePrefab;
+	public GameObject[] boltParticles;
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
@@ -82,6 +83,14 @@ public class Player : MonoBehaviour
 		// put at level start position, if any
 		mIsDead = false;
 		mPlaying = false;
+
+		boltParticles = new GameObject[10];
+		for (int i = 0; i < boltParticles.Length; i++) 
+		{
+			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			boltParticles[i].gameObject.SetActive(false);
+			boltParticles[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
+		}
 	}
 
 	// Use this for initialization
@@ -90,6 +99,8 @@ public class Player : MonoBehaviour
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mDash.SetActive(false);
+
+		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 	}
 
 	public void StartGame()
@@ -107,23 +118,23 @@ public class Player : MonoBehaviour
 		mStartYValue = CenterPosition().y;
 		mPlaying = true;
 		mAntenLensFlare.color = Color.green;
+
+		transform.position = new Vector3(0, transform.position.y, 0);
 		
 		UpdatePerfectDistance (false);
+		mAS.gameObject.SetActive (false);
 	}
 
 	public void Dash()
 	{
-		if(mDashCDTime < Time.time)
-		{
-			mAni.SetTrigger("Burst");
-			mDash.SetActive(true);
-			AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
-			mfp.Dash();
-			mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-			mDashTime = Time.time + PlayerData.Instance.BurstDelay();
-			mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
-			mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
-		}
+		mAni.SetTrigger("Burst");
+		mDash.SetActive(true);
+		AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
+		mfp.Dash();
+		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
+		mDashTime = Time.time + PlayerData.Instance.BurstDelay();
+		mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
+		mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
 	}
 	
 	public void Inflate()
@@ -137,6 +148,11 @@ public class Player : MonoBehaviour
 		mAni.SetBool("Hover", false);
 		mAni.CrossFade("Chubby_Tumblin", 0.1f, 0, UnityEngine.Random.value);
 		AudioManager.Instance.PlaySoundOnce(mDeflateSound);
+	}
+
+	public bool CanDash ()
+	{
+		return (mDashCDTime < Time.time);
 	}
 
 	void FixedUpdate()
@@ -190,7 +206,8 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Input.GetButton("Fire1") && CanDash())
+
 		{
 			Dash();
 		}
@@ -234,9 +251,15 @@ public class Player : MonoBehaviour
 
 		if (col.tag == "Bolts")
 		{
-			Instantiate(boltParticles, col.transform.parent.position, Quaternion.identity);
-			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+			int index = PickBoltEffect();
+			if (index != -1) 
+			{
+				boltParticles[index].SetActive(true);
+				boltParticles[index].transform.position = col.transform.parent.position;
+			}
+
 			col.gameObject.SetActive(false);
+			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
 		}
 		else if(col.tag == "BoltCluster")
@@ -247,6 +270,19 @@ public class Player : MonoBehaviour
 		{
 			mAS.gameObject.SetActive(true);
 		}
+	}
+	
+	int PickBoltEffect()
+	{
+		for (int i = 0; i < boltParticles.Length; i++) 
+		{
+			if (!boltParticles[i].activeSelf) 
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 
 	void OnTriggerExit(Collider col)
@@ -355,6 +391,11 @@ public class Player : MonoBehaviour
 	{
 		return mIsDead;
 	}
+
+	public void PlayerHeal (int heal)
+	{
+		mLife = Math.Min(mLife + heal, PlayerData.Instance.MaxLife());
+	}
 	
 	public void PlayerDamage(int dmg)
 	{
@@ -390,7 +431,7 @@ public class Player : MonoBehaviour
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
 			InGame.Instance.mDeathMenu.SetActive(true);
-			GUICanvas.Instance.setEnableDeathMenu(true);
+			GUICanvas.Instance.InGameGUICanvas().setEnableDeathMenu(true);
 
 			Vector3 a = gameObject.transform.position;
 			a.x = 0;

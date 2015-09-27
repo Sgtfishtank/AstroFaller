@@ -3,6 +3,8 @@ using System.Collections;
 
 public abstract class Item : MonoBehaviour 
 {
+	public abstract GameObject PreviewObject();
+
 	public abstract bool UnlockItem ();
 	
 	public abstract bool IsUnlocked ();

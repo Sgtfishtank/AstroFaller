@@ -10,7 +10,8 @@ public class GlobalVariables : MonoBehaviour
 	public float ASTROID_SPAWN_SPAWNRATE 				= 5f   ;
 	public float ASTROID_SPAWN_XOFFSET					= 10f  ; 
 	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f ;
-	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5    ;
+	public int   ASTROID_SPAWN_MAX_ASTROIDS				= 5;
+	public int	 ASTROID_SPAWN_MAX_PARTICLES			= 3;
 
 	/*----------------------------------------Player----------------------------------------*/
 
@@ -37,6 +38,7 @@ public class GlobalVariables : MonoBehaviour
 	// other
 	public int PERFECT_DISTANCE_SIZE					= 10;
 	public float ASTEROID_WARNING_MAX_SHOW_TIME			= 2;
+	public float LOAD_LEVEL_DELAY						= 3;
 
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;
@@ -231,20 +233,22 @@ public class GlobalVariables : MonoBehaviour
 			return ASTEROID_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 2": 
 			return ASTEROID_BONUS_2_CRITERA_DISTANCE;
-		case "cosmic storm level": 
+		case "Cosmic storm": 
 			return COSMIC_LEVEL_CRITERA_DISTANCE;
 		case "bonus 3": 
 			return COSMIC_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 4":
 			return COSMIC_BONUS_2_CRITERA_DISTANCE;
-		case "satellite graveyard level":
+		case "satellite graveyard":
 			return SATELITE_LEVEL_CRITERA_DISTANCE;
 		case "bonus 5":
 			return SATELITE_BONUS_1_CRITERA_DISTANCE;
 		case "bonus 6":
 			return SATELITE_BONUS_2_CRITERA_DISTANCE;
-		case "black hole level":
+		case "black hole":
 			return BLACK_HOLE_LEVEL_CRITERA_DISTANCE;
+		case "Alien Territory":
+			return ASTEROID_BONUS_1_CRITERA_DISTANCE;
 		default:
 			print("Error in DistanceCritera " + levelName);
 			break;

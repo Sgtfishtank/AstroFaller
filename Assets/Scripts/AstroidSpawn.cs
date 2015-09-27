@@ -6,16 +6,25 @@ public class AstroidSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	public GameObject[] mAstroidTypes;
-	public  List<GameObject> mAstroids;
+	public GameObject[] mAstroids;
 
 	private Player mPlayer;
 	private Rigidbody mPlRigid;
 
 	private float mLastSpawn = 0;
+	public int mSpawnedAsteroids;
 
 	void Awake ()
 	{
-		mAstroids = new List<GameObject>();
+		mSpawnedAsteroids = 0;
+		mAstroids = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS];
+		for (int i = 0; i < mAstroids.Length; i++) 
+		{
+			int astroid = UnityEngine.Random.Range(0, mAstroidTypes.Length);
+			mAstroids[i] = Instantiate(mAstroidTypes[astroid]) as GameObject;
+			mAstroids[i].transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
+			mAstroids[i].SetActive(false);
+		}
 	}
 
 	void Start ()
@@ -32,18 +41,22 @@ public class AstroidSpawn : MonoBehaviour {
 
 		mPlRigid = mPlayer.GetComponent<Rigidbody>();
 
-		if((Time.time > (mLastSpawn + mCd)) && (mAstroids.Count < mMaxAstroids))
+		if((Time.time > (mLastSpawn + mCd)) && (mSpawnedAsteroids < mMaxAstroids))
 		{
 			mLastSpawn = Time.time + mCd;
 			int x = UnityEngine.Random.Range(0,2)*2-1;
 			float y = UnityEngine.Random.Range(-25,8);
-			int astroid = UnityEngine.Random.Range(0,3);
+			//int astroid = UnityEngine.Random.Range(0,3);
 			Quaternion angel = UnityEngine.Random.rotation;
 
+			Vector3 pos = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayer.transform.position.y + y , 0);
+
 			//Spawn astroid
-			GameObject instace = Instantiate(mAstroidTypes[astroid],
-			                                 new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayer.transform.position.y + y , 0),
-			                                 angel) as GameObject;
+			GameObject instace = PickFreeAsteroid();//Instantiate(mAstroidTypes[astroid], pos, angel) as GameObject;
+			instace.transform.position = pos;
+			instace.transform.rotation = angel;
+			instace.SetActive(true);
+			mSpawnedAsteroids++;
 
 			//add velocity
 			Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
@@ -58,15 +71,26 @@ public class AstroidSpawn : MonoBehaviour {
 				new Vector3(UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
 			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
 			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed)));
-			mAstroids.Add(instace);
-			
-			instace.transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
+
 		}
+	}
+
+	GameObject PickFreeAsteroid()
+	{
+		for (int i = 0; i < mAstroids.Length; i++) 
+		{
+			if (!mAstroids[i].activeSelf)
+			{
+				return mAstroids[i];
+			}
+		}
+
+		return null;
 	}
 
 	public void ShiftBack (float shift)
 	{
-		for (int i = 0; i < mAstroids.Count; i++) 
+		for (int i = 0; i < mAstroids.Length; i++) 
 		{
 			mAstroids[i].transform.position -= new Vector3(0, shift, 0);
 		}
@@ -74,16 +98,16 @@ public class AstroidSpawn : MonoBehaviour {
 
 	public void RemoveAstroid(GameObject g)
 	{
-		mAstroids.Remove(g);
-		Destroy(g);
+		g.SetActive(false);
+		mSpawnedAsteroids--;
 	}
 
 	public void RemoveAllAstroids ()
 	{
-		for (int i = 0; i < mAstroids.Count; i++) 
+		for (int i = 0; i < mAstroids.Length; i++) 
 		{
-			Destroy(mAstroids[i]);
+			mAstroids[i].SetActive(false);
 		}
-		mAstroids.Clear ();
+		mSpawnedAsteroids = 0;
 	}
 }

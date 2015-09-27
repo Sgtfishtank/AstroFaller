@@ -46,17 +46,22 @@ public class MenuCamera : MonoBehaviour
 
 	private GameObject mPopupCraftingMenu;
 	private GameObject mPopupAchievementsMenu;
-	private GameObject mHelpMenu;
+	public GameObject[] mHelpMenu = new GameObject[3];
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
 	private GameObject mWorldMapIcon;
 	private GameObject mOptionsIcon;
+	private TextMesh mBoltsText;
 	private Camera mCamera;
 	
 	void Awake()
 	{
 		mCamera = GetComponent<Camera> ();
-		mHelpMenu = transform.Find("Help").gameObject;
+		mBoltsText = transform.Find("Bolts/Total_Bolts_Text").GetComponent<TextMesh>();
+
+		//mHelpMenu[0] = transform.Find("question_menu_worldmap").gameObject;
+		//mHelpMenu[1] = transform.Find("question_menu_Items").gameObject;
+		//mHelpMenu[2] = transform.Find("question_menu_Items").gameObject;
 		mOptionsMenu = transform.Find("Options").gameObject;
 		mWorldMapButton = transform.Find("Icons/worldmap_icon").gameObject;
 		mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
@@ -65,8 +70,11 @@ public class MenuCamera : MonoBehaviour
 
 		GlobalVariables.Instance.Instanciate (mPopupCraftingMenuPrefab, mPopupCraftingMenu.transform, 19);
 		GlobalVariables.Instance.Instanciate (mPopupAchievementsMenuPrefab, mPopupAchievementsMenu.transform, 19);
-		GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
+		//GlobalVariables.Instance.Instanciate (mHelpMenuPrefab, mHelpMenu.transform, 10);
 		GlobalVariables.Instance.Instanciate (mOptionsMenuPrefab, mOptionsMenu.transform, 15);
+		mHelpMenu [0].SetActive (false);
+		mHelpMenu [1].SetActive (false);
+		mHelpMenu [2].SetActive (false);
 	}
 
 	// Use this for initialization
@@ -77,6 +85,7 @@ public class MenuCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		mBoltsText.text = PlayerData.Instance.bolts().ToString();
 		Vector3 mCameraOffset = GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 		if (mMoving) 
 		{
@@ -217,7 +226,23 @@ public class MenuCamera : MonoBehaviour
 
 	public void ShowHelpMenu (bool show)
 	{
-		mHelpMenu.SetActive (show);
+		switch (MainGameMenu.Instance.CurrentMenu())
+		{
+		case 0:
+			mHelpMenu[0].SetActive(show);
+			break;
+		case 1:
+			mHelpMenu[1].SetActive(show);
+			break;
+		case 2:
+			mHelpMenu[2].SetActive(show);
+			break;
+		default:
+			break;
+		}
+		//mHelpMenu.SetActive (show);
+
+
 	}
 	
 	public void ShowOptionsMenu (bool show)
@@ -261,12 +286,12 @@ public class MenuCamera : MonoBehaviour
 			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_2").gameObject;
 		case "CrystalStoreButton":
 			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_3").gameObject;
-		case "BoltsButton":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
-		case "CrystalsButton 1":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button").gameObject;
-		case "BackToMenuButton":
-			return transform.Find("PopupBuyMenu/Pop-up buy menu/popup_button 1").gameObject;
+		//case "BoltsButton":
+			//return mPopupBuyMenu.transform.Find("polySurface11").gameObject;
+		//case "CrystalsButton 1":
+		//	return transform.Find("polySurface11").gameObject;
+		//case "BackToMenuButton":
+			//	return null;
 		case "SettingsYes":
 			return transform.Find("Options/settings_pop_up/Button_1").gameObject;
 		case "SettingsNo":

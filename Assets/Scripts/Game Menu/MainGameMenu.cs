@@ -22,8 +22,8 @@ public class MainGameMenu : MonoBehaviour
 	public GameObject mBackground;
 
 	private int WORLD_MAP_MENU_INDEX = 0;
-	private int ITEMS_MENU_INDEX = 2;
 	private int PERKS_MENU_INDEX = 1;
+	private int ITEMS_MENU_INDEX = 2;
 	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
@@ -76,10 +76,9 @@ public class MainGameMenu : MonoBehaviour
 	void ShowComponents(bool show)
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
-		GUICanvas.Instance.ShowInGameButtons(show);
-		
+
 		GUICanvas.Instance.ShowMenuButtons(show);
-		GUICanvas.Instance.ShowIconButtons(show);
+		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(show);
 		
 		if (mBackground != null) 
 		{
@@ -109,6 +108,8 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].gameObject.SetActive (false);
 			mGameMenus[i].Unfocus();
 		}
+		
+		GUICanvas.Instance.MenuGUICanvas().SetFadeColor(Color.clear);
 
 		ResetAllMenusAndButtons ();
 
@@ -141,19 +142,30 @@ public class MainGameMenu : MonoBehaviour
 		GUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
 
 		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
-		GUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupCraftingButton(mShowPopupCraftingMenu);
 
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
-		GUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
-		GUICanvas.Instance.ShowWorldMapButton(showBack);
+		GUICanvas.Instance.MenuGUICanvas().ShowWorldMapButton(showBack);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
 			mGameMenus[i].UpdateMenusAndButtons();
 		}
+	}
+	public int CurrentMenu()
+	{
+		for (int i = 0; i < mGameMenus.Length; i++)
+		{
+			if(mCurrentGameMenu == mGameMenus[i])
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public void ChangeToWorldMapMenu()
@@ -226,7 +238,7 @@ public class MainGameMenu : MonoBehaviour
 		else if ((!mShowOptionsMenu) && apply) 
 		{
 			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
-			GUICanvas.Instance.UpdateOptions();
+			GUICanvas.Instance.OptionsGUICanvas().UpdateOptions();
 		}
 
 		UpdateMenusAndButtons ();
@@ -334,6 +346,12 @@ public class MainGameMenu : MonoBehaviour
 	{
 		switch (name) 
 		{
+		case "Button 7":
+			return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
+		case "Button 1":
+			return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
+		case "Button 4":
+			return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
 		case "RocketThrust":
 			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
 		case "UnlimitedAir":

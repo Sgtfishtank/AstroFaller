@@ -57,13 +57,13 @@ public class Level : PlayableLevel
 	{
 		mTitleText.text = mLevelName;
 
-		if (!mUnlocked)
+		//if (!mUnlocked)
 		{
-			mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
+			//mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
 		}
-		else
+		//else
 		{
-			mTotalDistanceText.text = "Max Distance\n" + mTotalDistance;
+			mTotalDistanceText.text = mTotalDistance.ToString();
 		}
 	}
 	
@@ -123,15 +123,24 @@ public class Level : PlayableLevel
 		mFrame2.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
-		
 
-		mPlayButton.transform.localPosition += GUICanvas.Instance.PlayButton().PositionOffset();
-		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.PlayButton().ScaleFactor();
+		mPlayButton.transform.localPosition += GUICanvas.Instance.MenuGUICanvas().PlayButton().PositionOffset();
+		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
 
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 
 		{
-			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+			Color x = textMeshes[i].color;
+			x.a = focusLevel;
+			textMeshes[i].color = x;
+		}
+		
+		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
+		for (int i = 0; i < rextMeshes.Length; i++) 
+		{
+			Color x = rextMeshes[i].material.color;
+			x.a = focusLevel;
+			rextMeshes[i].material.color = x;
 		}
 	}
 

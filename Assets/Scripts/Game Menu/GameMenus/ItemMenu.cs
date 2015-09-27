@@ -35,7 +35,7 @@ public class ItemMenu : GameMenu
 			int costBolts = mCurrentItem.BuyCostBolts();
 			int nextCrystals = mCurrentItem.BuyCostCrystals();
 			
-			MenuCamera.Instance.PopupBuyMenu().updateData (description, current, next, costBolts, nextCrystals);
+			MenuCamera.Instance.PopupBuyMenu().updateData (mCurrentItem.name, description, current, next, costBolts, nextCrystals);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class ItemMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvas.Instance.ShowItemButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		GUICanvas.Instance.MenuGUICanvas().ShowItemButtons(mFocused && false && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()
@@ -112,7 +112,7 @@ public class ItemMenu : GameMenu
 			return;
 		}
 
-		MenuCamera.Instance.PopupBuyMenu().Open();
+		MenuCamera.Instance.PopupBuyMenu().Open(mItems[index].PreviewObject());
 	}
 	
 	void CloseBuyItemMenu()

@@ -18,25 +18,22 @@ public class DeathmenuButtons : MonoBehaviour
 			return;
 		}
 		boxes = InGame.Instance.mPlayer.CollectedPerfectDistances();
-
-		t = gameObject.GetComponentsInChildren<RectTransform>();
-		print("tlenght" + t.Length);
+		if(t == null)
+			t = gameObject.GetComponentsInChildren<RectTransform>();
 		if(boxes < 5)
 		{
 			for (int i = 1+boxes; i < t.Length; i++)
 			{
-				print ("hej");
 				t[i].gameObject.SetActive(false);
 			}
 		}
 		else
 		{
-			for (int i = 2; i < t.Length; i++)
+			for (int i = 2; i < t.Length-1; i++)
 			{
 				t[i].gameObject.SetActive(false);
 			}
 		}
-		//t[5].gameObject.SetActive(false);
 		switch (boxes)
 		{
 		case 1:
@@ -66,6 +63,19 @@ public class DeathmenuButtons : MonoBehaviour
 			t[5].gameObject.SetActive(true);
 			t[5].gameObject.GetComponent<Text>().text = "x" + boxes;
 		}
+	}
+	void OnDisable()
+	{
+		for (int i = 1; i < t.Length; i++)
+		{
+			 t[i].gameObject.SetActive(true);
+		}
+		t = null;
+	}
+	public void disableSpecific(int value)
+	{
+		print (t.Length);
+		t[value].gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame

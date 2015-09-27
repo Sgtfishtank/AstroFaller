@@ -106,11 +106,24 @@ public class TutorialLevel : PlayableLevel
 		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
-
+		
+		mPlayButton.transform.localPosition += GUICanvas.Instance.MenuGUICanvas().PlayButton().PositionOffset();
+		mPlayButton.transform.localScale = Vector3.one * 0.84f * GUICanvas.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
+		
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
 		for (int i = 0; i < textMeshes.Length; i++) 
 		{
-			textMeshes[i].color = new Color(mTitleText.color.r, mTitleText.color.g, mTitleText.color.b, focusLevel);
+			Color x = textMeshes[i].color;
+			x.a = focusLevel;
+			textMeshes[i].color = x;
+		}
+		
+		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
+		for (int i = 0; i < rextMeshes.Length; i++) 
+		{
+			Color x = rextMeshes[i].material.color;
+			x.a = focusLevel;
+			rextMeshes[i].material.color = x;
 		}
 	}
 }
