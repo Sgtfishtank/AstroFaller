@@ -46,6 +46,17 @@ public class AstroidRemove : MonoBehaviour
 		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
 	}
 	
+	void OnDisable()
+	{
+		mWarning.SetActive (false);
+	}
+
+	void OnEnable()
+	{
+		mWarning.SetActive (true);
+		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -66,22 +77,37 @@ public class AstroidRemove : MonoBehaviour
 		Vector3 plVel = mpl.Rigidbody().velocity;
 		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, mRb.velocity - new Vector3(0, plVel.y, 0));
 		mWarning.transform.rotation = rot * Quaternion.Euler (0, 0, 90);
+
 		
+		float minX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(-GlobalVariables.Instance.PLAYER_MINMAX_X, mpl.CenterPosition().y, mpl.CenterPosition().z)).x;
+		float maxX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(GlobalVariables.Instance.PLAYER_MINMAX_X, mpl.CenterPosition().y, mpl.CenterPosition().z)).x;
+
+		print (minX + " " + maxX);
 		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(transform.position);
 		
 		a.z = 1;
-		
-		if (((transform.position.x < 0) && (a.x > 10)) || ((transform.position.x > 0) && (a.x < Screen.width - 10)) || (mHideT < Time.time))
+
+		int offset = 0;
+
+		if ((transform.position.x < 0) && (a.x > (minX + offset)))
+		{
+			mWarning.SetActive(false);
+		}
+		else if ((transform.position.x > 0) && (a.x < (maxX - offset)))
+		{
+			mWarning.SetActive(false);
+		}
+		else if (mHideT < Time.time)
 		{
 			mWarning.SetActive(false);
 		}
 		else if (transform.position.x < 0)
 		{
-			a.x = 10;
+			a.x = (minX + offset);
 		}
 		else
 		{
-			a.x = Screen.width - 10;
+			a.x = (maxX - offset);
 		}
 		
 		mWarning.transform.position = InGameCamera.Instance.Camera().ScreenToWorldPoint(a);

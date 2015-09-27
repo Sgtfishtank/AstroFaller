@@ -121,7 +121,7 @@ public class InGame : MonoBehaviour
 		{
 			if(startdelay == -1)
 			{
-				startdelay = Time.time+3.0f;
+				startdelay = Time.time+GlobalVariables.Instance.LOAD_LEVEL_DELAY;
 				print(startdelay);
 
 			}

@@ -38,6 +38,7 @@ public class GlobalVariables : MonoBehaviour
 	// other
 	public int PERFECT_DISTANCE_SIZE					= 10;
 	public float ASTEROID_WARNING_MAX_SHOW_TIME			= 2;
+	public float LOAD_LEVEL_DELAY						= 3;
 
 	// WorldGen
 	public float WORLD_SHIFT_BACK_INTERVAL				= 1000f;
