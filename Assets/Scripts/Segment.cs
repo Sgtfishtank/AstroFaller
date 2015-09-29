@@ -7,36 +7,47 @@ public class Segment : MonoBehaviour
 	public int mStaticWeight;
 	public int mLength;
 	public Vector3[] mOriginalPosition;
+	public Vector3[] mOriginalScale;
 	public Quaternion[] mOriginalRotation;
+	public Transform[] mTrans;
+	public Rigidbody[] mRigidbodys;
+
+	void Awake()
+	{
+		mTrans = gameObject.GetComponentsInChildren<Transform>(true).Where(x =>x.tag == "Enemy").ToArray();
+		mRigidbodys = gameObject.GetComponentsInChildren<Rigidbody>(true).Where(x =>x.tag == "Enemy").ToArray();
+		if(mOriginalPosition.Length == 0)
+		{
+			mOriginalPosition = new Vector3[mTrans.Length];
+			mOriginalRotation = new Quaternion[mTrans.Length];
+			mOriginalScale = new Vector3[mTrans.Length];
+			for (int i = 0; i < mTrans.Length; i++)
+			{
+				mOriginalPosition[i] = mTrans[i].localPosition;
+				mOriginalRotation[i] = mTrans[i].localRotation;
+				mOriginalScale[i] = mTrans[i].localScale;
+			}
+		}
+	}
 
 	// Use this for initialization
 	void Start () 
 	{
 	}
+
 	void OnDisable()
 	{
-		if(mOriginalPosition.Length == 0)
+		for (int i = 0; i < mTrans.Length; i++)
 		{
-			Transform[] b = gameObject.GetComponentsInChildren<Transform>(true).Where(x =>x.tag == "Enemy").ToArray();
-			mOriginalPosition = new Vector3[b.Length];
-			mOriginalRotation = new Quaternion[b.Length];
-			for (int i = 0; i < b.Length; i++)
-			{
-				mOriginalPosition[i] = b[i].localPosition;
-				mOriginalRotation[i] = b[i].localRotation;
-			}
+			mTrans[i].localPosition = mOriginalPosition[i];
+			mTrans[i].localRotation = mOriginalRotation[i];
+			mTrans[i].localScale = mOriginalScale[i];
 		}
 
-		Transform[] a = gameObject.GetComponentsInChildren<Transform>(true).Where(x =>x.tag == "Enemy").ToArray();
-
-		for (int i = 0; i < a.Length; i++)
+		for (int i = 0; i < mRigidbodys.Length; i++) 
 		{
-			a[i].localPosition = mOriginalPosition[i];
-			a[i].localRotation = mOriginalRotation[i];
-			if(a[i].gameObject.GetComponent<Rigidbody>() != null)
-				a[i].gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			mRigidbodys[i].velocity = Vector3.zero;
 		}
-
 	}
 	
 	// Update is called once per frame

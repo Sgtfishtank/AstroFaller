@@ -4,10 +4,10 @@ using System.Collections;
 public class AstroidRemove : MonoBehaviour 
 {
 	public GameObject mWarningPrefab;
-	public GameObject mCollisionEffect1;
-	public GameObject mCollisionEffect2;
+	/*public GameObject mCollisionEffect1Prefab;
+	public GameObject mCollisionEffect2Prefab;
 	public GameObject[] mCollisionEffects1;
-	public GameObject[] mCollisionEffects2;
+	public GameObject[] mCollisionEffects2;*/
 	
 	private GameObject mWarning;
 	private Player mpl;
@@ -26,17 +26,17 @@ public class AstroidRemove : MonoBehaviour
 
 		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
 
-		mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
+		/*mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
 		mCollisionEffects2 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
 		for (int i = 0; i < mCollisionEffects1.Length; i++)
 		{
-			mCollisionEffects1[i] = (GameObject)GameObject.Instantiate(mCollisionEffect1);
-			mCollisionEffects2[i] = (GameObject)GameObject.Instantiate(mCollisionEffect2);
+			mCollisionEffects1[i] = (GameObject)GameObject.Instantiate(mCollisionEffect1Prefab);
+			mCollisionEffects2[i] = (GameObject)GameObject.Instantiate(mCollisionEffect2Prefab);
 			mCollisionEffects1[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
 			mCollisionEffects2[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
 			mCollisionEffects1[i].gameObject.SetActive(false);
 			mCollisionEffects2[i].gameObject.SetActive(false);
-		}
+		}*/
 	}
 
 	// Use this for initialization
@@ -82,7 +82,7 @@ public class AstroidRemove : MonoBehaviour
 		float minX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(-GlobalVariables.Instance.PLAYER_MINMAX_X, mpl.CenterPosition().y, mpl.CenterPosition().z)).x;
 		float maxX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(GlobalVariables.Instance.PLAYER_MINMAX_X, mpl.CenterPosition().y, mpl.CenterPosition().z)).x;
 
-		print (minX + " " + maxX);
+		//print (minX + " " + maxX);
 		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(transform.position);
 		
 		a.z = 1;
@@ -118,30 +118,8 @@ public class AstroidRemove : MonoBehaviour
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mpl.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			int index  = PickCollisionEffect();
-			if (index != -1) 
-			{
-				mCollisionEffects1[index].SetActive(true);
-				mCollisionEffects2[index].SetActive(true);
-				mCollisionEffects1[index].transform.position = coll.contacts[0].point;
-				mCollisionEffects2[index].transform.position = coll.contacts[0].point;
-				mCollisionEffects1[index].transform.rotation = Quaternion.identity;
-				mCollisionEffects2[index].transform.rotation = Quaternion.identity;
-			}
+			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
 		}
-	}
-
-	int PickCollisionEffect()
-	{
-		for (int i = 0; i < mCollisionEffects1.Length; i++) 
-		{
-			if (!mCollisionEffects1[i].activeSelf) 
-			{
-				return i;
-			}
-		}
-
-		return -1;
 	}
 
 	public bool OutOfBound()

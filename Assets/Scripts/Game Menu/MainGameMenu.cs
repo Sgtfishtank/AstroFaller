@@ -46,7 +46,14 @@ public class MainGameMenu : MonoBehaviour
 	{
 		mSettingAudioManagerBackup = GetComponent<AudioManager> ();
 
-		mBackground = GameObject.Instantiate (mBackgroundPrefab);
+		if (mBackgroundPrefab != null) 
+		{
+			mBackground = GameObject.Instantiate (mBackgroundPrefab);
+		}
+		else
+		{
+			mBackground = new GameObject("Menu Background");
+		}
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 
@@ -79,12 +86,7 @@ public class MainGameMenu : MonoBehaviour
 
 		GUICanvas.Instance.ShowMenuButtons(show);
 		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(show);
-		
-		if (mBackground != null) 
-		{
-			mBackground.gameObject.SetActive (show);
-		}
-
+		mBackground.gameObject.SetActive (show);
 		gameObject.SetActive (show);
 	}
 

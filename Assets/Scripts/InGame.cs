@@ -252,7 +252,7 @@ public class InGame : MonoBehaviour
 
 		ShowComponents(true);
 		
-		mBgGen.LoadSegments("Parralax", 830, 100);
+		mBgGen.LoadSegments("Parralax", 120, 5);
 		mWorldGen.LoadSegments("Level" + levelIndex, 50, -1);
 
 		mBgGen.StartSpawnSegments(0);

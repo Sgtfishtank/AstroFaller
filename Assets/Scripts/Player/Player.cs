@@ -167,7 +167,7 @@ public class Player : MonoBehaviour
 		{
 			return;
 		}
-
+		
 		// hover physics
 		mMovementControls.Hover(mRb);
 		
@@ -183,6 +183,8 @@ public class Player : MonoBehaviour
 		// do nothing if dead
 		if ((mIsDead) || (!mPlaying))
 		{
+			mStartYValue = CenterPosition().y;
+			transform.position = new Vector3(0, transform.position.y, 0);
 			return;
 		}
 
