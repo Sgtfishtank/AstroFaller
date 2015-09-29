@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DebugGUI : MonoBehaviour 
 {
-	public float mFpsUpdateTime;
+	public int mFpsUpdateFrames;
 
 	private bool mShowDebugGUI;
 	private int mDebugGUISizeY;
@@ -71,7 +71,8 @@ public class DebugGUI : MonoBehaviour
 			}
 		}
 
-		if ((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift)))
+		Input.multiTouchEnabled = true;
+		if (((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift))) || (Input.touchCount >= 3))
 		{
 			mShowDebugGUI = !mShowDebugGUI;
 			
@@ -83,11 +84,11 @@ public class DebugGUI : MonoBehaviour
 		}
 
 		mF++;
-		if (mFT < Time.time)
+		if (mF >= mFpsUpdateFrames)
 		{
-			mFT += mFpsUpdateTime;
-			mFps = mF / mFpsUpdateTime;
-			mF = 0;
+			mFps = mF / (Time.time -  mFT);
+			mFT = Time.time;
+			mF -= mFpsUpdateFrames;
 		}
 	}
 	
