@@ -381,6 +381,10 @@ public class Player : MonoBehaviour
 	{
 		return mBoltsCollected;
 	}
+	public int LifeRemaining()
+	{
+		return mLife;
+	}
 	
 	public int colectedCrystals()
 	{
