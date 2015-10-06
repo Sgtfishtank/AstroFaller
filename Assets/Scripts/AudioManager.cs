@@ -31,6 +31,17 @@ public class AudioManager : MonoBehaviour
 
 	void Awake() 
 	{
+		/*FMOD.System sys;
+		FMOD_StudioSystem.instance.System.getLowLevelSystem (out sys);
+		
+		sys.setDSPBufferSize(512, 8);
+		
+		uint buff;
+		int bu;
+		sys.getDSPBufferSize(out buff, out bu);
+		//FMOD.Studio.Bank a;
+		//a.load ();
+		print("buffsize " + buff + " num buffers " + bu);*/
 		mPlayingSoundEvents = new List<FMOD.Studio.EventInstance> ();
 		mPlayingMusicEvents = new List<FMOD.Studio.EventInstance> ();
 	}
@@ -43,6 +54,17 @@ public class AudioManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		/*FMOD.System sys;
+		FMOD_StudioSystem.instance.System.getLowLevelSystem (out sys);
+		
+		sys.setDSPBufferSize(512, 8);
+		
+		uint buff;
+		int bu;
+		sys.getDSPBufferSize(out buff, out bu);
+		//FMOD.Studio.Bank a;
+		//a.load ();
+		print("buffsize " + buff + " num buffers " + bu);*/
 	}
 
 	public void CopyState(AudioManager mOtherAudioManager)

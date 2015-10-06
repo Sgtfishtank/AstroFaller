@@ -455,6 +455,7 @@ public class Player : MonoBehaviour
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
 			InGame.Instance.mDeathMenu.SetActive(true);
+			InGame.Instance.DeathMenu().Open();
 			GUICanvas.Instance.InGameGUICanvas().setEnableDeathMenu(true);
 
 			Vector3 a = gameObject.transform.position;

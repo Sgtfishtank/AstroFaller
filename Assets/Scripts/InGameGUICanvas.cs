@@ -63,6 +63,7 @@ public class InGameGUICanvas : MonoBehaviour
 		MainGameMenu.Instance.Enable(0);
 		setEnableDeathMenu(false);
 		InGame.Instance.mDeathMenu.SetActive(false);
+		InGame.Instance.DeathMenu().Close();
 	}
 
 	// death
@@ -77,6 +78,7 @@ public class InGameGUICanvas : MonoBehaviour
 	{
 		clear();
 		InGame.Instance.mDeathMenu.SetActive(false);
+		InGame.Instance.DeathMenu().Close();
 		setEnableDeathMenu(false);
 		InGame.Instance.StartGame();
 	}

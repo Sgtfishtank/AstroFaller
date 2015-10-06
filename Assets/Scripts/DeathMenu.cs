@@ -27,27 +27,30 @@ public class DeathMenu : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-
 	}
 
 	void OnEnable ()
 	{
-		AudioManager.Instance.PlayMusic(fmodDeathMusic);
 		mCalcT = Time.time + mCalcDuration;
 		mPlayer = InGame.Instance.mPlayer;
 		boxes = mPlayer.CollectedPerfectDistances();
 		setBoxes();
 	}
+
+	public void Open()
+	{
+		AudioManager.Instance.PlayMusic(fmodDeathMusic);
+	}
 	
-	void OnDisable()
+	public void Close()
 	{
 		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-		if (runSound)
-		{
-			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-			AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-			runSound = false;
-		}
+		AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+	}
+
+	void OnDisable()
+	{
 	}
 
 	// Update is called once per frame
