@@ -87,12 +87,12 @@ public class OptionsGUICanvas : MonoBehaviour
 	
 	public void AcceptOptions()
 	{
-		MainGameMenu.Instance.ShowOptions (false, true);
+		MainGameMenu.Instance.ShowOptions (false, false);
 	}
 	
 	public void CancelOptions()
 	{
-		MainGameMenu.Instance.ShowOptions (false, false);
+		MainGameMenu.Instance.ShowOptions (false, true);
 	}
 	
 	//

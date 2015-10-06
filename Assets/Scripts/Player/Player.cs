@@ -54,8 +54,6 @@ public class Player : MonoBehaviour
 	private FMOD.Studio.EventInstance mInflateSound;
 	private FMOD.Studio.EventInstance mDeflateSound;
 	public LensFlare mAntenLensFlare;
-	
-	private FMOD.Studio.EventInstance fmodDeathMusic;
 
 	// Use this for initialization
 	void Awake() 
@@ -72,7 +70,6 @@ public class Player : MonoBehaviour
 		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
-		fmodDeathMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/Scrapscoremusic/ScrapScoreMusic");
 		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
 		mDash = transform.Find("Burst_Trail").gameObject;
 		mInflateSound.setVolume(100);
@@ -110,8 +107,6 @@ public class Player : MonoBehaviour
 
 	public void StartGame()
 	{
-		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.IMMEDIATE);
-
 		mAirAmount = PlayerData.Instance.MaxAirTime();
 		mRb.isKinematic = false;
 		mIsDead = false;
@@ -456,7 +451,6 @@ public class Player : MonoBehaviour
 	{
 		if(!mInvulnerable && !mIsDead)
 		{
-			AudioManager.Instance.PlayMusic(fmodDeathMusic);
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);

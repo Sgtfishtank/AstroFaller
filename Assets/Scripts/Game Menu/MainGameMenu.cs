@@ -225,7 +225,7 @@ public class MainGameMenu : MonoBehaviour
 		ShowOptions (!mShowOptionsMenu, false);
 	}
 
-	public void ShowOptions(bool show, bool apply)
+	public void ShowOptions(bool show, bool cancelChanges)
 	{
 		ResetAllMenusAndButtons();
 
@@ -235,10 +235,12 @@ public class MainGameMenu : MonoBehaviour
 		// if not show -> if apply -> revert current state to backup state
 		if (mShowOptionsMenu) 
 		{
+			// backup audio current state on open options
 			AudioManager.Instance.CopyState (mSettingAudioManagerBackup);
 		}
-		else if ((!mShowOptionsMenu) && apply) 
+		else if ((!mShowOptionsMenu) && cancelChanges) 
 		{
+			// apply backup state on close options if cancel changes made in options
 			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
 			GUICanvas.Instance.OptionsGUICanvas().UpdateOptions();
 		}

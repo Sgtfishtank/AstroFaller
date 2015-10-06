@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
 	public bool mMuteMaster = false;
 	public bool mMuteSounds = false;
 	public bool mMuteMusic = false;
+	public bool mDebug = false;
 
 	public List<FMOD.Studio.EventInstance> mPlayingSoundEvents;
 	public List<FMOD.Studio.EventInstance> mPlayingMusicEvents;
@@ -46,11 +47,9 @@ public class AudioManager : MonoBehaviour
 
 	public void CopyState(AudioManager mOtherAudioManager)
 	{
-		// hack set master state
-		mOtherAudioManager.mMasterLevel = mMasterLevel;
-		mOtherAudioManager.mMuteMaster = mMuteMaster;
-
-		// normal set rest of state
+		// set state to other state
+		mOtherAudioManager.MuteMaster(mMuteMusic);
+		mOtherAudioManager.MasterLevel(mMasterLevel);
 		mOtherAudioManager.MusicLevel(mMusicLevel);
 		mOtherAudioManager.SoundsLevel(mSoundsLevel);
 		mOtherAudioManager.MuteMusic(mMuteMusic);
@@ -224,6 +223,7 @@ public class AudioManager : MonoBehaviour
 			return;
 		}
 		
+		print("playing music once " + GetFmodPath(fmodEvent));
 		StartMusic(GetEventCopy(fmodEvent));
 	}
 
@@ -238,9 +238,42 @@ public class AudioManager : MonoBehaviour
 		if (!mPlayingMusicEvents.Contains(fmodEvent))
 		{
 			mPlayingMusicEvents.Add(fmodEvent);
+			if (mDebug) 
+			{
+				printMusic();
+			}
 		}
 
 		StartMusic(fmodEvent);
+	}
+
+	void printSound()
+	{
+		string strOutput = "Playing sounds " + mPlayingSoundEvents.Count + " ";
+		for (int i = 0; i < mPlayingSoundEvents.Count; i++) 
+		{
+			strOutput += GetFmodPath(mPlayingSoundEvents[i]) + " ";
+		}
+		print(strOutput);
+	}
+	
+	void printMusic()
+	{
+		string strOutput = "Playing music " + mPlayingMusicEvents.Count + " ";
+		for (int i = 0; i < mPlayingMusicEvents.Count; i++) 
+		{
+			strOutput += GetFmodPath(mPlayingMusicEvents[i]) + " ";
+		}
+		print(strOutput);
+	}
+
+	public string GetFmodPath(FMOD.Studio.EventInstance fmodEvent)
+	{
+		FMOD.Studio.EventDescription ed;
+		string path;
+		fmodEvent.getDescription(out ed);
+		ed.getPath(out path);
+		return path;
 	}
 
 	public void StopMusic(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
@@ -251,7 +284,11 @@ public class AudioManager : MonoBehaviour
 			return;
 		}
 
-		mPlayingMusicEvents.Remove(fmodEvent);
+		if (mPlayingMusicEvents.Remove(fmodEvent) && mDebug) 
+		{
+			printMusic();
+		}
+
 		fmodEvent.stop (stopMode);
 	}
 
@@ -265,6 +302,10 @@ public class AudioManager : MonoBehaviour
 		}
 
 		StartSound(GetEventCopy(fmodEvent));
+		if (mDebug) 
+		{
+			print("playing sound once " + GetFmodPath(fmodEvent));
+		}
 	}
 
 	public FMOD.Studio.EventInstance GetEventCopy(FMOD.Studio.EventInstance fmodEvent)
@@ -289,6 +330,10 @@ public class AudioManager : MonoBehaviour
 		if (!mPlayingSoundEvents.Contains(fmodEvent))
 		{
 			mPlayingSoundEvents.Add(fmodEvent);
+			if (mDebug) 
+			{
+				printSound();
+			}
 		}
 
 		StartSound(fmodEvent);
@@ -302,7 +347,10 @@ public class AudioManager : MonoBehaviour
 			return;
 		}
 
-		mPlayingSoundEvents.Remove(fmodEvent);
+		if (mPlayingSoundEvents.Remove (fmodEvent) && mDebug) 
+		{
+			printSound();
+		}
 		fmodEvent.stop(stopMode);
 	}
 }

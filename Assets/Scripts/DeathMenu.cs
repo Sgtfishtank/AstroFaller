@@ -13,10 +13,12 @@ public class DeathMenu : MonoBehaviour
 	
 	private FMOD.Studio.EventInstance mDisDown;
 	private FMOD.Studio.EventInstance mCoinUp;
+	private FMOD.Studio.EventInstance fmodDeathMusic;
 	private bool runSound; 
 
 	void Awake()
 	{
+		fmodDeathMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/Scrapscoremusic/ScrapScoreMusic");
 		mDisDown = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerBolts/TickerBolts");
 		mCoinUp = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerDistance/TickerDistance");
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
@@ -30,6 +32,7 @@ public class DeathMenu : MonoBehaviour
 
 	void OnEnable ()
 	{
+		AudioManager.Instance.PlayMusic(fmodDeathMusic);
 		mCalcT = Time.time + mCalcDuration;
 		mPlayer = InGame.Instance.mPlayer;
 		boxes = mPlayer.CollectedPerfectDistances();
@@ -38,6 +41,7 @@ public class DeathMenu : MonoBehaviour
 	
 	void OnDisable()
 	{
+		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		if (runSound)
 		{
 			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -58,7 +62,7 @@ public class DeathMenu : MonoBehaviour
 		float deltaT = 1f - ((mCalcT + 0.8f - Time.time) / mCalcDuration);
 		deltaT = Mathf.Clamp01(deltaT);
 
-		if ((!runSound) && (deltaT > 0))
+		if ((!runSound) && (deltaT > 0) && (deltaT < 1))
 		{
 			AudioManager.Instance.PlaySound(mCoinUp);
 			AudioManager.Instance.PlaySound(mDisDown);
@@ -68,7 +72,7 @@ public class DeathMenu : MonoBehaviour
 		{
 			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 			AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-			runSound = true;
+			runSound = false;
 		}
 
 		float multi = (int)(Mathf.Lerp(1, calculateMultiplier(), deltaT) * 100f);
@@ -115,7 +119,6 @@ public class DeathMenu : MonoBehaviour
 		case 0:
 			break;
 		case 1:
-
 			mBoxObj[0].transform.localPosition = new Vector3(0,-2.56f,0);
 			break;
 		case 2:
