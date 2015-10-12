@@ -26,7 +26,7 @@ public class AstroidSpawn : MonoBehaviour {
 		for (int i = 0; i < mAstroids.Length; i++) 
 		{
 			int astroid = UnityEngine.Random.Range(0, mAstroidTypes.Length);
-			mAstroids[i] = Instantiate(mAstroidTypes[astroid]) as GameObject;
+			mAstroids[i] = Instantiate(mAstroidTypes[i % mAstroidTypes.Length]) as GameObject;
 			mAstroids[i].transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
 			mAstroids[i].SetActive(false);
 		}
@@ -81,14 +81,14 @@ public class AstroidSpawn : MonoBehaviour {
 			Vector3 targetVel = mPlayer.transform.position - instace.transform.position;
 			targetVel.y += mPlRigid.velocity.y;
 
-			instace.GetComponent<Rigidbody>().velocity = Vector3.Lerp(targetVel, randVel, Random.value);
-
+			Rigidbody rb = instace.GetComponent<Rigidbody>();
+			rb.velocity = Vector3.Lerp(targetVel, randVel, Random.value);
+			
 			//add torque
-			instace.GetComponent<Rigidbody>().AddTorque(
-				new Vector3(UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
-			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed),
-			            UnityEngine.Random.Range(-mRotationSpeed,mRotationSpeed)));
-
+			rb.AddTorque(
+				new Vector3(UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
+			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
+			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed)));
 		}
 	}
 

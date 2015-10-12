@@ -4,11 +4,7 @@ using System.Collections;
 public class AstroidRemove : MonoBehaviour 
 {
 	public GameObject mWarningPrefab;
-	/*public GameObject mCollisionEffect1Prefab;
-	public GameObject mCollisionEffect2Prefab;
-	public GameObject[] mCollisionEffects1;
-	public GameObject[] mCollisionEffects2;*/
-	
+
 	private GameObject mWarning;
 	private Player mpl;
 	private AstroidSpawn mAstroidSpawn;
@@ -25,18 +21,6 @@ public class AstroidRemove : MonoBehaviour
 		mWarning = GlobalVariables.Instance.Instanciate (mWarningPrefab, null, 0.05f);
 
 		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
-
-		/*mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
-		mCollisionEffects2 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
-		for (int i = 0; i < mCollisionEffects1.Length; i++)
-		{
-			mCollisionEffects1[i] = (GameObject)GameObject.Instantiate(mCollisionEffect1Prefab);
-			mCollisionEffects2[i] = (GameObject)GameObject.Instantiate(mCollisionEffect2Prefab);
-			mCollisionEffects1[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-			mCollisionEffects2[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-			mCollisionEffects1[i].gameObject.SetActive(false);
-			mCollisionEffects2[i].gameObject.SetActive(false);
-		}*/
 	}
 
 	// Use this for initialization
@@ -75,6 +59,7 @@ public class AstroidRemove : MonoBehaviour
 	void UpdateWarning ()
 	{
 		Vector3 plVel = mpl.Rigidbody().velocity;
+
 		Quaternion rot = Quaternion.LookRotation (mWarning.transform.forward, mRb.velocity - new Vector3(0, plVel.y, 0));
 		mWarning.transform.rotation = rot * Quaternion.Euler (0, 0, 90);
 
@@ -83,17 +68,17 @@ public class AstroidRemove : MonoBehaviour
 		float maxX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(GlobalVariables.Instance.PLAYER_MINMAX_X, mpl.CenterPosition().y, mpl.CenterPosition().z)).x;
 
 		//print (minX + " " + maxX);
-		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(transform.position);
+		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(mRb.position);
 		
 		a.z = 1;
 
 		int offset = 0;
 
-		if ((transform.position.x < 0) && (a.x > (minX + offset)))
+		if ((mRb.position.x < 0) && (a.x > (minX + offset)))
 		{
 			mWarning.SetActive(false);
 		}
-		else if ((transform.position.x > 0) && (a.x < (maxX - offset)))
+		else if ((mRb.position.x > 0) && (a.x < (maxX - offset)))
 		{
 			mWarning.SetActive(false);
 		}
@@ -101,7 +86,7 @@ public class AstroidRemove : MonoBehaviour
 		{
 			mWarning.SetActive(false);
 		}
-		else if (transform.position.x < 0)
+		else if (mRb.position.x < 0)
 		{
 			a.x = (minX + offset);
 		}

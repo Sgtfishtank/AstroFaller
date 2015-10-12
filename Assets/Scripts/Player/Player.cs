@@ -10,7 +10,9 @@ public class Player : MonoBehaviour
 	public bool mInvulnerable = false;
 	public Animator mAni;
 	public Transform mMeshTrans;
+
 	private AstroidSpawn mAS;
+	private Collider mCurrentAsterodSpawnCollider;
 
 	public bool mUseAirDrain;
 	public bool mUseAirReg;
@@ -77,7 +79,7 @@ public class Player : MonoBehaviour
 		mIsDead = false;
 		mPlaying = false;
 
-		boltParticles = new GameObject[10];
+		boltParticles = new GameObject[GlobalVariables.Instance.MAX_TEXT_PARTICLES];
 		for (int i = 0; i < boltParticles.Length; i++) 
 		{
 			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -102,11 +104,11 @@ public class Player : MonoBehaviour
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 		mDash.SetActive(false);
 
-		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 	}
 
 	public void StartGame()
 	{
+		mCurrentAsterodSpawnCollider = null;
 		mAirAmount = PlayerData.Instance.MaxAirTime();
 		mRb.isKinematic = false;
 		mIsDead = false;
@@ -121,6 +123,8 @@ public class Player : MonoBehaviour
 
 		transform.position = new Vector3(0, transform.position.y, 0);
 		
+		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
+
 		UpdatePerfectDistance (false);
 		mAS.gameObject.SetActive (false);
 	}
@@ -276,6 +280,7 @@ public class Player : MonoBehaviour
 		}
 		else if(col.tag == "SpawnAstroid")
 		{
+			mCurrentAsterodSpawnCollider = col;
 			mAS.gameObject.SetActive(true);
 		}
 	}
@@ -314,11 +319,13 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		if(col.tag == "SpawnAstroid")
+		if(col == mCurrentAsterodSpawnCollider)
 		{
 			mAS.gameObject.SetActive(false);
+			mCurrentAsterodSpawnCollider = null;
 		}
 	}
+
 	void OnCollisionEnter(Collision coll)
 	{
 		// do nothing if dead

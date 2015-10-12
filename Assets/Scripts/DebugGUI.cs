@@ -130,16 +130,7 @@ public class DebugGUI : MonoBehaviour
 		
 		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals: " + PlayerData.Instance.crystals());
 		startY += size;
-		
-		GUI.Label (new Rect(startX, startY, 180, size), "Bolts Total: " + PlayerData.Instance.totalBolts());
-		startY += size;
-		
-		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
-		startY += size;
-		
-		GUI.Label (new Rect(startX, startY, 180, size), "Distance total: " + PlayerData.Instance.totalDistance());
-		startY += size;
-		
+
 		if (InGame.Instance.Player().gameObject.activeInHierarchy) 
 		{
 			GUI.Label (new Rect (startX, startY, 180, size), "Player Air: " + InGame.Instance.Player ().airAmount ());
@@ -156,11 +147,26 @@ public class DebugGUI : MonoBehaviour
 			
 			GUI.Label (new Rect (startX, startY, 180, size), "Player Drain Air: " + InGame.Instance.Player ().mUseAirDrain);
 			startY += size;
+
+			GUI.Label (new Rect(startX, startY, 180, size), "Acc: " + Input.acceleration.x);
+			startY += size;
+		}
+		else 
+		{
+			GUI.Label (new Rect(startX, startY, 180, size), "Bolts Total: " + PlayerData.Instance.totalBolts());
+			startY += size;
+			
+			GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals Total: " + PlayerData.Instance.totalCrystals());
+			startY += size;
+			
+			GUI.Label (new Rect(startX, startY, 180, size), "Distance total: " + PlayerData.Instance.totalDistance());
+			startY += size;
+
 		}
 
 		GUI.Label (new Rect(startX, startY, 180, size), "FPS: " + (int)mFps);
 		startY += size;
-		
+
 		mDebugGUISizeY = startY;
 	}
 }
