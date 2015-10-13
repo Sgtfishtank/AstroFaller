@@ -13,7 +13,7 @@ public class SwipeScript : MonoBehaviour
 	
 	void Start()
 	{
-		mPlayer = GameObject.Find("Player").GetComponent<Player>();
+		mPlayer = InGame.Instance.mPlayer;
 	}
 	// Update is called once per frame
 	void Update ()
