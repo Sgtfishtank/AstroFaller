@@ -74,7 +74,6 @@ public class DeathmenuButtons : MonoBehaviour
 	}
 	public void disableSpecific(int value)
 	{
-		print (t.Length);
 		t[value].gameObject.SetActive(false);
 	}
 	

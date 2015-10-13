@@ -85,7 +85,6 @@ public class InGameGUICanvas : MonoBehaviour
 	
 	public void perfectDistanceReward(int pos)
 	{
-		print ("dafuck");
 		int box = InGame.Instance.mPlayer.CollectedPerfectDistances();
 		
 		int value = 0;
@@ -95,7 +94,6 @@ public class InGameGUICanvas : MonoBehaviour
 		if (box < 5)
 		{
 			value = UnityEngine.Random.Range(20,51);
-			print("a length " + a.Length);
 			switch (pos)
 			{
 			case 1:
