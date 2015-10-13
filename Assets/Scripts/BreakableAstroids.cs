@@ -62,7 +62,6 @@ public class BreakableAstroids : MonoBehaviour
 		if((col.transform.tag == mCollWith) && (!mBreak))
 		{
 			float angle = Random.value * 360;
-			print("ghh");
 			for (int i = 1; i < mPartColliders.Length; i++) 
 			{
 				//mPartRigidBodys[i] = mPartColliders[i].gameObject.AddComponent<Rigidbody>();

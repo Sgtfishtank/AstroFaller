@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
 		mIsDead = false;
 		mPlaying = false;
 
-		boltParticles = new GameObject[GlobalVariables.Instance.MAX_TEXT_PARTICLES];
+		boltParticles = new GameObject[GlobalVariables.Instance.MAX_BOLT_PARTICLES];
 		for (int i = 0; i < boltParticles.Length; i++) 
 		{
 			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour
 			boltParticles[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
 		}
 
-		mPickupTexts = new ParticelCleanUp[10];
+		mPickupTexts = new ParticelCleanUp[GlobalVariables.Instance.MAX_TEXT_PARTICLES];
 		for (int i = 0; i < mPickupTexts.Length; i++) 
 		{
 			GameObject obj = Instantiate(mPickupTextPrefab, Vector3.zero, Quaternion.identity) as GameObject;

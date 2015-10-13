@@ -38,7 +38,8 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_AIR_REG							= 10;
 
 	// other
-	public int MAX_TEXT_PARTICLES						= 12;
+	public int MAX_TEXT_PARTICLES						= 15;
+	public int MAX_BOLT_PARTICLES						= 12;
 	public int PERFECT_DISTANCE_SIZE					= 10;
 	public float ASTEROID_WARNING_MAX_SHOW_TIME			= 2;
 	public float LOAD_LEVEL_DELAY						= 3;
