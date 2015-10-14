@@ -100,7 +100,7 @@ public class AstroidSpawn : MonoBehaviour {
 			
 			float playerBreakableOffset = 12;
 			float playerBreakableTime = 10;
-			if ((!mPlayerAsteroid.activeSelf) && (Random.value < playerBreakableChance)) 
+			if ((!mPlayerAsteroid.activeSelf) && (Random.value < playerBreakableChance) && false) 
 			{
 				mPlayerAsteroid.SetActive(true);
 				Rigidbody rba = mPlayerAsteroid.GetComponent<Rigidbody>();
@@ -116,7 +116,7 @@ public class AstroidSpawn : MonoBehaviour {
 
 		if ((mPlayerAsteroid.activeSelf) && (OutOfBounds(mPlayerAsteroid)))
 		{
-			//mPlayerAsteroid.SetActive(false);
+			mPlayerAsteroid.SetActive(false);
 		}
 	}
 

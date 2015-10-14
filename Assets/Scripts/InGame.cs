@@ -257,8 +257,7 @@ public class InGame : MonoBehaviour
 
 		mBgGen.StartSpawnSegments(0);
 
-		mPlayer.GetComponent<Rigidbody>().useGravity = true;
-		mPlayer.transform.position = Vector3.zero;
+		mPlayer.IntroLoad();
 
 		mIntroPhase = true;
 		mIntroPhaseT = 0;

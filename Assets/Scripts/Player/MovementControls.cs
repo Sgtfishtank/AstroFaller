@@ -10,26 +10,11 @@ public class MovementControls
 	private bool mHoverFailed = false;
 	private float mHoverFailedT;
 
-	//private Animator mAni;
 	private Player mPlayer;
-	//private SkinnedMeshRenderer[] skinnedMeshRenderer;
 
-	//public float AccelerometerUpdateInterval = 0.25f;
-	//public float LowPassKernelWidthInSeconds = 1.0f;
-	
-	//private float LowPassFilterFactor;
-
-	//bool first;
-
- // tweakable
-	//private float lowPassValue = 0;
-	//public bool temp = false;
-
-	public MovementControls (Animator ani, Transform mesh, Player player, SkinnedMeshRenderer[] skinmesh)
+	public MovementControls (Player player)
 	{
 		mPlayer = player;
-		//LowPassFilterFactor = AccelerometerUpdateInterval / LowPassKernelWidthInSeconds;
-		//skinnedMeshRenderer = skinmesh;
 	}
 
 	

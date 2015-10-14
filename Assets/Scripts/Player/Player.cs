@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class Player : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
 	private bool mIsDead = false;
 	private bool mPlaying;
 	private MovementControls mMovementControls;
-	public SkinnedMeshRenderer[] skinnedMeshRenderer;
+	private SkinnedMeshRenderer[] skinnedMeshRenderer;
 
 	private float mDashTime;
 	private float mDashCDTime;
@@ -33,7 +34,7 @@ public class Player : MonoBehaviour
 	private bool doShift = false;
 	private float shiftAmount;
 
-	public ParticelCleanUp[] mPickupTexts;
+	private ParticelCleanUp[] mPickupTexts;
 	public GameObject mPickupTextPrefab;
 
 	public int mLife;
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
 	public int mCrystalsCollected;
 	public int mPerfectDistanceCollected;
 	public GameObject boltParticlePrefab;
-	public GameObject[] boltParticles;
+	private GameObject[] boltParticles;
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour
 	private FMOD.Studio.EventInstance mCoinPickUpSound;
 	private FMOD.Studio.EventInstance mInflateSound;
 	private FMOD.Studio.EventInstance mDeflateSound;
-	public LensFlare mAntenLensFlare;
+	private LensFlare mAntenLensFlare;
 
 	// Use this for initialization
 	void Awake() 
@@ -73,13 +74,14 @@ public class Player : MonoBehaviour
 		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
 		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
 		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
-		mMovementControls = new MovementControls(null, null, this, skinnedMeshRenderer);
+		mMovementControls = new MovementControls(this);
 		mDash = transform.Find("Burst_Trail").gameObject;
 		mInflateSound.setVolume(100);
 		mDeflateSound.setVolume(100);
 		mIsDead = false;
 		mPlaying = false;
 
+		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
 		boltParticles = new GameObject[GlobalVariables.Instance.MAX_BOLT_PARTICLES];
 		for (int i = 0; i < boltParticles.Length; i++) 
 		{
@@ -103,8 +105,16 @@ public class Player : MonoBehaviour
 	{
 		mAS = WorldGen.Instance.AstroidSpawn ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
-		mDash.SetActive(false);
+	}
 
+	public void IntroLoad ()
+	{
+		mDash.SetActive(false);
+		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
+		mRb.useGravity = true;
+		mRb.isKinematic = false;
+		transform.position = Vector3.zero;
+		mIsDead = false;
 	}
 
 	public void StartGame()

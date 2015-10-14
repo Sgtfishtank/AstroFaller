@@ -37,7 +37,7 @@ public class InGameCamera : MonoBehaviour
 
 	void OnEnable()
 	{
-		//crash.transform.position = Vector3.zero;
+		GetComponent<FollowPlayer> ().ydist = 0;
 	}
 	
 	void OnDisable()
