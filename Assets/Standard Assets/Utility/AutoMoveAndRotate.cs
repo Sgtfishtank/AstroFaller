@@ -5,6 +5,7 @@ namespace UnityStandardAssets.Utility
 {
     public class AutoMoveAndRotate : MonoBehaviour
     {
+		public bool rotateAroundParent;
         public Vector3andSpace moveUnitsPerSecond;
         public Vector3andSpace rotateDegreesPerSecond;
         public bool ignoreTimescale;
@@ -31,7 +32,14 @@ namespace UnityStandardAssets.Utility
                 m_LastRealTime = Time.realtimeSinceStartup;
             }
             transform.Translate(moveUnitsPerSecond.value*deltaTime, moveUnitsPerSecond.space);
-            transform.Rotate(rotateDegreesPerSecond.value*deltaTime, moveUnitsPerSecond.space);
+			if (rotateAroundParent) 
+			{
+				transform.RotateAround(transform.parent.position, rotateDegreesPerSecond.value, 50 * deltaTime);
+			}
+			else 
+			{
+				transform.Rotate(rotateDegreesPerSecond.value*deltaTime, moveUnitsPerSecond.space);
+			}
         }
 
 
