@@ -30,7 +30,7 @@ public class DebugGUI : MonoBehaviour
 				pl.mInvulnerable = !pl.mInvulnerable;
 			}
 			
-			if (Input.GetKeyDown(KeyCode.D))
+			if (Input.GetKeyDown(KeyCode.F))
 			{
 				pl.Dash();
 			}

@@ -63,7 +63,7 @@ public class ItemMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvas.Instance.MenuGUICanvas().ShowItemButtons(mFocused && false && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		GUICanvas.Instance.MenuGUICanvas().ShowItemButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()
@@ -102,6 +102,7 @@ public class ItemMenu : GameMenu
 
 	void OpenBuyItemMenu(int index)
 	{
+		return;
 		mCurrentItem = mItems[index];
 		print ("i " + index + " n " + mCurrentItem.name);
 		

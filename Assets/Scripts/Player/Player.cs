@@ -222,7 +222,7 @@ public class Player : MonoBehaviour
 			Dash();
 		}
 
-		if(mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time)
+		if (isDashing())
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF * Time.deltaTime;
 			if(mMaxCurrentFallSpeed < mMaxFallSpeed+0.1f)
@@ -240,6 +240,11 @@ public class Player : MonoBehaviour
 		{
 			skinnedMeshRenderer[i].SetBlendShapeWeight (0, blendOne);
 		}
+	}
+
+	public bool isDashing()
+	{
+		return (mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time);
 	}
 
 	void LateUpdate()
@@ -265,7 +270,7 @@ public class Player : MonoBehaviour
 			if (index != -1) 
 			{
 				boltParticles[index].SetActive(true);
-				boltParticles[index].transform.position = col.transform.parent.position;
+				boltParticles[index].transform.position = col.transform.position;
 			}
 
 			col.gameObject.SetActive(false);
@@ -274,7 +279,7 @@ public class Player : MonoBehaviour
 			int index2 = PickPuckupText();
 			if (index2 != -1)
 			{
-				mPickupTexts[index2].Activate(col.transform.parent.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
+				mPickupTexts[index2].Activate(col.transform.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
 			}
 
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);

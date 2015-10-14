@@ -105,6 +105,7 @@ public class WorldGen : MonoBehaviour
 		mCurrentPos -= segSize;
 		Vector3 pos = new Vector3 (0, mCurrentPos + (segSize * 0.5f), 0);
 		newSeg.transform.position = pos + segmentPrefab.transform.position;
+		newSeg.transform.rotation = segmentPrefab.transform.rotation;
 		newSeg.gameObject.SetActive(true);
 
 		GameObject[] bolts = newSeg.GetComponentsInChildren<Transform>(true).Where(x => x.tag == "Bolts").Select(x => x.gameObject).ToArray();
@@ -116,8 +117,12 @@ public class WorldGen : MonoBehaviour
 
 		if (mNoiseFactor > 0)
 		{
-			//newSeg.transform.position += Random.insideUnitSphere * mNoiseFactor;
-			//newSeg.transform.localScale = segmentPrefab.transform.localScale * (1f - (mNoiseFactor / 400) + (Random.value * (mNoiseFactor / 200)));
+			Vector3 randPos = Random.insideUnitCircle;
+
+			newSeg.transform.position += randPos * mNoiseFactor;
+			newSeg.transform.rotation = Quaternion.Euler(newSeg.transform.rotation.eulerAngles + new Vector3(0, 0, (Random.value - 0.5f) * mNoiseFactor * 10));
+			newSeg.transform.localScale = segmentPrefab.transform.localScale * (1f - (mNoiseFactor / 400) + (Random.value * (mNoiseFactor / 200)));
+
 		}
 		
 		mSegmentsTimesGenerated[index]++;

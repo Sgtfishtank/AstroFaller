@@ -212,7 +212,10 @@ public class MainGameMenu : MonoBehaviour
 
 	public void ResetAllMenusAndButtons ()
 	{
-		MenuCamera.Instance.PopupBuyMenu().Close();
+		if (MenuCamera.Instance.PopupBuyMenu().IsOpen()) 
+		{
+			MenuCamera.Instance.PopupBuyMenu().Close ();
+		}
 
 		mShowHelpMenu = false;
 		mShowOptionsMenu = false;

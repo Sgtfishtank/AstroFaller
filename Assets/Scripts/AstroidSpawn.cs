@@ -12,6 +12,10 @@ public class AstroidSpawn : MonoBehaviour {
 	public GameObject mCollisionEffect2Prefab;
 	public GameObject[] mCollisionEffects1;
 	public GameObject[] mCollisionEffects2;
+	
+	public GameObject mPlayerAsteroidPrefab;
+	public GameObject mPlayerAsteroid;
+	public float mPlayerAsteroidT;
 
 	private Player mPlayer;
 	private Rigidbody mPlRigid;
@@ -25,7 +29,7 @@ public class AstroidSpawn : MonoBehaviour {
 		mAstroids = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS];
 		for (int i = 0; i < mAstroids.Length; i++) 
 		{
-			int astroid = UnityEngine.Random.Range(0, mAstroidTypes.Length);
+			//int astroid = UnityEngine.Random.Range(0, mAstroidTypes.Length);
 			mAstroids[i] = Instantiate(mAstroidTypes[i % mAstroidTypes.Length]) as GameObject;
 			mAstroids[i].transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
 			mAstroids[i].SetActive(false);
@@ -42,6 +46,8 @@ public class AstroidSpawn : MonoBehaviour {
 			mCollisionEffects1[i].gameObject.SetActive(false);
 			mCollisionEffects2[i].gameObject.SetActive(false);
 		}
+		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
+		mPlayerAsteroid.SetActive (false);
 	}
 
 	void Start ()
@@ -89,7 +95,39 @@ public class AstroidSpawn : MonoBehaviour {
 				new Vector3(UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
 			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
 			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed)));
+
+			float playerBreakableChance = 0.9f;
+			
+			float playerBreakableOffset = 12;
+			float playerBreakableTime = 10;
+			if ((!mPlayerAsteroid.activeSelf) && (Random.value < playerBreakableChance)) 
+			{
+				mPlayerAsteroid.SetActive(true);
+				Rigidbody rba = mPlayerAsteroid.GetComponent<Rigidbody>();
+				mPlayerAsteroid.transform.position = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayer.transform.position.y - playerBreakableOffset, 0);
+				Vector3 arandVel = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * -x, mPlRigid.velocity.y, 0);
+				rba.velocity = arandVel;
+				rba.AddTorque(new Vector3(UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
+				            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
+				            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed)));
+				mPlayerAsteroidT = Time.time + playerBreakableTime;
+			}
 		}
+
+		if ((mPlayerAsteroid.activeSelf) && (OutOfBounds(mPlayerAsteroid)))
+		{
+			//mPlayerAsteroid.SetActive(false);
+		}
+	}
+
+	bool OutOfBounds (GameObject mPlayerAsteroid)
+	{
+		float absx = Mathf.Abs (mPlayerAsteroid.transform.position.x);
+		if ((absx > GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET) || (mPlayerAsteroidT < Time.time))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public void SpawnCollisionEffects(Vector3 position)
@@ -139,6 +177,7 @@ public class AstroidSpawn : MonoBehaviour {
 		{
 			mAstroids[i].transform.position -= new Vector3(0, shift, 0);
 		}
+		mPlayerAsteroid.transform.position -= new Vector3(0, shift, 0);
 	}
 
 	public void RemoveAstroid(GameObject g)

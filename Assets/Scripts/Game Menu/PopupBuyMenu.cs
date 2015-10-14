@@ -46,6 +46,11 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Open(GameObject prefab)
 	{
+		if (mOpen) 
+		{
+			Close();
+		}
+
 		mObjToBuy = GameObject.Instantiate(prefab);
 
 		Transform[] obs = mObjToBuy.GetComponentsInChildren<Transform>(true);
@@ -66,6 +71,11 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void Close()
 	{
+		if (!mOpen) 
+		{
+			return;
+		}
+
 		Destroy (mObjToBuy);
 		mOpen = false;
 		gameObject.SetActive(false);

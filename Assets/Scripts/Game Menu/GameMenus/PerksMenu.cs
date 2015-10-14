@@ -61,7 +61,7 @@ public class PerksMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{		
-		GUICanvas.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && false && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		GUICanvas.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()
@@ -103,6 +103,7 @@ public class PerksMenu : GameMenu
 
 	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
 	{
+		return;
 		mCurrentPerk = mPerks[index];
 		//mCurrentPerkPart = perkPart;
 

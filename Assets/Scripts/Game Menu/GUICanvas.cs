@@ -156,7 +156,7 @@ public class GUICanvas : MonoBehaviour
 
 		if (ret == null) 
 		{
-			print("ERORR! BUTTON OBJECT NOT FOUND: " + name);
+			Debug.LogWarning("Warning! BUTTON OBJECT NOT FOUND: " + name);
 		}
 
 		return ret;
