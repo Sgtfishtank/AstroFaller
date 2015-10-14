@@ -37,6 +37,7 @@ public class PopupBuyMenu : MonoBehaviour
 	void Start()
 	{
 		gameObject.SetActive(false);
+		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
 	}
 
 	// Update is called once per frame

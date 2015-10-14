@@ -127,7 +127,7 @@ public class MainGameMenu : MonoBehaviour
 	{
 		if (!mMenuChangePhase) 
 		{
-			bool focusCurrent = !(mShowOptionsMenu || mShowHelpMenu);
+			bool focusCurrent = !(mShowOptionsMenu || mShowHelpMenu || mShowPopupAchievementsMenu || mShowPopupCraftingMenu);
 			if (focusCurrent && (!mCurrentGameMenu.IsFocused())) 
 			{
 				mCurrentGameMenu.Focus ();
