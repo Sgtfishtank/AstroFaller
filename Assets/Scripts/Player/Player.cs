@@ -198,6 +198,7 @@ public class Player : MonoBehaviour
 			mLife++;
 		}
 
+		mHover = Input.GetButton ("Jump");
 		LifePerk.UpdatePerkValueAnimation(mAni);
 
 		if ((mMovementControls.IsHovering()) && (blendOne < 100))
