@@ -38,9 +38,9 @@ public class MovementControls
 		//lowPassValue = Mathf.Lerp(lowPassValue, Input.acceleration.x, LowPassFilterFactor);
 	}
 
-	public float JumpAndHover (Rigidbody mRb, float mAirAmount)
+	public float JumpAndHover (Rigidbody mRb, float mAirAmount, bool hover)
 	{
-		if (Input.GetButton("Jump") || Input.touchCount >= 1)//checks if the player wants to jump/hover
+		if (hover)//checks if the player wants to jump/hover
 		{
 			//first = true;
 

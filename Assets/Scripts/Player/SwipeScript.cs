@@ -13,11 +13,39 @@ public class SwipeScript : MonoBehaviour
 	
 	void Start()
 	{
-		mPlayer = InGame.Instance.mPlayer;
+		mPlayer = InGame.Instance.Player();
 	}
 	// Update is called once per frame
 	void Update ()
 	{	
+		if(Input.touchCount > 0)
+		{
+			if(Input.touches[0].phase == TouchPhase.Began)
+			{
+				fingerStartPos = Input.touches[0].position;
+			}
+			if((fingerStartPos - Input.touches[0].position).magnitude < 10f)
+			{
+				mPlayer.Hover(true);
+			}
+			else
+			{
+				mPlayer.Hover(false);
+				if (mPlayer.CanDash())
+				{
+					mPlayer.Dash();
+				}
+			}
+			if(Input.touches[0].phase == TouchPhase.Ended)
+			{
+				mPlayer.Hover(true);
+			}
+		}
+
+
+
+
+
 		if (Input.touchCount > 0)
 		{			
 			foreach (Touch touch in Input.touches)

@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 	public bool mUseAirDrain;
 	public bool mUseAirReg;
 	private float mAirAmount;
+	private bool mHover;
 
 	private FollowPlayer mfp;
 	private Rigidbody mRb;
@@ -140,6 +141,10 @@ public class Player : MonoBehaviour
 		mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
 		mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
 	}
+	public void Hover(bool h)
+	{
+		mHover = h;
+	}
 	
 	public void Inflate()
 	{
@@ -171,7 +176,7 @@ public class Player : MonoBehaviour
 		mMovementControls.Hover(mRb);
 		
 		// jump and hover player
-		mAirAmount = mMovementControls.JumpAndHover(mRb, mAirAmount);
+		mAirAmount = mMovementControls.JumpAndHover(mRb, mAirAmount, mHover);
 		
 		// move player
 		mMovementControls.Move(mRb);
