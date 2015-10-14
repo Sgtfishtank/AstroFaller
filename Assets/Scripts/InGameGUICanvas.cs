@@ -39,6 +39,13 @@ public class InGameGUICanvas : MonoBehaviour
 		}
 	}
 	
+	// toggle menu buttons
+	public void Deselect()
+	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{

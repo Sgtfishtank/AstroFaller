@@ -36,7 +36,7 @@ public class GUICanvas : MonoBehaviour
 	{
 		ShowButtons (false);
 	}
-	
+
 	// toggle menu buttons
 	public void ShowMenuButtons(bool show)
 	{

@@ -54,6 +54,13 @@ public class MenuGUICanvas : MonoBehaviour
 	
 	}
 	
+	// toggle menu buttons
+	public void Deselect()
+	{
+		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+		MainGameMenu.Instance.UpdateMenusAndButtons ();
+	}
+
 	public Button[] GetButtons ()
 	{
 		return mButtons;
