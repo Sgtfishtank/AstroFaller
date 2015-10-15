@@ -77,8 +77,7 @@ public class WorldMapMenu : GameMenu
 					}
 				//}
 			}
-			
-			if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
+			else if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
 			{
 				mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
 				mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
@@ -88,11 +87,11 @@ public class WorldMapMenu : GameMenu
 			}
 			else if (Input.GetKey(KeyCode.UpArrow))
 			{
-				ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+				ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * 1000 * Time.deltaTime);
 			}
 			else if (Input.GetKey(KeyCode.DownArrow))
 			{
-				ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * Time.deltaTime);
+				ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * 1000 * Time.deltaTime);
 			}
 			else 
 			{
@@ -110,11 +109,8 @@ public class WorldMapMenu : GameMenu
 					mLevels[mCurrentLevelFocusIndex].UnlockLevel();
 				}
 			}
-			else if (Input.GetKeyDown(KeyCode.Return))
-			{
-				PlayLevel();
-			}
-			
+
+			mScrollValue = Mathf.Clamp(mScrollValue, -1 * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, mLevels.Length * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE);
 			setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET + mScrollValue);
 			
 			for (int i = 0; i < mLevels.Length; i++) 
