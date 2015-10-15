@@ -4,7 +4,7 @@ using System.Collections;
 public class FollowPlayer : MonoBehaviour 
 {
 
-	public Transform mplayer;
+	public Player mPlayer;
 	public float zdist;
 	public float ydist;
 	public float mDashDelay;
@@ -14,18 +14,17 @@ public class FollowPlayer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		if (mplayer == null)
+		if (mPlayer == null)
 		{
-			mplayer = WorldGen.Instance.Player().transform;
+			mPlayer = WorldGen.Instance.Player();
 		}
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(!InGame.Instance.mPlayer.isDead())
+		if(!mPlayer.isDead())
 			UpdatePosition();
-
 
 		if(mDash)
 		{
@@ -64,7 +63,7 @@ public class FollowPlayer : MonoBehaviour
 	{
 		Vector3 pos = transform.position;
 		pos.z = -zdist;
-		pos.y = mplayer.GetComponent<Player>().CenterPosition().y - ydist;
+		pos.y = mPlayer.CenterPosition().y - ydist;
 		transform.position = pos;
 	}
 }

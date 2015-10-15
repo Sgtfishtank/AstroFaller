@@ -26,9 +26,12 @@ public class GUICanvas : MonoBehaviour
 
 	void Awake () 
 	{
-		mInGameGUICanvas = GameObject.Find("InGame GUICanvas").GetComponent<InGameGUICanvas>();
-		mMenuGUICanvas = GameObject.Find("Menu GUICanvas").GetComponent<MenuGUICanvas>();
-		mOptionsGUICanvas = GameObject.Find("Options GUICanvas").GetComponent<OptionsGUICanvas>();
+		mInGameGUICanvas = GetComponentsInChildren<InGameGUICanvas>(true)[0];
+		mMenuGUICanvas = GetComponentsInChildren<MenuGUICanvas>(true)[0];
+		mOptionsGUICanvas = GetComponentsInChildren<OptionsGUICanvas>(true)[0];
+		mInGameGUICanvas.gameObject.SetActive (true);
+		mMenuGUICanvas.gameObject.SetActive (true);
+		mOptionsGUICanvas.gameObject.SetActive (true);
 	}
 
 	// Use this for initialization

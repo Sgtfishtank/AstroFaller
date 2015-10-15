@@ -6,22 +6,22 @@ public class AstroidSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	public GameObject[] mAstroidTypes;
-	public GameObject[] mAstroids;
+	private GameObject[] mAstroids;
 
 	public GameObject mCollisionEffect1Prefab;
 	public GameObject mCollisionEffect2Prefab;
-	public GameObject[] mCollisionEffects1;
-	public GameObject[] mCollisionEffects2;
+	private GameObject[] mCollisionEffects1;
+	private GameObject[] mCollisionEffects2;
 	
 	public GameObject mPlayerAsteroidPrefab;
-	public GameObject mPlayerAsteroid;
-	public float mPlayerAsteroidT;
+	private GameObject mPlayerAsteroid;
+	private float mPlayerAsteroidT;
 
 	private Player mPlayer;
 	private Rigidbody mPlRigid;
 
 	private float mLastSpawn = 0;
-	public int mSpawnedAsteroids;
+	private int mSpawnedAsteroids;
 
 	void Awake ()
 	{

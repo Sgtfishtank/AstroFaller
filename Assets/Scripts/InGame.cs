@@ -24,7 +24,7 @@ public class InGame : MonoBehaviour
 	public GameObject mPerfectDistanceParticlesPrefab;
 	public GameObject mDeathMenuPrefab;
 	
-	public Player mPlayer;
+	private Player mPlayer;
 	public AstroidSpawn mAstroidSpawn;
 	public GameObject mDeathMenu;
 	private int mCurrentLevel;

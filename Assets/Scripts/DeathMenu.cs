@@ -32,7 +32,7 @@ public class DeathMenu : MonoBehaviour
 	void OnEnable ()
 	{
 		mCalcT = Time.time + mCalcDuration;
-		mPlayer = InGame.Instance.mPlayer;
+		mPlayer = InGame.Instance.Player();
 		boxes = mPlayer.CollectedPerfectDistances();
 		setBoxes();
 	}

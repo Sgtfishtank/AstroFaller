@@ -208,7 +208,6 @@ public class Player : MonoBehaviour
 			mLife++;
 		}
 
-		mHover = Input.GetButton ("Jump");
 		LifePerk.UpdatePerkValueAnimation(mAni);
 
 		if ((mMovementControls.IsHovering()) && (blendOne < 100))
@@ -228,11 +227,6 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if(Input.GetButton("Fire1") && CanDash())
-		{
-			Dash();
-		}
-
 		if (isDashing())
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF * Time.deltaTime;
@@ -242,7 +236,6 @@ public class Player : MonoBehaviour
 			}
 		}
 		mMaxCurrentFallSpeed = Mathf.Max(mMaxFallSpeed, mMaxCurrentFallSpeed);
-
 	}
 
 	void UpdateMeshBlend()

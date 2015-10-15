@@ -60,8 +60,9 @@ public class WorldMapMenu : GameMenu
 		{
 			if (Input.touchCount > 0)
 			{
-				foreach (Touch touch in Input.touches)
-				{
+				Touch touch = Input.touches[0];
+				//foreach (Touch touch in Input.touches)
+				//{
 					switch (touch.phase)
 					{
 					case TouchPhase.Began:
@@ -74,7 +75,7 @@ public class WorldMapMenu : GameMenu
 					case TouchPhase.Ended:
 						break;
 					}
-				}
+				//}
 			}
 			
 			if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))

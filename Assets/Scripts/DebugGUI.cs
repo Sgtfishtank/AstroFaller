@@ -72,7 +72,9 @@ public class DebugGUI : MonoBehaviour
 		}
 
 		Input.multiTouchEnabled = true;
-		if (((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift))) || (Input.touchCount >= 3))
+		bool touching = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
+
+		if (((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift))) || (touching))
 		{
 			mShowDebugGUI = !mShowDebugGUI;
 			

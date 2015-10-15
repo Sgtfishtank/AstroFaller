@@ -92,7 +92,7 @@ public class InGameGUICanvas : MonoBehaviour
 	
 	public void perfectDistanceReward(int pos)
 	{
-		int box = InGame.Instance.mPlayer.CollectedPerfectDistances();
+		int box = InGame.Instance.Player().CollectedPerfectDistances();
 		
 		int value = 0;
 		

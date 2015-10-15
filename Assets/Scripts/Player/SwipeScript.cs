@@ -20,15 +20,21 @@ public class SwipeScript : MonoBehaviour
 	{	
 		if(Input.touchCount > 0)
 		{
-			if(Input.touches[0].phase == TouchPhase.Began)
+			switch (Input.touches[0].phase)
 			{
+			case TouchPhase.Began:
 				fingerStartPos = Input.touches[0].position;
+				mPlayer.Hover(true);
+				break;
+			case TouchPhase.Ended:
+				mPlayer.Hover(false);
+				break;
 			}
-			if((fingerStartPos - Input.touches[0].position).magnitude < 10f)
+			if((fingerStartPos - Input.touches[0].position).magnitude < (Screen.height * 0.2f))
 			{
 				mPlayer.Hover(true);
 			}
-			else
+			else if (fingerStartPos.y < Input.touches[0].position.y) 
 			{
 				mPlayer.Hover(false);
 				if (mPlayer.CanDash())
@@ -36,31 +42,35 @@ public class SwipeScript : MonoBehaviour
 					mPlayer.Dash();
 				}
 			}
-			if(Input.touches[0].phase == TouchPhase.Ended)
+		}
+		else // keyboard controls
+		{
+			mPlayer.Hover(Input.GetButton("Jump"));
+
+			if (Input.GetButton("Fire1")) 
 			{
-				mPlayer.Hover(true);
+				if (mPlayer.CanDash())
+				{
+					mPlayer.Dash();
+				}
 			}
 		}
 
-
-
-
-
-		if (Input.touchCount > 0)
+		/*if (Input.touchCount > 0)
 		{			
 			foreach (Touch touch in Input.touches)
 			{
 				switch (touch.phase)
 				{
 				case TouchPhase.Began :
-					/* this is a new touch */
+					/* this is a new touch *
 					isSwipe = true;
 					fingerStartTime = Time.time;
 					fingerStartPos = touch.position;
 					break;
 					
 				case TouchPhase.Canceled :
-					/* The touch is being canceled */
+					/* The touch is being canceled *
 					isSwipe = false;
 					break;
 					
@@ -122,7 +132,6 @@ public class SwipeScript : MonoBehaviour
 					break;
 				}
 			}
-		}
-		
+		}*/
 	}
 }

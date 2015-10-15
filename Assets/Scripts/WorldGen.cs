@@ -19,7 +19,6 @@ public class WorldGen : MonoBehaviour
 	private Segment mCurrentSegment;
 	private Segment mNextSegment;
 	private float mCurrentPos;
-	//private int mLastSegmentNr;
 
 	private float mOffset;
 	private float mNoiseFactor;
@@ -166,7 +165,7 @@ public class WorldGen : MonoBehaviour
 		mNoiseFactor = noiseFactor;
 		mOffset = baseSize;
 
-		mPlayer = InGame.Instance.mPlayer;
+		mPlayer = InGame.Instance.Player();
 
 		mSegmentPrefabs = Resources.LoadAll<Segment>(path) as Segment[];
 		mSegments = new Segment[mSegmentPrefabs.Length*2];

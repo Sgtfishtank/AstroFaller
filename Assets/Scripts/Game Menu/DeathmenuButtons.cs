@@ -13,11 +13,11 @@ public class DeathmenuButtons : MonoBehaviour
 	}
 	void OnEnable()
 	{
-		if(InGame.Instance.mPlayer == null)
+		if(InGame.Instance.Player() == null)
 		{
 			return;
 		}
-		boxes = InGame.Instance.mPlayer.CollectedPerfectDistances();
+		boxes = InGame.Instance.Player().CollectedPerfectDistances();
 		if(t == null)
 			t = gameObject.GetComponentsInChildren<RectTransform>();
 		if(boxes < 5)
