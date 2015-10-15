@@ -356,9 +356,9 @@ public class MainGameMenu : MonoBehaviour
 		case "Button 7":
 			return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
 		case "Button 1":
-			return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
+			//return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
 		case "Button 4":
-			return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
+			//return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
 		case "RocketThrust":
 			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
 		case "UnlimitedAir":
