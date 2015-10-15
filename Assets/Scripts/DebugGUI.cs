@@ -103,8 +103,9 @@ public class DebugGUI : MonoBehaviour
 		
 		int startX = 10;
 		int startY = 10;
-		int size = 20;
-		
+		int size = 30;
+
+		GUI.skin.label.fontSize = 16;
 		GUI.Box(new Rect(10, 10, 200, mDebugGUISizeY - startY), "Debug Window");
 		startX += 10;
 		startY += size;

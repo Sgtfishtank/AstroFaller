@@ -34,7 +34,7 @@ public class SwipeScript : MonoBehaviour
 			{
 				mPlayer.Hover(true);
 			}
-			else if (fingerStartPos.y < Input.touches[0].position.y) 
+			else if (fingerStartPos.y > Input.touches[0].position.y) 
 			{
 				mPlayer.Hover(false);
 				if (mPlayer.CanDash())

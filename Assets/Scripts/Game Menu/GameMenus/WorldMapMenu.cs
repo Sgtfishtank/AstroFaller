@@ -68,7 +68,7 @@ public class WorldMapMenu : GameMenu
 					case TouchPhase.Began:
 						break;
 					case TouchPhase.Moved:
-						ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * touch.deltaPosition.y * Time.deltaTime / touch.deltaTime);
+						ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * touch.deltaPosition.y * Time.deltaTime / (touch.deltaTime + 0.01f));
 						break;
 					case TouchPhase.Canceled:
 						break;
