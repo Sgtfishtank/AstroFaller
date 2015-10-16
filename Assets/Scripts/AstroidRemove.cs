@@ -37,7 +37,7 @@ public class AstroidRemove : MonoBehaviour
 
 	void OnEnable()
 	{
-		//mWarning.SetActive (true);
+		mWarning.SetActive (true);
 		mHideT = Time.time + GlobalVariables.Instance.ASTEROID_WARNING_MAX_SHOW_TIME;
 	}
 

@@ -66,6 +66,8 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		
+		MenuCamera.Instance.mCotrls.SetActive(true);
 	}
 
 	// Update is called once per frame
@@ -212,6 +214,7 @@ public class MainGameMenu : MonoBehaviour
 
 	public void ResetAllMenusAndButtons ()
 	{
+		MenuCamera.Instance.mCotrls.SetActive(false);
 		if (MenuCamera.Instance.PopupBuyMenu().IsOpen()) 
 		{
 			MenuCamera.Instance.PopupBuyMenu().Close ();

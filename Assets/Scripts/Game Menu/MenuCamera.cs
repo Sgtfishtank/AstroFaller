@@ -54,9 +54,12 @@ public class MenuCamera : MonoBehaviour
 	private TextMesh mBoltsText;
 	private Camera mCamera;
 	
+	public GameObject mCotrls;
+
 	void Awake()
 	{
 		mCamera = GetComponent<Camera> ();
+		mCotrls = transform.Find("player_controls 1").gameObject;
 		mBoltsText = transform.Find("Bolts/Total_Bolts_Text").GetComponent<TextMesh>();
 
 		//mHelpMenu[0] = transform.Find("question_menu_worldmap").gameObject;
