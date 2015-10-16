@@ -240,7 +240,7 @@ public class Player : MonoBehaviour
 			mPerfectDistanceCollected++;
 		}
 
-		if (isDashing())
+		if ((mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time))
 		{
 			mMaxCurrentFallSpeed -= GlobalVariables.Instance.PLAYER_VERTICAL_SPEED_FALLOF * Time.deltaTime;
 			if(mMaxCurrentFallSpeed < mMaxFallSpeed+0.1f)
@@ -261,7 +261,7 @@ public class Player : MonoBehaviour
 
 	public bool isDashing()
 	{
-		return (mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time);
+		return (mMaxCurrentFallSpeed > mMaxFallSpeed || mDashTime > Time.time);
 	}
 
 	void LateUpdate()
@@ -291,11 +291,17 @@ public class Player : MonoBehaviour
 			}
 
 			col.gameObject.SetActive(false);
-			mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
-
+			if(isDashing())
+				mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE*2;
+			else
+				mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
 			int index2 = PickPuckupText();
 			if (index2 != -1)
 			{
+				if(isDashing())
+					mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text="+2";
+				else
+					mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text="+1";
 				mPickupTexts[index2].Activate(col.transform.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
 			}
 
