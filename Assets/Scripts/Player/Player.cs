@@ -119,6 +119,11 @@ public class Player : MonoBehaviour
 
 	public void StartGame()
 	{
+		for (int i = 0; i < mPickupTexts.Length; i++) 
+		{
+			mPickupTexts[i].gameObject.SetActive(false);
+		}
+
 		mCurrentAsterodSpawnCollider = null;
 		mAirAmount = PlayerData.Instance.MaxAirTime();
 		mRb.isKinematic = false;
@@ -138,6 +143,14 @@ public class Player : MonoBehaviour
 
 		UpdatePerfectDistance (false);
 		mAS.gameObject.SetActive (false);
+	}
+
+	void OnDisable()
+	{
+		for (int i = 0; i < mPickupTexts.Length; i++) 
+		{
+			mPickupTexts[i].gameObject.SetActive(false);
+		}
 	}
 
 	public void Dash()
@@ -502,6 +515,11 @@ public class Player : MonoBehaviour
 		shiftAmount = shift;
 		transform.position -= new Vector3(0, shift, 0);
 		mPerfectDistanceY -= shift;
+
+		for (int i = 0; i < mPickupTexts.Length; i++) 
+		{
+			mPickupTexts[i].transform.position -= new Vector3(0, shift, 0);
+		}
 	}
 	
 	void ShiftBackLate()
