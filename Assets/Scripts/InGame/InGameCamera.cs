@@ -53,9 +53,23 @@ public class InGameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		mBoltsText.text = InGame.Instance.Player().colectedBolts().ToString();
-		mDistnceText.text = InGame.Instance.Player().distance().ToString();
-		mBoxesText.text = InGame.Instance.Player().CollectedPerfectDistances().ToString();
+		int temp = InGame.Instance.Player().colectedBolts();
+		if(temp >= 10000)
+			mBoltsText.text = (temp/1000).ToString()+ "K";
+		else
+			mBoltsText.text = (temp).ToString();
+		temp = InGame.Instance.Player().distance();
+		if(temp >= 1000000)		
+			mDistnceText.text = (temp/1000000).ToString() + "M";
+		else if(temp >= 10000)
+			mDistnceText.text = (temp/1000).ToString() + "K";
+		else
+			mDistnceText.text = temp.ToString();
+		temp = InGame.Instance.Player().CollectedPerfectDistances();
+		if(temp >= 1000)
+			mBoxesText.text = (temp/1000).ToString()+ " K";
+		else
+			mBoxesText.text = temp.ToString();
 		mLifeText.text = InGame.Instance.Player().LifeRemaining().ToString();
 	}
 
