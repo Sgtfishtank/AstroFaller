@@ -23,9 +23,11 @@ public class DebugGUI : MonoBehaviour
 	{
 		if (mShowDebugGUI)
 		{
+			bool touching3 = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
+
 			Player pl = InGame.Instance.Player();
 			
-			if (Input.GetKeyDown(KeyCode.I))
+			if (Input.GetKeyDown(KeyCode.I) || touching3)
 			{
 				pl.mInvulnerable = !pl.mInvulnerable;
 			}
@@ -69,10 +71,11 @@ public class DebugGUI : MonoBehaviour
 			{
 				PlayerData.Instance.withdrawBolts(PlayerData.Instance.bolts());
 			}
+
 		}
 
 		Input.multiTouchEnabled = true;
-		bool touching = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
+		bool touching = (Input.touchCount >= 4) && (Input.touches [3].phase == TouchPhase.Began);
 
 		if (((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift))) || (touching))
 		{
