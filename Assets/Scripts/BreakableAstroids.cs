@@ -3,11 +3,11 @@ using System.Collections;
 
 public class BreakableAstroids : MonoBehaviour 
 {
-	private Rigidbody mRigidBody;
-	private Rigidbody[] mPartRigidBodys;
-	private Collider[] mPartColliders;
-	private Collider mCollider;
-	private bool mBreak = false;
+	public Rigidbody mRigidBody;
+	public Rigidbody[] mPartRigidBodys;
+	public Collider[] mPartColliders;
+	public Collider mCollider;
+	public bool mBreak = false;
 	public string mCollWith;
 
 	void Awake()
