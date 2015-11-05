@@ -58,6 +58,7 @@ public class MenuGUICanvas : MonoBehaviour
 	public void Deselect()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons ();
+		MenuCamera.Instance.mCotrls.SetActive(false);
 		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 
@@ -72,21 +73,31 @@ public class MenuGUICanvas : MonoBehaviour
 	}
 
 	// pressed buy perks
-	public void BuyAirPerk(int partperk)
+	public void BuyAirPerk()
 	{
-		MainGameMenu.Instance.PerksMenu().BuyAirPerk((Perk.PerkPart)partperk);
+		MainGameMenu.Instance.PerksMenu().BuyAirPerk();
 	}
 	
-	public void BuyBurstPerk(int partperk)
+	public void BuyBurstPerk()
 	{
-		MainGameMenu.Instance.PerksMenu().BuyBurstPerk((Perk.PerkPart)partperk);
+		MainGameMenu.Instance.PerksMenu().BuyBurstPerk();
 	}
 	
-	public void BuyLifePerk(int partperk)
+	public void BuyLifePerk()
 	{
-		MainGameMenu.Instance.PerksMenu().BuyLifePerk((Perk.PerkPart)partperk);
+		MainGameMenu.Instance.PerksMenu().BuyLifePerk();
 	}
 	
+	public void ViewNextPerk()
+	{	
+		MainGameMenu.Instance.PerksMenu().ViewNextPerk();
+	}
+	
+	public void ViewPreviousPerk()
+	{
+		MainGameMenu.Instance.PerksMenu().ViewPreviousPerk();
+	}
+
 	// pressed buy items
 	public void BuyUlimitedAirItem()
 	{

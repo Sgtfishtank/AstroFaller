@@ -47,8 +47,10 @@ public class Player : MonoBehaviour
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
 	
-	private float mLastDmgTime;
-	private bool mLastDmgGetLife;
+	//private float mLastDmgTime;
+	//private bool mLastDmgGetLife;
+	private int mBurstsLeft;
+	private float mInvulnerableTime;
 	private float blendSpeed = 400f;
 	private float blendOne = 0;
 
@@ -128,6 +130,7 @@ public class Player : MonoBehaviour
 		mAirAmount = PlayerData.Instance.MaxAirTime();
 		mRb.isKinematic = false;
 		mIsDead = false;
+		mBurstsLeft = PlayerData.Instance.MaxBursts();
 
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
@@ -155,15 +158,24 @@ public class Player : MonoBehaviour
 
 	public void Dash()
 	{
+		mBurstsLeft--;
 		mAni.SetTrigger("Burst");
 		mDash.SetActive(true);
 		AudioManager.Instance.PlaySoundOnce(mDownSwipeSound);
 		mfp.Dash();
 		mMaxCurrentFallSpeed = mMaxFallSpeed + GlobalVariables.Instance.PLAYER_DASH_SPEED;
-		mDashTime = Time.time + PlayerData.Instance.BurstDelay();
-		mRb.velocity += new Vector3(0,-GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
-		mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
+		mDashTime = Time.time + GlobalVariables.Instance.PLAYER_DASH_SPEED_DELAY;
+		mRb.velocity += new Vector3(0, -GlobalVariables.Instance.PLAYER_DASH_SPEED, 0);
+
+		// out of bursts 
+		if (mBurstsLeft == 0) 
+		{
+			// start cooldown and reset
+			mDashCDTime = Time.time + PlayerData.Instance.BurstCooldown();
+			mBurstsLeft = PlayerData.Instance.MaxBursts();
+		}
 	}
+
 	public void Hover(bool h)
 	{
 		mHover = h;
@@ -184,7 +196,7 @@ public class Player : MonoBehaviour
 
 	public bool CanDash ()
 	{
-		return (mDashCDTime < Time.time);
+		return (mDashTime < Time.time) && (mDashCDTime < Time.time);
 	}
 
 	void FixedUpdate()
@@ -215,11 +227,11 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		if (mLastDmgGetLife && (mLastDmgTime < Time.time))
+		/*if (mLastDmgGetLife && (mLastDmgTime < Time.time))
 		{
 			mLastDmgGetLife = false;
 			mLife++;
-		}
+		}*/
 
 		LifePerk.UpdatePerkValueAnimation(mAni);
 
@@ -234,8 +246,14 @@ public class Player : MonoBehaviour
 			UpdateMeshBlend();
 		}
 
+		// perfect ditsner check
 		if (CenterPosition().y < mPerfectDistanceY)
 		{
+			if (PlayerData.Instance.RegLifeAtPerfectDistance()) 
+			{
+				mLife++;
+			}
+
 			UpdatePerfectDistance(true);
 			mPerfectDistanceCollected++;
 		}
@@ -259,7 +277,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public bool isDashing()
+	public bool isBursting()
 	{
 		return (mMaxCurrentFallSpeed > mMaxFallSpeed || mDashTime > Time.time);
 	}
@@ -290,21 +308,20 @@ public class Player : MonoBehaviour
 				boltParticles[index].transform.position = col.transform.position;
 			}
 
-			col.gameObject.SetActive(false);
-			if(isDashing())
-				mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE*2;
-			else
-				mBoltsCollected += GlobalVariables.Instance.BOLT_VALUE;
+			int boltCollect = GlobalVariables.Instance.BOLT_VALUE;
+
+			if(isBursting())
+				boltCollect *= PlayerData.Instance.BurstMultiplier();
+
 			int index2 = PickPuckupText();
 			if (index2 != -1)
 			{
-				if(isDashing())
-					mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text="+2";
-				else
-					mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text="+1";
+				mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text = "+" + boltCollect;
 				mPickupTexts[index2].Activate(col.transform.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
 			}
-
+			
+			mBoltsCollected += boltCollect;
+			col.gameObject.SetActive(false);
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
 		}
 		else if(col.tag == "BoltCluster")
@@ -317,7 +334,7 @@ public class Player : MonoBehaviour
 			mAS.gameObject.SetActive(true);
 		}
 	}
-	
+
 	int PickBoltEffect()
 	{
 		for (int i = 0; i < boltParticles.Length; i++) 
@@ -369,10 +386,9 @@ public class Player : MonoBehaviour
 
 		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
 		{
-
 			mLastDmgCollider = coll.collider;
-			mLastDmgTime = Time.time + 3.0f;
-			mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
+			//mLastDmgTime = Time.time + 3.0f;
+			//mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
 			UpdatePerfectDistance(false);
 
@@ -436,7 +452,7 @@ public class Player : MonoBehaviour
 		return mRb.worldCenterOfMass;
 	}
 
-	public int distance()
+	public int Distance()
 	{
 		if (!mPlaying)
 		{
@@ -447,7 +463,7 @@ public class Player : MonoBehaviour
 		return -dist;
 	}
 
-	public float airAmount()
+	public float AirAmount()
 	{
 		return mAirAmount;
 	}
@@ -464,8 +480,10 @@ public class Player : MonoBehaviour
 	
 	public void PlayerDamage(int dmg)
 	{
-		if (!mInvulnerable)
+		if ((!mInvulnerable) && (mInvulnerableTime < Time.time))
 		{
+			mInvulnerableTime = Time.time + PlayerData.Instance.TimeInvurnerableAfterHit();
+
 			mLife -= dmg;
 			if (mLife <= 0)
 			{
@@ -512,7 +530,7 @@ public class Player : MonoBehaviour
 	{
 		PlayerData.Instance.depositBolts(colectedBolts());
 		PlayerData.Instance.depositCrystals(colectedCrystals());
-		PlayerData.Instance.depositDistance(distance());
+		PlayerData.Instance.depositDistance(Distance());
 	}
 
 	public void ShiftBack (float shift)

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class DeathMenu : MonoBehaviour
@@ -79,7 +79,7 @@ public class DeathMenu : MonoBehaviour
 		}
 
 		float multi = (int)(Mathf.Lerp(1, calculateMultiplier(), deltaT) * 100f);
-		int dis = (int)Mathf.Lerp(mPlayer.distance(), 0, deltaT);
+		int dis = (int)Mathf.Lerp(mPlayer.Distance(), 0, deltaT);
 		int totl = (int)Mathf.Lerp(mPlayer.colectedBolts(), calculateMultiplier() * mPlayer.colectedBolts(), deltaT);
 
 		for (int i = 0; i < mTexts.Length; i++)
@@ -97,7 +97,7 @@ public class DeathMenu : MonoBehaviour
 
 	float calculateMultiplier()
 	{
-		return 1 + (mPlayer.distance() / 5000f);
+		return 1 + (mPlayer.Distance() / 5000f);
 	}
 
 	public void setBoxes()

@@ -168,10 +168,14 @@ public class MovementControls
 	
 	void FailHover ()
 	{
-		Vector3 vel = UnityEngine.Random.insideUnitCircle;
-		vel.z = 0;
-		vel.Normalize();
-		mPlayer.GetComponent<Rigidbody>().velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
+		// explode if not imune
+		if (!PlayerData.Instance.NoExplodeWhenNoAir()) 
+		{
+			Vector3 vel = UnityEngine.Random.insideUnitCircle;
+			vel.z = 0;
+			vel.Normalize ();
+			mPlayer.GetComponent<Rigidbody> ().velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
+		}
 
 		mHoverFailed = true;
 		mHoverFailedT = Time.time + GlobalVariables.Instance.PLAYER_HOVER_FAILED_TIME;

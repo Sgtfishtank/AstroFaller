@@ -3,23 +3,29 @@ using System.Collections;
 
 public class PerksMenu : GameMenu 
 {
-	private int AIR_PERK_INDEX = 1;
-	private int LIFE_PERK_INDEX = 2;
-	private int BURST_PERK_INDEX = 0;
+	//private int AIR_PERK_INDEX = 1;
+	//private int LIFE_PERK_INDEX = 2;
+	//private int BURST_PERK_INDEX = 0;
 
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
-	//private Perk.PerkPart mCurrentPerkPart;
 	private bool mFocused;
+	private int mPerkIndex;
+	private GameObject mPrevObj;
+	private GameObject mNextObj;
 
 	void Awake()
 	{
+		mPrevObj = transform.Find("Prev").gameObject;
+		mNextObj = transform.Find("Next").gameObject;
 		mPerks = GetComponentsInChildren<Perk> ();
+		mPerkIndex = 1; // start in the middle
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		UpdateViewPerk ();
 	}
 	
 	// Update is called once per frame
@@ -61,9 +67,35 @@ public class PerksMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{		
-		GUICanvas.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		GUICanvas.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
+	public void ViewNextPerk()
+	{
+		mPerkIndex++;	
+		UpdateViewPerk();
+	}
+	
+	public void ViewPreviousPerk()
+	{
+		mPerkIndex--;	
+		UpdateViewPerk();
+	}
+
+	void UpdateViewPerk ()
+	{
+		mPerkIndex = Mathf.Clamp(mPerkIndex, 0, mPerks.Length - 1);	
+
+		for (int i = 0; i < mPerks.Length; i++) 
+		{
+			mPerks[i].gameObject.SetActive(false);
+		}
+
+		mPerks[mPerkIndex].gameObject.SetActive(true);
+		mPrevObj.SetActive (mPerkIndex > 0);
+		mNextObj.SetActive (mPerkIndex < (mPerks.Length - 1));
+	}
+
 	public override void BuyWithBolts()
 	{
 		if (mCurrentPerk == null)
@@ -101,14 +133,12 @@ public class PerksMenu : GameMenu
 
 	}
 
-	void OpenBuyPerkMenu(int index, Perk.PerkPart perkPart)
+	void OpenBuyPerkMenu(int index)
 	{
-		return;
 		mCurrentPerk = mPerks[index];
-		//mCurrentPerkPart = perkPart;
 
 		// alredy unlocked or cannot unlock - ABORT! ABORT!!
-		if ((mCurrentPerk.IsPartUnlocked()) || (!mCurrentPerk.CanUnlockPart()))
+		if (!mCurrentPerk.CanUnlockPart())
 		{
 			mCurrentPerk = null;
 			return;
@@ -123,29 +153,29 @@ public class PerksMenu : GameMenu
 		MenuCamera.Instance.PopupBuyMenu().Close();
 	}
 
-	public void BuyAirPerk (Perk.PerkPart pp)
+	public void BuyAirPerk ()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
 		
-		OpenBuyPerkMenu(AIR_PERK_INDEX, pp);
+		OpenBuyPerkMenu(mPerkIndex);
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
-	public void BuyLifePerk (Perk.PerkPart pp)
+	public void BuyLifePerk ()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
 		
-		OpenBuyPerkMenu(LIFE_PERK_INDEX, pp);
+		OpenBuyPerkMenu(mPerkIndex);
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 	
-	public void BuyBurstPerk (Perk.PerkPart pp)
+	public void BuyBurstPerk ()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
 		
-		OpenBuyPerkMenu(BURST_PERK_INDEX, pp);
+		OpenBuyPerkMenu(mPerkIndex);
 
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}

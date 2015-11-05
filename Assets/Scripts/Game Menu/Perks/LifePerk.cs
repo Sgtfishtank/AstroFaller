@@ -7,9 +7,7 @@ public class LifePerk : Perk
 	public GameObject mPrefab;
 	
 	private GameObject mObj;
-	private bool mMainUnlocked;
-	private bool mLeftUnlocked;
-	private bool mRightUnlocked;
+	private int mUnlockedLevel;
 	private	TextMesh mTitleText;
 	private	Animator mAnimator;
 	private	GameObject m1p;
@@ -63,201 +61,56 @@ public class LifePerk : Perk
 	
 	public override bool UnlockPart()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
+		switch (mUnlockedLevel) 
 		{
-		case PerkPart.Main:
-			if (!mMainUnlocked)
-			{
-				mMainUnlocked = true;
-				PlayerData.Instance.mAirPerkUnlockedLevel = 1;
-				//mAnimator.SetTrigger("Upgrade");
-				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
-				mObjParts[0].SetActive(true);
-				m1p.SetActive(true);
-				return true;
-			}
+		case 0:
+			m1p.SetActive(true);
 			break;
-		case PerkPart.Left:
-			if (mMainUnlocked && (!mLeftUnlocked))
-			{
-				mLeftUnlocked = true;
-				PlayerData.Instance.mAirPerkUnlockedLevel = 2;
-				//mAnimator.SetTrigger("Upgrade");
-				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
-				mObjParts[1].SetActive(true);
-				m2p.SetActive(true);
-				return true;
-			}
+		case 1:
+			m2p.SetActive(true);
 			break;
-		case PerkPart.Right:
-			if (mMainUnlocked && mLeftUnlocked && (!mRightUnlocked))
-			{
-				mRightUnlocked = true;
-				PlayerData.Instance.mAirPerkUnlockedLevel = 3;
-				//mAnimator.SetTrigger("Upgrade");
-				mAnimator.Play(PlayerData.Instance.mAirPerkUnlockedLevel.ToString());
-				mObjParts[2].SetActive(true);
-				m3p.SetActive(true);
-				return true;
-			}
+		case 2:
+			m3p.SetActive(true);
 			break;
 		default:
-			print("Error part in UnlockPart: " + perkPart);
-			break;
+			print("Error part in UnlockPart: " + mUnlockedLevel);
+			return false;
 		}
 		
-		return false;
-	}
-
-	public override bool IsPartUnlocked()
-	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return mMainUnlocked;
-		case PerkPart.Left:
-			return mMainUnlocked && mLeftUnlocked;
-		case PerkPart.Right:
-			return mMainUnlocked && mRightUnlocked;
-		default:
-			print("Error part in IsPartUnlocked: " + perkPart);
-			break;
-		}
-		
-		return false;
+		mObjParts[mUnlockedLevel].SetActive(true);
+		mUnlockedLevel++;
+		PlayerData.Instance.mLifePerkUnlockedLevel = mUnlockedLevel;
+		mAnimator.Play(PlayerData.Instance.mLifePerkUnlockedLevel.ToString());
+		return true;
 	}
 	
 	public override bool CanUnlockPart()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return (!mMainUnlocked);
-		case PerkPart.Left:
-			return mMainUnlocked && (!mLeftUnlocked);
-		case PerkPart.Right:
-			return mMainUnlocked && (!mRightUnlocked);
-		default:
-			print("Error part in CanUnlockPart: " + perkPart);
-			break;
-		}
-		
-		return false;
+		return (mUnlockedLevel < GlobalVariables.Instance.PERKS_MAX_LEVEL);
 	}
 	
 	public override int BuyCostBolts()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_COST_BOLTS;
-		case PerkPart.Left:
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_COST_BOLTS;
-		case PerkPart.Right:
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_COST_BOLTS;
-		default:
-			print ("Error perkPart in BuyCost " + perkPart);
-			break;
-		}
-		
-		return -1;
+		return GlobalVariables.Instance.LIFE_PERK_COST_BOLTS[mUnlockedLevel];
 	}
-
+	
 	public override int BuyCostCrystals()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_COST_CRYSTALS;
-		case PerkPart.Left:
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_COST_CRYSTALS;
-		case PerkPart.Right:
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_COST_CRYSTALS;
-		default:
-			print ("Error perkPart in BuyCost " + perkPart);
-			break;
-		}
-
-		return -1;
+		return GlobalVariables.Instance.LIFE_PERK_COST_CRYSTALS[mUnlockedLevel];
 	}
 	
 	public override string BuyDescription()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_DESCRIPTION;
-		case PerkPart.Left:
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_DESCRIPTION;
-		case PerkPart.Right:
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_DESCRIPTION;
-		default:
-			print ("Error perkPart in BuyDescription " + perkPart);
-			break;
-		}
-		
-		return "---";
+		return GlobalVariables.Instance.LIFE_PERK_DESCRIPTION[mUnlockedLevel];
 	}
 	
-	public PerkPart GetNextPerkPart()
-	{
-		if (!mMainUnlocked) 
-		{
-			return PerkPart.Main;
-		}
-		else if( mMainUnlocked && (!mLeftUnlocked))
-		{
-			return PerkPart.Left;
-		}
-		else if (mMainUnlocked && mLeftUnlocked && (!mRightUnlocked))
-		{
-			return PerkPart.Right;
-		}
-		
-		return PerkPart.Main;
-	}
-
 	public override string BuyCurrent()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS[0] + GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS_UNIT;
-		case PerkPart.Left:
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_LEVELS[0] + GlobalVariables.Instance.LIFE_PERK_LEFT_LEVELS_UNIT;
-		case PerkPart.Right:
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_LEVELS[0] + GlobalVariables.Instance.LIFE_PERK_RIGHT_LEVELS_UNIT;
-		default:
-			print ("Error perkPart in BuyCurrent " + perkPart);
-			break;
-		}
-		
 		return "---";
 	}
 	
 	public override string BuyNext()
 	{
-		PerkPart perkPart = GetNextPerkPart();
-		switch (perkPart) 
-		{
-		case PerkPart.Main:
-			return GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS[1] + GlobalVariables.Instance.LIFE_PERK_MAIN_LEVELS_UNIT;
-		case PerkPart.Left:
-			return GlobalVariables.Instance.LIFE_PERK_LEFT_LEVELS[1] + GlobalVariables.Instance.LIFE_PERK_LEFT_LEVELS_UNIT;
-		case PerkPart.Right:
-			return GlobalVariables.Instance.LIFE_PERK_RIGHT_LEVELS[1] + GlobalVariables.Instance.LIFE_PERK_RIGHT_LEVELS_UNIT;
-		default:
-			print ("Error perkPart in BuyNext " + perkPart);
-			break;
-		}
-		
 		return "---";
 	}
 	

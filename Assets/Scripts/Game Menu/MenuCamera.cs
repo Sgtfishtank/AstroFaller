@@ -78,6 +78,8 @@ public class MenuCamera : MonoBehaviour
 		mHelpMenu [0].SetActive (false);
 		mHelpMenu [1].SetActive (false);
 		mHelpMenu [2].SetActive (false);
+		
+		mCotrls.SetActive(true);
 	}
 
 	// Use this for initialization

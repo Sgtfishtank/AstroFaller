@@ -64,7 +64,7 @@ public class DebugGUI : MonoBehaviour
 			
 			if (Input.GetKeyDown(KeyCode.K))
 			{
-				PlayerData.Instance.depositBolts(999);
+				PlayerData.Instance.depositBolts(9999);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.L))
@@ -127,7 +127,7 @@ public class DebugGUI : MonoBehaviour
 			GUI.Label (new Rect (startX, startY, 180, size), "Cyrstals on level: " + WorldGen.Instance.Player ().colectedCrystals ());
 			startY += size;
 			
-			GUI.Label (new Rect (startX, startY, 180, size), "Distance on level: " + WorldGen.Instance.Player ().distance ());
+			GUI.Label (new Rect (startX, startY, 180, size), "Distance on level: " + WorldGen.Instance.Player ().Distance ());
 			startY += size;
 		}
 		
@@ -136,10 +136,19 @@ public class DebugGUI : MonoBehaviour
 		
 		GUI.Label (new Rect(startX, startY, 180, size), "Cyrstals: " + PlayerData.Instance.crystals());
 		startY += size;
+		
+		GUI.Label (new Rect (startX, startY, 180, size), "Air: " + PlayerData.Instance.mAirPerkUnlockedLevel);
+		startY += size;
+		
+		GUI.Label (new Rect(startX, startY, 180, size), "Burst: " + PlayerData.Instance.mBurstPerkUnlockedLevel);
+		startY += size;
+		
+		GUI.Label (new Rect(startX, startY, 180, size), "Live: " + PlayerData.Instance.mLifePerkUnlockedLevel);
+		startY += size;
 
 		if (InGame.Instance.Player().gameObject.activeInHierarchy) 
 		{
-			GUI.Label (new Rect (startX, startY, 180, size), "Player Air: " + InGame.Instance.Player ().airAmount ());
+			GUI.Label (new Rect (startX, startY, 180, size), "Player Air: " + InGame.Instance.Player ().AirAmount ());
 			startY += size;
 			
 			GUI.Label (new Rect (startX, startY, 180, size), "Player HP: " + InGame.Instance.Player ().mLife);

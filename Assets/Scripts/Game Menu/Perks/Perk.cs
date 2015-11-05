@@ -14,7 +14,7 @@ public abstract class Perk : MonoBehaviour
 
 	public abstract bool UnlockPart ();
 
-	public abstract bool IsPartUnlocked ();
+	//public abstract bool IsPartUnlocked ();
 	
 	public abstract string BuyDescription ();
 	

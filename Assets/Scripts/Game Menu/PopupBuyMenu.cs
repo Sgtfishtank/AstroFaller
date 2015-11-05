@@ -52,17 +52,20 @@ public class PopupBuyMenu : MonoBehaviour
 			Close();
 		}
 
-		mObjToBuy = GameObject.Instantiate(prefab);
-
-		Transform[] obs = mObjToBuy.GetComponentsInChildren<Transform>(true);
-		for (int i = 0; i < obs.Length; i++) 
+		if (mObjToBuy != null)
 		{
-			//obs[i].gameObject.SetActive(true);
-		}
+			mObjToBuy = GameObject.Instantiate(prefab);
 
-		mObjToBuy.transform.parent = transform;
-		mObjToBuy.transform.localPosition = new Vector3(0,3,0);
-		mObjToBuy.transform.localScale *= 0.8f;
+			Transform[] obs = mObjToBuy.GetComponentsInChildren<Transform>(true);
+			for (int i = 0; i < obs.Length; i++) 
+			{
+				//obs[i].gameObject.SetActive(true);
+			}
+
+			mObjToBuy.transform.parent = transform;
+			mObjToBuy.transform.localPosition = new Vector3(0,3,0);
+			mObjToBuy.transform.localScale *= 0.8f;
+		}
 
 		mOpen = true;
 		gameObject.SetActive(true);
@@ -76,8 +79,12 @@ public class PopupBuyMenu : MonoBehaviour
 		{
 			return;
 		}
+		
+		if (mObjToBuy != null)
+		{
+			Destroy (mObjToBuy);
+		}
 
-		Destroy (mObjToBuy);
 		mOpen = false;
 		gameObject.SetActive(false);
 		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
@@ -90,7 +97,9 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
+
 		mTitleText.text = title;
+		description = description.Replace("\\n", "\n"); 
 		mDescriptionText.text = description + "\n" + costBolts + " Bolts";
 		mCurrentText.text = current;
 		mNextText.text = next;

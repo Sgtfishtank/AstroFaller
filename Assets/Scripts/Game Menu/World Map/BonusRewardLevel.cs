@@ -12,7 +12,7 @@ public class BonusRewardLevel : LevelBase
 	public RewardType mRewardType;
 	public GameObject mPrefab;
 	
-	private TextMesh mTitleText;
+	public TextMesh mTitleText;
 	private TextMesh mRewardText;
 	private	MeshRenderer mPictureImage;
 	private	MeshRenderer mFrame;

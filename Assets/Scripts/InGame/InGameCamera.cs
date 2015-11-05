@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class InGameCamera : MonoBehaviour 
@@ -58,7 +58,7 @@ public class InGameCamera : MonoBehaviour
 			mBoltsText.text = (temp/1000).ToString()+ "K";
 		else
 			mBoltsText.text = (temp).ToString();
-		temp = InGame.Instance.Player().distance();
+		temp = InGame.Instance.Player().Distance();
 		if(temp >= 1000000)		
 			mDistnceText.text = (temp/1000000).ToString() + "M";
 		else if(temp >= 10000)

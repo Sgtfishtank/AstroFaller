@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BreakableAstroids : MonoBehaviour 
@@ -57,7 +57,7 @@ public class BreakableAstroids : MonoBehaviour
 	{
 		if((col.transform.tag == mCollWith) && (!mBreak))
 		{
-			if ((mCollWith == "Player") && (!InGame.Instance.Player().isDashing())) 
+			if ((mCollWith == "Player") && (!InGame.Instance.Player().isBursting())) 
 			{
 				return;
 			}

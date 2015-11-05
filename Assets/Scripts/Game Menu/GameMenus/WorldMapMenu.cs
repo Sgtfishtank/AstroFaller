@@ -16,13 +16,6 @@ public class WorldMapMenu : GameMenu
 	{
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
-
-	}
-
-	// Use this for initialization
-	void Start () 
-	{
-		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 		
 		for (int i = 0; i < mLevels.Length; i++) 
 		{
@@ -34,7 +27,13 @@ public class WorldMapMenu : GameMenu
 				criterias[j].Init();
 			}
 		}
-		
+
+		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
+	}
+
+	// Use this for initialization
+	void Start () 
+	{
 		CheckLevels();
 	}
 	
@@ -149,7 +148,7 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!mPlayLevelPhase));
+		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
 	}
 
 	public LevelBase CurrentLevel()

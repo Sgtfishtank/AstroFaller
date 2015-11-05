@@ -98,108 +98,70 @@ public class GlobalVariables : MonoBehaviour
 	public int BLACK_HOLE_LEVEL_CRITERA_DISTANCE = 1000;
 
 	// PERKS
+	public int PERKS_MAX_LEVEL = 3;
+	private const int PERKS_ARRAY_SIZE = 3;
 
 	// Air Perk
-	public int AIR_PERK_MAIN_COST_CRYSTALS = 1;
-	public int AIR_PERK_MAIN_COST_BOLTS = 2;
-	public int[] AIR_PERK_MAIN_LEVELS = new int[2]{0, 1};
-	public string AIR_PERK_MAIN_DESCRIPTION = "---";
-	public string AIR_PERK_MAIN_LEVELS_UNIT = "---";
-	
-	public int AIR_PERK_LEFT_COST_CRYSTALS = 4;
-	public int AIR_PERK_LEFT_COST_BOLTS = 8;
-	public int[] AIR_PERK_LEFT_LEVELS = new int[2]{0, 1};
-	public string AIR_PERK_LEFT_DESCRIPTION = "---";
-	public string AIR_PERK_LEFT_LEVELS_UNIT = "---";
-	
-	public int AIR_PERK_RIGHT_COST_CRYSTALS = 16;
-	public int AIR_PERK_RIGHT_COST_BOLTS = 32;
-	public int[] AIR_PERK_RIGHT_LEVELS = new int[2]{0, 1};
-	public string AIR_PERK_RIGHT_DESCRIPTION = "---";
-	public string AIR_PERK_RIGHT_LEVELS_UNIT = "---";
+	public int[] AIR_PERK_COST_CRYSTALS = new int[PERKS_ARRAY_SIZE];
+	public int[] AIR_PERK_COST_BOLTS = new int[PERKS_ARRAY_SIZE];
+	//public int[] AIR_PERK_LEVELS = new int[PERKS_ARRAY_SIZE];
+	public string[] AIR_PERK_DESCRIPTION = new string[PERKS_ARRAY_SIZE];
+	//public string[] AIR_PERK_LEVELS_UNIT = new string[PERKS_ARRAY_SIZE];
 
 	// Life Perk
-	public int LIFE_PERK_MAIN_COST_CRYSTALS = 1;
-	public int LIFE_PERK_MAIN_COST_BOLTS = 2;
-	public int[] LIFE_PERK_MAIN_LEVELS = new int[2]{0, 1};
-	public string LIFE_PERK_MAIN_DESCRIPTION = "---";
-	public string LIFE_PERK_MAIN_LEVELS_UNIT = "---";
-	
-	public int LIFE_PERK_LEFT_COST_CRYSTALS = 4;
-	public int LIFE_PERK_LEFT_COST_BOLTS = 8;
-	public int[] LIFE_PERK_LEFT_LEVELS = new int[2]{0, 1};
-	public string LIFE_PERK_LEFT_DESCRIPTION = "---";
-	public string LIFE_PERK_LEFT_LEVELS_UNIT = "---";
-	
-	public int LIFE_PERK_RIGHT_COST_CRYSTALS = 16;
-	public int LIFE_PERK_RIGHT_COST_BOLTS = 32;
-	public int[] LIFE_PERK_RIGHT_LEVELS = new int[2]{0, 1};
-	public string LIFE_PERK_RIGHT_DESCRIPTION = "---";
-	public string LIFE_PERK_RIGHT_LEVELS_UNIT = "---";
+	public int[] LIFE_PERK_COST_CRYSTALS = new int[PERKS_ARRAY_SIZE];
+	public int[] LIFE_PERK_COST_BOLTS = new int[PERKS_ARRAY_SIZE];
+	public string[] LIFE_PERK_DESCRIPTION = new string[PERKS_ARRAY_SIZE];
 
 	// Burst Perk
-	public int BURST_PERK_MAIN_COST_CRYSTALS = 1;
-	public int BURST_PERK_MAIN_COST_BOLTS = 2;
-	public int[] BURST_PERK_MAIN_LEVELS = new int[2]{0, 1};
-	public string BURST_PERK_MAIN_DESCRIPTION = "---";
-	public string BURST_PERK_MAIN_LEVELS_UNIT = "---";
-
-	public int BURST_PERK_LEFT_COST_CRYSTALS = 4;
-	public int BURST_PERK_LEFT_COST_BOLTS = 8;
-	public int[] BURST_PERK_LEFT_LEVELS = new int[2]{0, 1};
-	public string BURST_PERK_LEFT_DESCRIPTION = "---";
-	public string BURST_PERK_LEFT_LEVELS_UNIT = "---";
-
-	public int BURST_PERK_RIGHT_COST_CRYSTALS = 16;
-	public int BURST_PERK_RIGHT_COST_BOLTS = 32;
-	public int[] BURST_PERK_RIGHT_LEVELS = new int[2]{0, 1};
-	public string BURST_PERK_RIGHT_DESCRIPTION = "---";
-	public string BURST_PERK_RIGHT_LEVELS_UNIT = "---";
+	public int[] BURST_PERK_COST_CRYSTALS = new int[PERKS_ARRAY_SIZE];
+	public int[] BURST_PERK_COST_BOLTS = new int[PERKS_ARRAY_SIZE];
+	public string[] BURST_PERK_DESCRIPTION = new string[PERKS_ARRAY_SIZE];
 
 	// ITEMS
-	public int ITEMS_START_LEVEL = 1;
-	public int ITEMS_MAX_LEVEL = 3;
-	private const int ITEMS_ARRAY_SIZE = 4;
+	public int ITEMS_START_LEVEL = 0;
+	public int ITEMS_MAX_LEVEL = 6;
+	private const int ITEMS_ARRAY_SIZE = 6;
 
 	// Ulimited air
-	public int[] UNLIMITED_AIR_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] UNLIMITED_AIR_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] UNLIMITED_AIR_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] UNLIMITED_AIR_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] UNLIMITED_AIR_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] UNLIMITED_AIR_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string UNLIMITED_AIR_DESCRIPTION = "---";
 	public string UNLIMITED_AIR_LEVELS_UNIT = "---";
 	
 	// Ulimited air
-	public int[] BOLT_MAGNET_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] BOLT_MAGNET_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] BOLT_MAGNET_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] BOLT_MAGNET_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] BOLT_MAGNET_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] BOLT_MAGNET_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string BOLT_MAGNET_DESCRIPTION = "---";
 	public string BOLT_MAGNET_LEVELS_UNIT = "---";
 	
 	// Ulimited air
-	public int[] BOLT_MULTIPLIER_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] BOLT_MULTIPLIER_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] BOLT_MULTIPLIER_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] BOLT_MULTIPLIER_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] BOLT_MULTIPLIER_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] BOLT_MULTIPLIER_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string BOLT_MULTIPLIER_DESCRIPTION = "---";
 	public string BOLT_MULTIPLIER_LEVELS_UNIT = "---";
 	
 	// Ulimited air
-	public int[] FORCE_FIELD_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] FORCE_FIELD_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] FORCE_FIELD_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] FORCE_FIELD_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] FORCE_FIELD_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] FORCE_FIELD_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string FORCE_FIELD_DESCRIPTION = "---";
 	public string FORCE_FIELD_LEVELS_UNIT = "---";
 	
 	// Ulimited air
-	public int[] ROCKET_THRUST_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] ROCKET_THRUST_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] ROCKET_THRUST_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] ROCKET_THRUST_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] ROCKET_THRUST_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] ROCKET_THRUST_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string ROCKET_THRUST_DESCRIPTION = "---";
 	public string ROCKET_THRUST_LEVELS_UNIT = "---";
 	
 	// Ulimited air
-	public int[] SHOCKWAVE_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] SHOCKWAVE_COST_BOLTS = new int[ITEMS_ARRAY_SIZE]{1, 2, 3, 4};
-	public int[] SHOCKWAVE_LEVELS = new int[ITEMS_ARRAY_SIZE + 1]{0, 1, 2, 3, 4};
+	public int[] SHOCKWAVE_COST_CRYSTALS = new int[ITEMS_ARRAY_SIZE];
+	public int[] SHOCKWAVE_COST_BOLTS = new int[ITEMS_ARRAY_SIZE];
+	public int[] SHOCKWAVE_LEVELS = new int[ITEMS_ARRAY_SIZE + 1];
 	public string SHOCKWAVE_DESCRIPTION = "---";
 	public string SHOCKWAVE_LEVELS_UNIT = "---";
 
