@@ -16,10 +16,11 @@ public class WorldGen : MonoBehaviour
 	public Segment[] mSegments;
 	public int[] mSegmentsTimesGenerated;
 	public int[] mSegmentWeightDynamic;
+	public int mStartSegmentIndex;
 	private Segment mCurrentSegment;
 	private Segment mNextSegment;
 	private float mCurrentPos;
-
+	
 	private float mOffset;
 	private float mNoiseFactor;
 
@@ -86,7 +87,14 @@ public class WorldGen : MonoBehaviour
 
 	void SpawnStartSegments()
 	{
-		mCurrentSegment = SpawnSegment(1);
+		if (mStartSegmentIndex < 0) 
+		{
+			mCurrentSegment = SpawnSegment(PickSegment());
+		}
+		else
+		{
+			mCurrentSegment = SpawnSegment(mStartSegmentIndex % mSegments.Length);
+		}
 		mNextSegment = SpawnSegment(PickSegment());
 	}
 

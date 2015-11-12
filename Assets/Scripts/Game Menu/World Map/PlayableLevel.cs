@@ -6,4 +6,6 @@ public abstract class PlayableLevel : LevelBase
 	public abstract void Open();
 	
 	public abstract void Close();
+
+	public abstract int GetLevelIndex();
 }

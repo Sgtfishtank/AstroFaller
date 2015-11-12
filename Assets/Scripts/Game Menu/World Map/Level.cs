@@ -76,6 +76,17 @@ public class Level : PlayableLevel
 	{
 		return true;
 	}
+	
+	public override int GetLevelIndex()
+	{
+		switch (mLevelName) 
+		{
+		case "Alien Territory":
+			return 2;
+		}
+
+		return -1;
+	}
 
 	public override bool UnlockLevel()
 	{

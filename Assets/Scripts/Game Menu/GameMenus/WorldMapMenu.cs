@@ -4,16 +4,19 @@ using System.Collections;
 public class WorldMapMenu : GameMenu 
 {
 	public LevelBase[] mLevels;
+
 	private float mScrollValue;
 	private int mCurrentLevelFocusIndex;
-	private LevelBase mCurrentLevel;
+	private PlayableLevel mCurrentLevel;
 	private GameObject mLevelsScroller;
-	public bool mFocused;
-	public bool mLevelOpen;
-	public bool mPlayLevelPhase;
+	private bool mFocused;
+
+	private bool mPlayLevelPhase;
+	private int mPlayLevelIndex;
 
 	void Awake () 
 	{
+		mPlayLevelIndex = -1;
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
 		
@@ -36,7 +39,7 @@ public class WorldMapMenu : GameMenu
 	{
 		CheckLevels();
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -46,7 +49,7 @@ public class WorldMapMenu : GameMenu
 			{
 				mPlayLevelPhase = false;
 				MainGameMenu.Instance.Disable();
-				WorldGen.Instance.Enable(1);
+				WorldGen.Instance.Enable(mPlayLevelIndex);
 			}
 			else
 			{
@@ -151,11 +154,6 @@ public class WorldMapMenu : GameMenu
 		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
 	}
 
-	public LevelBase CurrentLevel()
-	{
-		return mCurrentLevel;
-	}
-	
 	public override void BuyWithBolts()
 	{
 	}
@@ -227,7 +225,7 @@ public class WorldMapMenu : GameMenu
 
 	public bool IsLevelOpen ()
 	{
-		return mLevelOpen;
+		return (mCurrentLevel != null);
 	}
 
 	public void PlayLevel ()
@@ -240,21 +238,22 @@ public class WorldMapMenu : GameMenu
 			return;
 		}
 
-		mCurrentLevel = mLevels [mCurrentLevelFocusIndex];
-		if ((!mCurrentLevel.IsPlayable()) || (!mCurrentLevel.IsUnlocked()))
+		LevelBase level = mLevels [mCurrentLevelFocusIndex];
+
+		if ((!level.IsPlayable()) || (!level.IsUnlocked()))
 		{
 			print("Not playable");
 			return;
 		}
 
-		if (!mLevelOpen)
+		if (!IsLevelOpen())
 		{
-			OpenLevel((PlayableLevel)mCurrentLevel);
+			OpenLevel((PlayableLevel)level);
 		}
 		else
 		{
-			CloseLevels();
 			StartPlayLevelPhase();
+			CloseLevels();
 		}
 
 		MainGameMenu.Instance.UpdateMenusAndButtons();
@@ -262,13 +261,13 @@ public class WorldMapMenu : GameMenu
 	
 	public void OpenLevel (PlayableLevel level)
 	{
-		mLevelOpen = true;
+		mCurrentLevel = level;
 		level.Open();
 	}
 
 	public void CloseLevels()
 	{
-		mLevelOpen = false;
+		mCurrentLevel = null;
 		for (int i = 0; i < mLevels.Length; i++) 
 		{
 			if (mLevels[i].IsPlayable())
@@ -290,6 +289,7 @@ public class WorldMapMenu : GameMenu
 
 	void StartPlayLevelPhase ()
 	{
+		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
 		mPlayLevelPhase = true;
 		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(false);
 		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(false);

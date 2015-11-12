@@ -51,7 +51,18 @@ public class TutorialLevel : PlayableLevel
 	{
 		mTitleText.text = mLevelName;
 	}
-	
+
+	public override int GetLevelIndex ()
+	{
+		switch (mLevelName) 
+		{
+		case "Asteroid Belt":
+			return 1;
+		}
+
+		return -1;
+	}
+
 	public override string LevelName ()
 	{
 		return mLevelName;
