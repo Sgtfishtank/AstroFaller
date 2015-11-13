@@ -27,7 +27,7 @@ public class Turret : MonoBehaviour
 		mShootEffect = transform.Find("turret_explosion_effect").gameObject;
 		mShotsManager = GetComponent<ParticleManager> ();
 		mBase = transform.Find("Turret_anim/Base").gameObject;
-		mShotsManager.Load(15);
+		mShotsManager.Load(50);
 	}
 
 	// Use this for initialization
@@ -43,7 +43,7 @@ public class Turret : MonoBehaviour
 	
 	void OnDisable()
 	{
-		
+		mShotsManager.reset ();
 	}
 
 	// Update is called once per frame
@@ -70,6 +70,8 @@ public class Turret : MonoBehaviour
 			mShootT = Time.time + mShootDelay;
 			Shoot();
 		}
+
+		mBase.transform.localPosition = new Vector3(0, 0.25f, 0) - (mBase.transform.localRotation * (Vector3.up * 0.2f * ((mShootT - Time.time) / mShootDelay)));
 	}
 
 	void RotateTowardsPlayer()
@@ -111,7 +113,7 @@ public class Turret : MonoBehaviour
 	{
 		mShootEffect.SetActive(false);
 		mShootEffect.SetActive(true);
-		Vector3 offset = mBase.transform.rotation * new Vector3(0, 3.27f, 0);
+		Vector3 offset = mBase.transform.rotation * new Vector3(0, 3.27f * transform.localScale.x / 9, 0);
 		GameObject shot = mShotsManager.Spawn(transform.position + offset);
 
 		if (shot != null) 
