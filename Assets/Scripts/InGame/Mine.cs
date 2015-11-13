@@ -4,14 +4,14 @@ using System.Collections;
 public class Mine : MonoBehaviour 
 {
 	private SphereCollider mCol;
-	private Animator mAnim;
+	public Animator mAnim;
 	
 	private float mBlowTime;
 
 	void Awake()
 	{
 		mCol = GetComponent<SphereCollider> ();
-		mAnim = GetComponent<Animator> ();
+		mAnim = transform.Find ("mine_anim").GetComponent<Animator> ();;
 		enabled = false;
 	}
 
@@ -27,12 +27,14 @@ public class Mine : MonoBehaviour
 		float blowRadius = 2;
 		if (mBlowTime < Time.time) 
 		{
+
 			Vector3 pos = InGame.Instance.Player().CenterPosition();
 
 			if (Vector3.Distance(transform.position, pos) < blowRadius) 
 			{
 				InGame.Instance.Player().PlayerDamage(1);
 			}
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -42,17 +44,17 @@ public class Mine : MonoBehaviour
 		if (col.tag == "Player") 
 		{
 			mBlowTime = Time.time + blowDelay;
-			mAnim.Play("Open");
+			mAnim.SetTrigger("Expand");
 			enabled = true;
 		}
 	}
 	
-	void OnTriggerExit(Collider col)
+	/*void OnTriggerExit(Collider col)
 	{
 		if (col.tag == "Player") 
 		{
 			enabled = false;
 			mAnim.Play("Close");
 		}
-	}
+	}*/
 }

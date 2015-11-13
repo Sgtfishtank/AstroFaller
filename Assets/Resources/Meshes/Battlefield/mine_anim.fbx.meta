@@ -60,7 +60,9 @@ ModelImporter:
     4300016: U_Spike_2
     4300018: U_Spike_3
     4300020: U_Spike_4
-    7400000: Take 001
+    7400000: Idel
+    7400002: Expand
+    7400004: Explode
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -77,7 +79,151 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idel
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_mine
+        weight: 1
+      - path: Bottom_mine/B_Spike_1
+        weight: 1
+      - path: Bottom_mine/B_spike_2
+        weight: 1
+      - path: Bottom_mine/B_Spike_3
+        weight: 1
+      - path: Bottom_mine/B_Spike_4
+        weight: 1
+      - path: Upper_mine
+        weight: 1
+      - path: Upper_mine/U_Spike_1
+        weight: 1
+      - path: Upper_mine/U_Spike_2
+        weight: 1
+      - path: Upper_mine/U_Spike_3
+        weight: 1
+      - path: Upper_mine/U_Spike_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Expand
+      takeName: Take 001
+      firstFrame: 25
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_mine
+        weight: 1
+      - path: Bottom_mine/B_Spike_1
+        weight: 1
+      - path: Bottom_mine/B_spike_2
+        weight: 1
+      - path: Bottom_mine/B_Spike_3
+        weight: 1
+      - path: Bottom_mine/B_Spike_4
+        weight: 1
+      - path: Upper_mine
+        weight: 1
+      - path: Upper_mine/U_Spike_1
+        weight: 1
+      - path: Upper_mine/U_Spike_2
+        weight: 1
+      - path: Upper_mine/U_Spike_3
+        weight: 1
+      - path: Upper_mine/U_Spike_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Explode
+      takeName: Take 001
+      firstFrame: 31
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_mine
+        weight: 1
+      - path: Bottom_mine/B_Spike_1
+        weight: 1
+      - path: Bottom_mine/B_spike_2
+        weight: 1
+      - path: Bottom_mine/B_Spike_3
+        weight: 1
+      - path: Bottom_mine/B_Spike_4
+        weight: 1
+      - path: Upper_mine
+        weight: 1
+      - path: Upper_mine/U_Spike_1
+        weight: 1
+      - path: Upper_mine/U_Spike_2
+        weight: 1
+      - path: Upper_mine/U_Spike_3
+        weight: 1
+      - path: Upper_mine/U_Spike_4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []
