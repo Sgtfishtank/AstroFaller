@@ -188,7 +188,7 @@ public class AstroidSpawn : MonoBehaviour
 		return false;
 	}
 
-	bool OutOfBound(GameObject asteroid)
+	public bool OutOfBound(GameObject asteroid)
 	{
 		Vector3 pos = asteroid.transform.position;
 		float xMax = GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f;

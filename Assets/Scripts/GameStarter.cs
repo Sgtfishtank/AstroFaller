@@ -11,6 +11,7 @@ public class GameStarter : MonoBehaviour
 		Perks,
 		CrystalShop,
 		AstroidLevel,
+		AlienLevel,
 	}
 
 	public StartState mStartState;
@@ -68,6 +69,10 @@ public class GameStarter : MonoBehaviour
 		case StartState.AstroidLevel:
 			MainGameMenu.Instance.Disable();
 			WorldGen.Instance.Enable(1);
+			break;
+		case StartState.AlienLevel:
+			MainGameMenu.Instance.Disable();
+			WorldGen.Instance.Enable(2);
 			break;
 		default:
 			print("ERROR: StartState " + mStartState);

@@ -284,7 +284,7 @@ public class Player : MonoBehaviour
 		if (col.tag == "Bolts")
 		{
 
-			GameObject boltP = mBoltParticleManager.Spawn(col.transform.position);
+			mBoltParticleManager.Spawn(col.transform.position);
 
 			int boltCollect = GlobalVariables.Instance.BOLT_VALUE;
 
@@ -311,6 +311,10 @@ public class Player : MonoBehaviour
 			mCurrentAsterodSpawnCollider = col;
 			
 			mAS.StartSpawning ();
+		}
+		else if(col.tag == "Enemy")
+		{
+			PlayerDamage(1);
 		}
 	}
 

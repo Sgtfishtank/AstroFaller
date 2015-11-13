@@ -67,6 +67,11 @@ public class ParticleManager : MonoBehaviour
 		mActiveParticles = 0;
 	}
 
+	public GameObject[] getParticles()
+	{
+		return mParticles;
+	}
+
 	public GameObject Spawn(Vector3 position)
 	{
 		int index = PickParticle ();
@@ -78,6 +83,7 @@ public class ParticleManager : MonoBehaviour
 			{
 				mParticleSpawnTimes[index] = Time.time;
 			}
+			mActiveParticles++;
 			return mParticles[index];
 		}
 		else if (mParticleSpawnTimes != null)
@@ -87,10 +93,17 @@ public class ParticleManager : MonoBehaviour
 			mParticles[index].transform.position = position;
 			mParticles[index].SetActive(true);
 			mParticleSpawnTimes[index] = Time.time;
+			mActiveParticles++;
 			return mParticles[index];
 		}
 
 		return null;
+	}
+
+	public void DespawnParticle (int i)
+	{
+		mParticles [i].SetActive (false);
+		mActiveParticles--;
 	}
 	
 	int PickParticle()
