@@ -11,6 +11,8 @@ public class BreakablePrefab : MonoBehaviour {
 	public Rigidbody[] mPartRigidBodys;
 	public Collider[] mPartColliders;
 	public Collider mCollider;
+	public string mCollWith;
+	public bool mBreak;
 
 	// Use this for initialization
 	void Start ()
@@ -39,17 +41,25 @@ public class BreakablePrefab : MonoBehaviour {
 	}
 	void Awake()
 	{
-		print("hej");
+		print("hej "+gameObject.name);
 		time = Time.time + mDealay;
+		first=true;
+	}
+	void OnEnable()
+	{
+		time = Time.time + mDealay;
+	}
+	void OnDisable()
+	{
+		time= -1;
+		first =true;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		print (Time.time);
 		if(time > Time.time || time == -1)
 		{
-			print ("fisk");
 			return;
 		}
 		else if(first)
@@ -60,5 +70,26 @@ public class BreakablePrefab : MonoBehaviour {
 		}
 
 	
+	}
+	void OnCollisionEnter(Collision col)
+	{
+		if((col.transform.tag == mCollWith) && (!mBreak))
+		{
+			if ((mCollWith == "Player") && (!InGame.Instance.Player().isBursting())) 
+			{
+				return;
+			}
+			
+			float angle = Random.value * 360;
+			for (int i = 1; i < mPartColliders.Length; i++) 
+			{
+				mPartRigidBodys[i].velocity = mRigidBody.velocity + (new Vector3(Mathf.Cos(Mathf.Deg2Rad * (angle + (i * 120))), Mathf.Sin(Mathf.Deg2Rad * (angle + (i * 120))), 0) * GlobalVariables.Instance.ASTROID_SPAWN_IMPACT_FACTOR);
+				mPartRigidBodys[i].isKinematic = false;
+				mPartColliders[i].enabled = true;
+			}
+			mRigidBody.isKinematic = true;
+			mCollider.enabled = false;
+			mBreak = true;
+		}
 	}
 }
