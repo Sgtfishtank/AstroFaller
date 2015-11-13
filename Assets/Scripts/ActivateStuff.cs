@@ -11,7 +11,6 @@ public class ActivateStuff : MonoBehaviour {
 	}
 	void OnDisable()
 	{
-		print ("fisk");
 		for (int i = 1; i < go.Length; i++)
 		{
 			go[i].gameObject.SetActive(false);
@@ -19,7 +18,6 @@ public class ActivateStuff : MonoBehaviour {
 	}
 	void OnEnable()
 	{
-		print ("mört " + go.Length);
 		for (int i = 1; i < go.Length; i++)
 		{
 			go[i].gameObject.SetActive(true);
