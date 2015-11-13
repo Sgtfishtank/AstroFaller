@@ -255,6 +255,8 @@ public class InGame : MonoBehaviour
 		mBgGen.LoadSegments("Parralax", 120, 5);
 		mWorldGen.LoadSegments("Level" + levelIndex, 50, -1);
 
+		mAstroidSpawn.LoadAsteroids(levelIndex);
+
 		mBgGen.StartSpawnSegments(0);
 
 		mPlayer.IntroLoad();

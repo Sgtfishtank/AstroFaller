@@ -3,13 +3,65 @@ using System.Collections;
 
 public class Missile : MonoBehaviour 
 {
+	public float mStartTime;
+	private Player mPlayer;
+	private AstroidSpawn mAstroidSpawn;
+	private Rigidbody mRb;
+	
+	private Vector3 mStartPos;
+
+	void Awake()
+	{
+		mRb = GetComponent<Rigidbody> ();
+	}
+
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
+		mPlayer = WorldGen.Instance.Player();
+		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
 	}
 	
+	void OnDisable()
+	{
+	}
+	
+	void OnEnable()
+	{
+		mStartTime = Time.time;
+
+		mStartPos = transform.position;
+	}
+
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		float freq = mRb.velocity.magnitude;
+		float time = Time.time - mStartTime;
+		float hegiht = 1 / freq;
+
+		Vector3 pendVel = Vector3.Cross(new Vector3(0, 0, 1), mRb.velocity);
+		
+		Vector3 offset = (pendVel * Mathf.Sin (time * freq) * hegiht);
+		Vector3 offset2 = (pendVel * Mathf.Cos(time * freq) * freq * hegiht);
+
+		Vector3 pos = mStartPos + (mRb.velocity * time) + offset;
+		Vector3 vel = (mRb.velocity) + offset2;
+
+		transform.LookAt(transform.position + vel);
+		
+		Debug.DrawLine (transform.position, transform.position + (vel * Time.deltaTime), Color.green, 100);
+		transform.position = pos;
 	}
+	
+	void OnCollisionEnter(Collision coll)
+	{
+		if (coll.gameObject != gameObject)
+		{
+			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
+
+			mAstroidSpawn.RemoveAstroid(gameObject);
+		}
+	}
+
 }

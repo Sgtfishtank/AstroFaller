@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AstroidSpawn : MonoBehaviour {
-
+public class AstroidSpawn : MonoBehaviour 
+{
 	// Use this for initialization
 	public GameObject[] mAstroidTypes;
+	public GameObject[] mMissilePrefabs;
 	private GameObject[] mAstroids;
 
 	public GameObject mCollisionEffect1Prefab;
@@ -18,8 +19,6 @@ public class AstroidSpawn : MonoBehaviour {
 	private float mPlayerAsteroidT;
 
 	private Player mPlayer;
-	private Rigidbody mPlRigid;
-
 	private float mLastSpawn = 0;
 	private int mSpawnedAsteroids;
 
@@ -27,14 +26,8 @@ public class AstroidSpawn : MonoBehaviour {
 	{
 		mSpawnedAsteroids = 0;
 		mAstroids = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS];
-		for (int i = 0; i < mAstroids.Length; i++) 
-		{
-			//int astroid = UnityEngine.Random.Range(0, mAstroidTypes.Length);
-			mAstroids[i] = Instantiate(mAstroidTypes[i % mAstroidTypes.Length]) as GameObject;
-			mAstroids[i].transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
-			mAstroids[i].SetActive(false);
-		}
-		
+
+		// creat collision efets
 		mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
 		mCollisionEffects2 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
 		for (int i = 0; i < mCollisionEffects1.Length; i++)
@@ -46,6 +39,8 @@ public class AstroidSpawn : MonoBehaviour {
 			mCollisionEffects1[i].gameObject.SetActive(false);
 			mCollisionEffects2[i].gameObject.SetActive(false);
 		}
+
+		// creat player dasdoiud
 		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
 		mPlayerAsteroid.SetActive (false);
 	}
@@ -54,15 +49,62 @@ public class AstroidSpawn : MonoBehaviour {
 	{
 		mPlayer = WorldGen.Instance.Player();
 	}
+
+	public void LoadAsteroids(int levelIndex)
+	{
+		GameObject[] arrPrefabs = null;
+
+		switch (levelIndex) 
+		{
+		case 1:
+			arrPrefabs = mAstroidTypes;
+			break;
+		case 2:
+			arrPrefabs = mMissilePrefabs;
+			break;
+		}
+
+		if (arrPrefabs.Length == 0) 
+		{
+			Debug.LogError("No asteroids to spawn");
+			return;
+		}
+
+		for (int i = 0; i < mAstroids.Length; i++) 
+		{
+			mAstroids[i] = Instantiate(arrPrefabs[i % arrPrefabs.Length]) as GameObject;
+			mAstroids[i].transform.parent = InGame.Instance.transform.Find("AstroidsGoesHere");
+			mAstroids[i].SetActive(false);
+		}
+	}
 	
+	public void UnloadAsteroids()
+	{
+		for (int i = 0; i < mAstroids.Length; i++)
+		{
+			if (mAstroids[i].activeSelf) 
+			{
+				RemoveAstroid(mAstroids[i]);
+			}
+			Destroy(mAstroids[i]);
+		}
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
+		for (int i = 0; i < mAstroids.Length; i++) 
+		{
+			if (mAstroids[i].activeSelf && OutOfBound(mAstroids[i])) 
+			{
+				RemoveAstroid(mAstroids[i]);
+			}
+		}
+
 		int mMaxAstroids = GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS;
 		float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
-		float mRotationSpeed = GlobalVariables.Instance.ASTROID_SPAWN_ROTATION_SPEED;
 
-		mPlRigid = mPlayer.GetComponent<Rigidbody>();
+		Rigidbody playerRb = mPlayer.GetComponent<Rigidbody>();
 
 		if((Time.time > (mLastSpawn + mCd)) && (mSpawnedAsteroids < mMaxAstroids))
 		{
@@ -78,23 +120,18 @@ public class AstroidSpawn : MonoBehaviour {
 			GameObject instace = PickFreeAsteroid();//Instantiate(mAstroidTypes[astroid], pos, angel) as GameObject;
 			instace.transform.position = pos;
 			instace.transform.rotation = angel;
-			instace.SetActive(true);
 			mSpawnedAsteroids++;
 
 			//add velocity
 			Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
 
 			Vector3 targetVel = mPlayer.transform.position - instace.transform.position;
-			targetVel.y += mPlRigid.velocity.y;
+			targetVel.y += playerRb.velocity.y;
 
 			Rigidbody rb = instace.GetComponent<Rigidbody>();
 			rb.velocity = Vector3.Lerp(targetVel, randVel, Random.value);
 			
-			//add torque
-			rb.AddTorque(
-				new Vector3(UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
-			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
-			            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed)));
+			instace.SetActive(true);
 
 			float playerBreakableChance = 0.9f;
 			
@@ -105,22 +142,20 @@ public class AstroidSpawn : MonoBehaviour {
 				mPlayerAsteroid.SetActive(true);
 				Rigidbody rba = mPlayerAsteroid.GetComponent<Rigidbody>();
 				mPlayerAsteroid.transform.position = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * x, mPlayer.transform.position.y - playerBreakableOffset, 0);
-				Vector3 arandVel = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * -x, mPlRigid.velocity.y, 0);
+				Vector3 arandVel = new Vector3(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * -x, playerRb.velocity.y, 0);
 				rba.velocity = arandVel;
-				rba.AddTorque(new Vector3(UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
-				            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed),
-				            UnityEngine.Random.Range(-mRotationSpeed, mRotationSpeed)));
+
 				mPlayerAsteroidT = Time.time + playerBreakableTime;
 			}
 		}
 
-		if ((mPlayerAsteroid.activeSelf) && (OutOfBounds(mPlayerAsteroid)))
+		if ((mPlayerAsteroid.activeSelf) && (OutOfBoundsPlayer(mPlayerAsteroid)))
 		{
 			mPlayerAsteroid.SetActive(false);
 		}
 	}
 
-	bool OutOfBounds (GameObject mPlayerAsteroid)
+	bool OutOfBoundsPlayer(GameObject playerAsteroid)
 	{
 		float absx = Mathf.Abs (mPlayerAsteroid.transform.position.x);
 		if ((absx > GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET) || (mPlayerAsteroidT < Time.time))
@@ -128,6 +163,25 @@ public class AstroidSpawn : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+	
+	bool OutOfBoundOLD(GameObject asteroid)
+	{
+		return (!(transform.position.x < (GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f) && 
+		          transform.position.x > -(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f) &&
+		          transform.position.y < (mPlayer.transform.position.y + 25) && 
+		          transform.position.y > (mPlayer.transform.position.y - 50)));
+	}
+
+	bool OutOfBound(GameObject asteroid)
+	{
+		Vector3 pos = asteroid.transform.position;
+		float xMax = GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f;
+		float xMin = -GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f;
+		float yMax = mPlayer.transform.position.y + 25;
+		float yMin = mPlayer.transform.position.y - 50;
+		
+		return ((pos.x > xMax) || (pos.x < xMin) || (pos.y > yMax) || (pos.y < yMin));
 	}
 
 	public void SpawnCollisionEffects(Vector3 position)
