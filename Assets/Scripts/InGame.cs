@@ -225,7 +225,7 @@ public class InGame : MonoBehaviour
 		
 		mPerfectDistanceMid.gameObject.SetActive (false);
 
-		mAstroidSpawn.gameObject.SetActive (false);
+		mAstroidSpawn.gameObject.SetActive (show);
 		mDirectionalLight.SetActive (show);
 		gameObject.SetActive (show);
 		mPlayer.gameObject.SetActive (show);
@@ -240,6 +240,8 @@ public class InGame : MonoBehaviour
 		
 		mWorldGen.UnloadSegments ();
 		mBgGen.UnloadSegments ();
+		
+		mAstroidSpawn.UnloadAsteroids();
 
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
@@ -254,7 +256,7 @@ public class InGame : MonoBehaviour
 		
 		mBgGen.LoadSegments("Parralax", 120, 5);
 		mWorldGen.LoadSegments("Level" + levelIndex, 50, -1);
-
+		
 		mAstroidSpawn.LoadAsteroids(levelIndex);
 
 		mBgGen.StartSpawnSegments(0);

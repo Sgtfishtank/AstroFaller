@@ -11,12 +11,12 @@ public class Player : MonoBehaviour
 	public bool mInvulnerable = false;
 	public Animator mAni;
 	public Transform mMeshTrans;
+	public bool mUseAirDrain;
+	public bool mUseAirReg;
 
 	private AstroidSpawn mAS;
 	private Collider mCurrentAsterodSpawnCollider;
 
-	public bool mUseAirDrain;
-	public bool mUseAirReg;
 	private float mAirAmount;
 	private bool mHover;
 
@@ -34,16 +34,15 @@ public class Player : MonoBehaviour
 	private bool doShift = false;
 	private float shiftAmount;
 
-
 	public int mLife;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public int mPerfectDistanceCollected;
 
-	public ParticleManager mBoltParticleManager;
-	public ParticleManager mPickupTextManager;
+	private ParticleManager mBoltParticleManager;
+	private ParticleManager mPickupTextManager;
 
-	public GameObject mDash;
+	private GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
 	
@@ -131,7 +130,7 @@ public class Player : MonoBehaviour
 		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 
 		UpdatePerfectDistance (false);
-		mAS.gameObject.SetActive (false);
+		mAS.StopSpawning();
 	}
 
 	void OnDisable()
@@ -310,7 +309,8 @@ public class Player : MonoBehaviour
 		else if(col.tag == "SpawnAstroid")
 		{
 			mCurrentAsterodSpawnCollider = col;
-			mAS.gameObject.SetActive(true);
+			
+			mAS.StartSpawning ();
 		}
 	}
 
@@ -324,7 +324,7 @@ public class Player : MonoBehaviour
 
 		if(col == mCurrentAsterodSpawnCollider)
 		{
-			mAS.gameObject.SetActive(false);
+			mAS.StopSpawning ();
 			mCurrentAsterodSpawnCollider = null;
 		}
 	}
@@ -468,6 +468,8 @@ public class Player : MonoBehaviour
 			InGame.Instance.mDeathMenu.SetActive(true);
 			InGame.Instance.DeathMenu().Open();
 			GUICanvas.Instance.InGameGUICanvas().setEnableDeathMenu(true);
+			
+			mAS.StopSpawning();
 
 			Vector3 a = gameObject.transform.position;
 			a.x = 0;
