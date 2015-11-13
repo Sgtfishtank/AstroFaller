@@ -13,10 +13,8 @@ public class ParticelCleanUp : MonoBehaviour
 		mPSs = gameObject.GetComponentsInChildren<ParticleSystem>();
 	}
 
-	public void Activate(Vector3 position, float timeActivated)
+	public void Activate(float timeActivated)
 	{
-		transform.position = position;
-		gameObject.SetActive (true);
 		mEndTime = Time.time + timeActivated;
 	}
 

@@ -9,6 +9,7 @@ public class Missile : MonoBehaviour
 	private Rigidbody mRb;
 	
 	private Vector3 mStartPos;
+	private float mHeight;
 
 	void Awake()
 	{
@@ -29,7 +30,7 @@ public class Missile : MonoBehaviour
 	void OnEnable()
 	{
 		mStartTime = Time.time;
-
+		mHeight = 0.5f + Random.value * 2.5f;
 		mStartPos = transform.position;
 	}
 
@@ -38,7 +39,7 @@ public class Missile : MonoBehaviour
 	{
 		float freq = mRb.velocity.magnitude;
 		float time = Time.time - mStartTime;
-		float hegiht = 1 / freq;
+		float hegiht = mHeight / freq;
 
 		Vector3 pendVel = Vector3.Cross(new Vector3(0, 0, 1), mRb.velocity);
 		

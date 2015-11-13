@@ -9,11 +9,9 @@ public class AstroidSpawn : MonoBehaviour
 	public GameObject[] mMissilePrefabs;
 	private GameObject[] mAstroids;
 
-	public GameObject mCollisionEffect1Prefab;
-	public GameObject mCollisionEffect2Prefab;
-	private GameObject[] mCollisionEffects1;
-	private GameObject[] mCollisionEffects2;
-	
+	private ParticleManager mCollParticle1Manager;
+	private ParticleManager mCollParticle2Manager;
+
 	public GameObject mPlayerAsteroidPrefab;
 	private GameObject mPlayerAsteroid;
 	private float mPlayerAsteroidT;
@@ -28,17 +26,10 @@ public class AstroidSpawn : MonoBehaviour
 		mAstroids = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_ASTROIDS];
 
 		// creat collision efets
-		mCollisionEffects1 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
-		mCollisionEffects2 = new GameObject[GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES];
-		for (int i = 0; i < mCollisionEffects1.Length; i++)
-		{
-			mCollisionEffects1[i] = (GameObject)GameObject.Instantiate(mCollisionEffect1Prefab);
-			mCollisionEffects2[i] = (GameObject)GameObject.Instantiate(mCollisionEffect2Prefab);
-			mCollisionEffects1[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-			mCollisionEffects2[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-			mCollisionEffects1[i].gameObject.SetActive(false);
-			mCollisionEffects2[i].gameObject.SetActive(false);
-		}
+		mCollParticle1Manager = GetComponents<ParticleManager>()[0];
+		mCollParticle2Manager = GetComponents<ParticleManager>()[1];
+		mCollParticle1Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
+		mCollParticle2Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
 
 		// creat player dasdoiud
 		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
@@ -164,14 +155,6 @@ public class AstroidSpawn : MonoBehaviour
 		}
 		return false;
 	}
-	
-	bool OutOfBoundOLD(GameObject asteroid)
-	{
-		return (!(transform.position.x < (GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f) && 
-		          transform.position.x > -(GlobalVariables.Instance.ASTROID_SPAWN_XOFFSET * 1.5f) &&
-		          transform.position.y < (mPlayer.transform.position.y + 25) && 
-		          transform.position.y > (mPlayer.transform.position.y - 50)));
-	}
 
 	bool OutOfBound(GameObject asteroid)
 	{
@@ -186,30 +169,8 @@ public class AstroidSpawn : MonoBehaviour
 
 	public void SpawnCollisionEffects(Vector3 position)
 	{
-		int index  = PickCollisionEffect();
-		if (index != -1) 
-		{
-			mCollisionEffects1[index].SetActive(true);
-			mCollisionEffects1[index].transform.position = position;
-			mCollisionEffects1[index].transform.rotation = Quaternion.identity;
-
-			mCollisionEffects2[index].SetActive(true);
-			mCollisionEffects2[index].transform.position = position;
-			mCollisionEffects2[index].transform.rotation = Quaternion.identity;
-		}
-	}
-
-	int PickCollisionEffect()
-	{
-		for (int i = 0; i < mCollisionEffects1.Length; i++) 
-		{
-			if ((!mCollisionEffects1[i].activeSelf) && (!mCollisionEffects2[i].activeSelf))
-			{
-				return i;
-			}
-		}
-		
-		return -1;
+		mCollParticle1Manager.Spawn(position);
+		mCollParticle2Manager.Spawn(position);
 	}
 
 	GameObject PickFreeAsteroid()
@@ -232,6 +193,9 @@ public class AstroidSpawn : MonoBehaviour
 			mAstroids[i].transform.position -= new Vector3(0, shift, 0);
 		}
 		mPlayerAsteroid.transform.position -= new Vector3(0, shift, 0);
+
+		mCollParticle1Manager.ShiftBack(shift);
+		mCollParticle2Manager.ShiftBack(shift);
 	}
 
 	public void RemoveAstroid(GameObject g)

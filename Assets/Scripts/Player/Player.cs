@@ -34,15 +34,15 @@ public class Player : MonoBehaviour
 	private bool doShift = false;
 	private float shiftAmount;
 
-	private ParticelCleanUp[] mPickupTexts;
-	public GameObject mPickupTextPrefab;
 
 	public int mLife;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
 	public int mPerfectDistanceCollected;
-	public GameObject boltParticlePrefab;
-	private GameObject[] boltParticles;
+
+	public ParticleManager mBoltParticleManager;
+	public ParticleManager mPickupTextManager;
+
 	public GameObject mDash;
 	private Collider mLastDmgCollider;
 	private float mPerfectDistanceY;
@@ -66,7 +66,8 @@ public class Player : MonoBehaviour
 	{
 		// keep player along levels 
 		DontDestroyOnLoad(transform.gameObject);
-		
+		mBoltParticleManager = GetComponents<ParticleManager>()[1];
+		mPickupTextManager = GetComponents<ParticleManager>()[0];
 		// init compoments
 		mRb = GetComponent<Rigidbody>();
 		mAntenLensFlare = GetComponentInChildren<LensFlare>();
@@ -84,22 +85,9 @@ public class Player : MonoBehaviour
 		mPlaying = false;
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
-		boltParticles = new GameObject[GlobalVariables.Instance.MAX_BOLT_PARTICLES];
-		for (int i = 0; i < boltParticles.Length; i++) 
-		{
-			boltParticles[i] = Instantiate(boltParticlePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-			boltParticles[i].gameObject.SetActive(false);
-			boltParticles[i].transform.parent = InGame.Instance.transform.Find("ParticlesGoesHere");
-		}
 
-		mPickupTexts = new ParticelCleanUp[GlobalVariables.Instance.MAX_TEXT_PARTICLES];
-		for (int i = 0; i < mPickupTexts.Length; i++) 
-		{
-			GameObject obj = Instantiate(mPickupTextPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-			mPickupTexts[i] = obj.GetComponent<ParticelCleanUp>();
-			mPickupTexts[i].gameObject.SetActive(false);
-			mPickupTexts[i].transform.parent = InGame.Instance.transform;
-		}
+		mPickupTextManager.Load(GlobalVariables.Instance.MAX_TEXT_PARTICLES);
+		mBoltParticleManager.Load(GlobalVariables.Instance.MAX_BOLT_PARTICLES);
 	}
 
 	// Use this for initialization
@@ -121,10 +109,8 @@ public class Player : MonoBehaviour
 
 	public void StartGame()
 	{
-		for (int i = 0; i < mPickupTexts.Length; i++) 
-		{
-			mPickupTexts[i].gameObject.SetActive(false);
-		}
+		mPickupTextManager.reset();
+		mBoltParticleManager.reset();
 
 		mCurrentAsterodSpawnCollider = null;
 		mAirAmount = PlayerData.Instance.MaxAirTime();
@@ -150,10 +136,7 @@ public class Player : MonoBehaviour
 
 	void OnDisable()
 	{
-		for (int i = 0; i < mPickupTexts.Length; i++) 
-		{
-			mPickupTexts[i].gameObject.SetActive(false);
-		}
+		mPickupTextManager.reset();
 	}
 
 	public void Dash()
@@ -301,25 +284,21 @@ public class Player : MonoBehaviour
 
 		if (col.tag == "Bolts")
 		{
-			int index = PickBoltEffect();
-			if (index != -1) 
-			{
-				boltParticles[index].SetActive(true);
-				boltParticles[index].transform.position = col.transform.position;
-			}
+
+			GameObject boltP = mBoltParticleManager.Spawn(col.transform.position);
 
 			int boltCollect = GlobalVariables.Instance.BOLT_VALUE;
+
+			GameObject textP = mPickupTextManager.Spawn(col.transform.position);
+			if (textP != null) 
+			{
+				textP.GetComponentsInChildren<TextMesh>(true)[0].text = "+" + boltCollect;
+				textP.GetComponent<ParticelCleanUp>().Activate(GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
+			}
 
 			if(isBursting())
 				boltCollect *= PlayerData.Instance.BurstMultiplier();
 
-			int index2 = PickPuckupText();
-			if (index2 != -1)
-			{
-				mPickupTexts[index2].gameObject.GetComponentsInChildren<TextMesh>(true)[0].text = "+" + boltCollect;
-				mPickupTexts[index2].Activate(col.transform.position, GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
-			}
-			
 			mBoltsCollected += boltCollect;
 			col.gameObject.SetActive(false);
 			AudioManager.Instance.PlaySoundOnce(mCoinPickUpSound);
@@ -333,32 +312,6 @@ public class Player : MonoBehaviour
 			mCurrentAsterodSpawnCollider = col;
 			mAS.gameObject.SetActive(true);
 		}
-	}
-
-	int PickBoltEffect()
-	{
-		for (int i = 0; i < boltParticles.Length; i++) 
-		{
-			if (!boltParticles[i].activeSelf) 
-			{
-				return i;
-			}
-		}
-		
-		return -1;
-	}
-
-	int PickPuckupText ()
-	{
-		for (int i = 0; i < mPickupTexts.Length; i++) 
-		{
-			if (!mPickupTexts[i].gameObject.activeSelf) 
-			{
-				return i;
-			}
-		}
-		
-		return -1;
 	}
 
 	void OnTriggerExit(Collider col)
@@ -540,10 +493,8 @@ public class Player : MonoBehaviour
 		transform.position -= new Vector3(0, shift, 0);
 		mPerfectDistanceY -= shift;
 
-		for (int i = 0; i < mPickupTexts.Length; i++) 
-		{
-			mPickupTexts[i].transform.position -= new Vector3(0, shift, 0);
-		}
+		mBoltParticleManager.ShiftBack(shift);
+		mPickupTextManager.ShiftBack(shift);
 	}
 	
 	void ShiftBackLate()
