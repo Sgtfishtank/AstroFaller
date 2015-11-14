@@ -9,6 +9,10 @@ public class MovementControls
 	private bool mHoverActive = false;
 	private bool mHoverFailed = false;
 	private float mHoverFailedT;
+	public float mStartTime;
+	
+	private Vector3 mStartPos;
+	private float mHeight;
 
 	private Player mPlayer;
 
@@ -90,6 +94,10 @@ public class MovementControls
 	public void Move(Rigidbody rb)
 	{
 		LowPassFilterAccelerometer ();
+		if(!IsHoverFailWiggling())
+		{
+			mPlayer.Rigidbody().useGravity = true;
+		}
 		
 		float force = Input.acceleration.x;
 		float moveSpeed = GlobalVariables.Instance.PLAYER_HORIZONTAL_MOVESPEED;
@@ -109,7 +117,24 @@ public class MovementControls
 		// add movement
 		if (IsHoverFailWiggling())
 		{
+			float freq = mPlayer.Rigidbody().velocity.magnitude;
+			float time = Time.time - mStartTime;
+			float hegiht = mHeight / freq;
+			
+			Vector3 pendVel = Vector3.Cross(new Vector3(0, 0, 1), mPlayer.Rigidbody().velocity);
+			
+			Vector3 offset = (pendVel * Mathf.Sin (time * freq) * hegiht);
+			Vector3 offset2 = (pendVel * Mathf.Cos(time * freq) * freq * hegiht);
+			
+			Vector3 pos = mStartPos + (mPlayer.Rigidbody().velocity * time) + offset;
+			Vector3 vel = (mPlayer.Rigidbody().velocity) + offset2;
+			
+			//mPlayer.transform.LookAt(mPlayer.transform.position + vel);
+			
+			//Debug.DrawLine (transform.position, transform.position + (vel * Time.deltaTime), Color.green, 100);
+			mPlayer.transform.position = pos;
 			// no player monent if hover failed
+
 		}
 		else if (IsHovering())
 		{
@@ -171,15 +196,19 @@ public class MovementControls
 		// explode if not imune
 		if (!PlayerData.Instance.NoExplodeWhenNoAir()) 
 		{
+			mPlayer.Rigidbody().useGravity = false;
 			Vector3 vel = UnityEngine.Random.insideUnitCircle;
 			vel.z = 0;
 			vel.Normalize ();
-			mPlayer.GetComponent<Rigidbody> ().velocity += vel * GlobalVariables.Instance.PLAYER_HOVER_FAILED_FORCE * Time.deltaTime;
+			mStartTime = Time.time;
+			mHeight = 0.5f + UnityEngine.Random.value * 2.5f;
+			mStartPos = mPlayer.transform.position;
+			mPlayer.Rigidbody().velocity = vel * 10;
 		}
-
 		mHoverFailed = true;
 		mHoverFailedT = Time.time + GlobalVariables.Instance.PLAYER_HOVER_FAILED_TIME;
 		mPlayer.Deflate();
+
 	}
 
 	void StopHover ()
