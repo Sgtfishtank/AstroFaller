@@ -10,6 +10,7 @@ public class Mine : MonoBehaviour
 	public ParticleSystem mExplode;
 	
 	public float mBlowTime;
+	public float blowDelay = 1;
 
 	void Awake()
 	{
@@ -29,6 +30,7 @@ public class Mine : MonoBehaviour
 	void OnEnable()
 	{
 		mExplode.gameObject.SetActive(false);
+		mDetect.startColor = new Color (1, 1, 1, 0.1f);
 	}
 	// Update is called once per frame
 	void Update () 
@@ -48,17 +50,29 @@ public class Mine : MonoBehaviour
 			mExplode.gameObject.SetActive(true);
 			mBlowTime = -1;
 			mAniobj.SetActive(false);
+
 		}
 	}
 
 	void OnTriggerEnter(Collider col)
 	{
-		float blowDelay = 2;
 		if (col.tag == "Player") 
 		{
 			mBlowTime = Time.time + blowDelay;
 			mAnim.SetTrigger("Expand");
 			enabled = true;
+			mDetect.startColor = new Color(1f,0f,0.2f,0.2f);
+			print(mDetect.startColor);
+		}
+	}
+	void OnCollisionEnter(Collision coll)
+	{
+		if (coll.transform.tag == "Player")
+		{
+			mDetect.gameObject.SetActive (false);
+			mExplode.gameObject.SetActive (true);
+			mBlowTime = -1;
+			mAniobj.SetActive (false);
 		}
 	}
 	

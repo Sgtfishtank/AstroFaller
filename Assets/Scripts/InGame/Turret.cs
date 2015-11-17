@@ -112,6 +112,8 @@ public class Turret : MonoBehaviour
 	void Shoot ()
 	{
 		mShootEffect.SetActive(false);
+		Vector3 offset1 = mBase.transform.rotation * new Vector3(0, 3.27f * transform.localScale.x / 9, 0);
+		mShootEffect.transform.position = transform.position + offset1;
 		mShootEffect.SetActive(true);
 		Vector3 offset = mBase.transform.rotation * new Vector3(0, 3.27f * transform.localScale.x / 9, 0);
 		GameObject shot = mShotsManager.Spawn(transform.position + offset);
