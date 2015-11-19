@@ -72,7 +72,7 @@ public class AirMeterEffect : MonoBehaviour
 	void Update () 
 	{
 		float value2 = ((float)mPlayer.AirAmount()) / ((float)GlobalVariables.Instance.PLAYER_MAX_AIR);
-		print (value2);
+
 		// hide meter if it is full
 		if (mPlayer.AirAmount() < GlobalVariables.Instance.PLAYER_MAX_AIR)
 		{

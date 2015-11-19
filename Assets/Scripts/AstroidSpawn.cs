@@ -218,7 +218,6 @@ public class AstroidSpawn : MonoBehaviour
 	
 	public void SpawnMissileCollisionEffects (Vector3 position)
 	{
-		return;
 		mMissileCollParticleManager.Spawn(position);
 	}
 

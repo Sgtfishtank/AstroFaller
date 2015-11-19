@@ -9,7 +9,7 @@ public class BattleCruiserLevel : MonoBehaviour
 
 	void Awake()
 	{
-		mParts = new GameObject[3];
+		mParts = new GameObject[transform.childCount];
 		
 		for (int i = 0; i < mParts.Length; i++) 
 		{
@@ -27,11 +27,11 @@ public class BattleCruiserLevel : MonoBehaviour
 	{
 		for (int i = 0; i < mParts.Length; i++) 
 		{
-			mParts[i].transform.position += new Vector3(mSpeed, 0, 0);
+			mParts[i].transform.position += new Vector3(mSpeed, 0, 0) * Time.deltaTime;
 
 			if (mParts[i].transform.position.x >= mWrapValue) 
 			{
-				mParts[i].transform.position -= new Vector3(mWrapValue * 2, 0, 0);
+				mParts[i].transform.position -= new Vector3(mWrapValue * mParts.Length, 0, 0);
 			}
 		}
 	}
