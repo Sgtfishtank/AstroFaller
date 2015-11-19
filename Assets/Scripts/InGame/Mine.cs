@@ -13,12 +13,14 @@ public class Mine : MonoBehaviour
 	public float blowDelay = 1;
 	public SphereCollider hardColl;
 	public float blowRadius = 3;
+	private float explotation;
 
 	void Awake()
 	{
 		mCol = GetComponent<SphereCollider> ();
 		mAnim = transform.Find ("mine_anim").GetComponent<Animator> ();
 		enabled = false;
+		explotation = GlobalVariables.Instance.MINE_EXPLOTION_FORCE;
 		mDetect.gameObject.SetActive(true);
 		mExplode.gameObject.SetActive(false);
 		mBlowTime = -1;
@@ -50,7 +52,7 @@ public class Mine : MonoBehaviour
 				InGame.Instance.Player().PlayerDamage(1);
 			}
 
-			InGame.Instance.Player().Rigidbody().AddExplosionForce(10f, transform.position, blowRadius,0f, ForceMode.Impulse);
+			InGame.Instance.Player().Rigidbody().AddExplosionForce(explotation, transform.position, blowRadius,0f, ForceMode.Impulse);
 			mDetect.gameObject.SetActive(false);
 			mExplode.gameObject.SetActive(true);
 			mBlowTime = -1;
@@ -82,7 +84,7 @@ public class Mine : MonoBehaviour
 				InGame.Instance.Player().PlayerDamage(1);
 			}
 			//coll.gameObject.GetComponent<Rigidbody>().AddExplosionForce(10f,transform.position,3f,0f,ForceMode.Impulse);
-			InGame.Instance.Player().Rigidbody().AddExplosionForce(10f, transform.position, blowRadius, 0f, ForceMode.Impulse);
+			InGame.Instance.Player().Rigidbody().AddExplosionForce(explotation, transform.position, blowRadius, 0f, ForceMode.Impulse);
 			mDetect.gameObject.SetActive (false);
 			mExplode.gameObject.SetActive (true);
 			mBlowTime = -1;

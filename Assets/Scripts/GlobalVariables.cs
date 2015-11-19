@@ -81,6 +81,9 @@ public class GlobalVariables : MonoBehaviour
 	public float TURRET_SHOOT_DELAY = 1;
 	public float TURRET_ROTATION_SPEED = 5;
 	public float TURRET_BULLET_SPEED = 10;
+	//Mines
+	public float MINE_EXPLOTION_FORCE = 200f;
+
 
 	// cosmic storm level
 	public int COSMIC_LEVEL_CRITERA_DISTANCE = 1000;
