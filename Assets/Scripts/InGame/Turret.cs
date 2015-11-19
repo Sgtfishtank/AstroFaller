@@ -7,19 +7,13 @@ public class Turret : MonoBehaviour
 
 	private ParticleManager mShotsManager;
 	private GameObject[] mShots;
-
-	public float mRotationSpeed;
-	public float mShootDelay;
-	public float mShotSpeed;
-
 	private GameObject mShootEffect;
-	
 	private GameObject mBase;
-
 	private float mRotation;
 	private float mShootT;
 	private AstroidSpawn mAS;
 	private Player mPlayer;
+	private Vector3 mBasePos;
 
 	void Awake()
 	{
@@ -27,7 +21,8 @@ public class Turret : MonoBehaviour
 		mShootEffect = transform.Find("turret_explosion_effect").gameObject;
 		mShotsManager = GetComponent<ParticleManager> ();
 		mBase = transform.Find("Turret_anim/Base").gameObject;
-		mShotsManager.Load(50);
+		mShotsManager.Load(GlobalVariables.Instance.TURRET_MAX_BULLETS);
+		mBasePos = mBase.transform.localPosition;
 	}
 
 	// Use this for initialization
@@ -38,7 +33,7 @@ public class Turret : MonoBehaviour
 
 	void OnEnable()
 	{
-		mRotation = (Random.value * 2) - 1;
+		mRotation = Random.Range(-1.0f, 1.0f);
 	}
 	
 	void OnDisable()
@@ -57,38 +52,40 @@ public class Turret : MonoBehaviour
 			}
 		}
 
-		if (mPlayer.CenterPosition().y < transform.position.y) 
+		if (mPlayer.CenterPosition().y >= transform.position.y) 
 		{
-			return;
+			RotateTowardsPlayer ();
+
+			if (mShootT < Time.time) 
+			{
+				mShootT = Time.time + GlobalVariables.Instance.TURRET_SHOOT_DELAY;
+				Shoot();
+			}
 		}
 
-		RotateTowardsPlayer ();
+		float val = Mathf.Clamp(((mShootT - Time.time) / GlobalVariables.Instance.TURRET_SHOOT_DELAY), 0, 1);
 
-
-		if (mShootT < Time.time) 
-		{
-			mShootT = Time.time + mShootDelay;
-			Shoot();
-		}
-
-		mBase.transform.localPosition = new Vector3(0, 0.25f, 0) - (mBase.transform.localRotation * (Vector3.up * 0.2f * ((mShootT - Time.time) / mShootDelay)));
+		mBase.transform.localPosition = mBasePos - (mBase.transform.localRotation * Vector3.up * 0.2f * val);
 	}
 
 	void RotateTowardsPlayer()
 	{
+		float targetRotation = 0;
 		if (mTargetPlayer) 
 		{
-			lookTowardsPlayer();
+			targetRotation = lookTowardsPlayer();
 		}
 		else
 		{
-			mRotation = Mathf.Sin(Time.time * mRotationSpeed);
+			targetRotation = Mathf.Sin(Time.time);
 		}
+
+		mRotation = Mathf.Lerp(mRotation, targetRotation, Time.deltaTime * GlobalVariables.Instance.TURRET_ROTATION_SPEED);
 
 		mBase.transform.localRotation = Quaternion.Euler (0, 0, 84 * mRotation);
 	}
 
-	void lookTowardsPlayer()
+	float lookTowardsPlayer()
 	{
 		// look towards player
 		Vector3 relativePos = mPlayer.CenterPosition() - mBase.transform.position;
@@ -106,7 +103,8 @@ public class Turret : MonoBehaviour
 		{
 			angle -= 360;
 		}
-		mRotation = Mathf.Clamp (angle / -84, -1, 1);
+
+		return Mathf.Clamp (angle / -84, -1, 1);
 	}
 
 	void Shoot ()
@@ -116,11 +114,11 @@ public class Turret : MonoBehaviour
 		mShootEffect.transform.position = transform.position + offset1;
 		mShootEffect.SetActive(true);
 		Vector3 offset = mBase.transform.rotation * new Vector3(0, 3.27f * transform.localScale.x / 9, 0);
-		GameObject shot = mShotsManager.Spawn(transform.position + offset);
 
+		GameObject shot = mShotsManager.Spawn(transform.position + offset);
 		if (shot != null) 
 		{
-			shot.GetComponent<Rigidbody> ().velocity = offset.normalized * mShotSpeed;
+			shot.GetComponent<Rigidbody> ().velocity = offset.normalized * GlobalVariables.Instance.TURRET_BULLET_SPEED;
 			shot.transform.rotation = mBase.transform.rotation;
 		}
 	}
