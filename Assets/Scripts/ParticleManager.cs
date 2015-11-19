@@ -143,9 +143,12 @@ public class ParticleManager : MonoBehaviour
 
 	public void ShiftBack (float shift)
 	{
+
 		for (int i = 0; i < mParticles.Length; i++) 
 		{
-			mParticles[i].transform.position -= new Vector3(0, shift, 0);
+			if(mParticles[i] != null)
+				mParticles[i].transform.position -= new Vector3(0, shift, 0);
+
 		}
 	}
 }
