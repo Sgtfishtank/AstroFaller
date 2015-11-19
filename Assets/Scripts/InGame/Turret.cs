@@ -13,6 +13,7 @@ public class Turret : MonoBehaviour
 	private AstroidSpawn mAS;
 	private Player mPlayer;
 	private Vector3 mBasePos;
+	private bool mPayerDetected = false;
 
 	void Awake()
 	{
@@ -54,11 +55,13 @@ public class Turret : MonoBehaviour
 		if (mPlayer.CenterPosition().y >= transform.position.y) 
 		{
 			RotateTowardsPlayer ();
-
-			if (mShootT < Time.time) 
+			if(mPayerDetected)
 			{
-				mShootT = Time.time + GlobalVariables.Instance.TURRET_SHOOT_DELAY;
-				Shoot();
+				if (mShootT < Time.time) 
+				{
+					mShootT = Time.time + GlobalVariables.Instance.TURRET_SHOOT_DELAY;
+					Shoot();
+				}
 			}
 		}
 
@@ -122,5 +125,14 @@ public class Turret : MonoBehaviour
 		}
 	}
 
-
+	void OnTriggerStay(Collider col)
+	{
+		if(col.transform.tag == "Player")
+			mPayerDetected = true;
+	}
+	void OnTriggerExit(Collider col)
+	{
+		if(col.transform.tag == "Player")
+			mPayerDetected = false;
+	}
 }
