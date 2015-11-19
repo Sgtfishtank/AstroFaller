@@ -10,6 +10,7 @@ public class Missile : MonoBehaviour
 	
 	private Vector3 mStartPos;
 	private float mHeight;
+	private float mSpinSpeed;
 
 	void Awake()
 	{
@@ -30,7 +31,8 @@ public class Missile : MonoBehaviour
 	void OnEnable()
 	{
 		mStartTime = Time.time;
-		mHeight = 0.5f + Random.value * 2.5f;
+		mHeight = 0.5f + (Random.value * 2.5f);
+		mSpinSpeed = 200 + (Random.value * 800);
 		mStartPos = transform.position;
 	}
 
@@ -50,6 +52,11 @@ public class Missile : MonoBehaviour
 		Vector3 vel = (mRb.velocity) + offset2;
 
 		transform.LookAt(transform.position + vel);
+
+
+		Vector3 rotEu = transform.localRotation.eulerAngles;
+
+		transform.localRotation = Quaternion.Euler(rotEu.x, rotEu.y, (Time.time - mStartTime) * mSpinSpeed);
 		
 		Debug.DrawLine (transform.position, transform.position + (vel * Time.deltaTime), Color.green, 100);
 		transform.position = pos;

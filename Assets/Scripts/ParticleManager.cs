@@ -26,6 +26,12 @@ public class ParticleManager : MonoBehaviour
 		{
 			mParticleSpawnTimes = new float[size];
 		}
+
+		if (mPickupTextPrefab == null) 
+		{
+			return;
+		}
+
 		for (int i = 0; i < mParticles.Length; i++) 
 		{
 			mParticles[i] = Instantiate(mPickupTextPrefab, Vector3.zero, Quaternion.identity) as GameObject;

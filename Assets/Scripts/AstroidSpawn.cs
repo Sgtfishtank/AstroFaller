@@ -9,9 +9,10 @@ public class AstroidSpawn : MonoBehaviour
 	public GameObject[] mMissilePrefabs;
 	private GameObject[] mAstroids;
 
-	private ParticleManager mCollParticle1Manager;
-	private ParticleManager mCollParticle2Manager;
+	private ParticleManager mAstCollParticle1Manager;
+	private ParticleManager mAstCollParticle2Manager;
 	private ParticleManager mBulletCollParticleManager;
+	private ParticleManager mMissileCollParticleManager;
 
 	public GameObject mPlayerAsteroidPrefab;
 	private GameObject mPlayerAsteroid;
@@ -25,12 +26,14 @@ public class AstroidSpawn : MonoBehaviour
 	void Awake ()
 	{
 		// creat collision efets
-		mCollParticle1Manager = GetComponents<ParticleManager>()[0];
-		mCollParticle2Manager = GetComponents<ParticleManager>()[1];
+		mAstCollParticle1Manager = GetComponents<ParticleManager>()[0];
+		mAstCollParticle2Manager = GetComponents<ParticleManager>()[1];
 		mBulletCollParticleManager = GetComponents<ParticleManager>()[2];
-		mCollParticle1Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
-		mCollParticle2Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
+		mMissileCollParticleManager = GetComponents<ParticleManager>()[3];
+		mAstCollParticle1Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
+		mAstCollParticle2Manager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
 		mBulletCollParticleManager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
+		mMissileCollParticleManager.Load(GlobalVariables.Instance.ASTROID_SPAWN_MAX_PARTICLES);
 
 		// creat player dasdoiud
 		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
@@ -204,13 +207,19 @@ public class AstroidSpawn : MonoBehaviour
 
 	public void SpawnAstCollisionEffects(Vector3 position)
 	{
-		mCollParticle1Manager.Spawn(position);
-		mCollParticle2Manager.Spawn(position);
+		mAstCollParticle1Manager.Spawn(position);
+		mAstCollParticle2Manager.Spawn(position);
 	}
 
 	public void SpawnBulletCollisionEffects (Vector3 position)
 	{
 		mBulletCollParticleManager.Spawn(position);
+	}
+	
+	public void SpawnMissileCollisionEffects (Vector3 position)
+	{
+		return;
+		mMissileCollParticleManager.Spawn(position);
 	}
 
 	GameObject PickFreeAsteroid()
@@ -234,9 +243,10 @@ public class AstroidSpawn : MonoBehaviour
 		}
 		mPlayerAsteroid.transform.position -= new Vector3(0, shift, 0);
 
-		mCollParticle1Manager.ShiftBack(shift);
-		mCollParticle2Manager.ShiftBack(shift);
+		mAstCollParticle1Manager.ShiftBack(shift);
+		mAstCollParticle2Manager.ShiftBack(shift);
 		mBulletCollParticleManager.ShiftBack(shift);
+		mMissileCollParticleManager.ShiftBack(shift);
 	}
 
 	public void RemoveAstroid(GameObject g)
