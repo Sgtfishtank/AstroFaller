@@ -11,11 +11,13 @@ public class Mine : MonoBehaviour
 	
 	public float mBlowTime;
 	public float blowDelay = 1;
+	public SphereCollider hardColl;
+	public float blowRadius = 3;
 
 	void Awake()
 	{
 		mCol = GetComponent<SphereCollider> ();
-		mAnim = transform.Find ("mine_anim").GetComponent<Animator> ();;
+		mAnim = transform.Find ("mine_anim").GetComponent<Animator> ();
 		enabled = false;
 		mDetect.gameObject.SetActive(true);
 		mExplode.gameObject.SetActive(false);
@@ -31,11 +33,12 @@ public class Mine : MonoBehaviour
 	{
 		mExplode.gameObject.SetActive(false);
 		mDetect.startColor = new Color (1, 1, 1, 0.1f);
+		hardColl.enabled = true;
 	}
 	// Update is called once per frame
 	void Update () 
 	{
-		float blowRadius = 2;
+
 		if (mBlowTime < Time.time && mBlowTime != -1) 
 		{
 
@@ -43,9 +46,11 @@ public class Mine : MonoBehaviour
 
 			if (Vector3.Distance(transform.position, pos) < blowRadius) 
 			{
+
 				InGame.Instance.Player().PlayerDamage(1);
 			}
 
+			InGame.Instance.Player().Rigidbody().AddExplosionForce(10f, transform.position, blowRadius,0f, ForceMode.Impulse);
 			mDetect.gameObject.SetActive(false);
 			mExplode.gameObject.SetActive(true);
 			mBlowTime = -1;
@@ -69,19 +74,20 @@ public class Mine : MonoBehaviour
 	{
 		if (coll.transform.tag == "Player")
 		{
+			Vector3 pos = InGame.Instance.Player().CenterPosition();
+
+			if (Vector3.Distance(transform.position, pos) < blowRadius) 
+			{
+
+				InGame.Instance.Player().PlayerDamage(1);
+			}
+			//coll.gameObject.GetComponent<Rigidbody>().AddExplosionForce(10f,transform.position,3f,0f,ForceMode.Impulse);
+			InGame.Instance.Player().Rigidbody().AddExplosionForce(10f, transform.position, blowRadius, 0f, ForceMode.Impulse);
 			mDetect.gameObject.SetActive (false);
 			mExplode.gameObject.SetActive (true);
 			mBlowTime = -1;
 			mAniobj.SetActive (false);
+			hardColl.enabled = false;
 		}
 	}
-	
-	/*void OnTriggerExit(Collider col)
-	{
-		if (col.tag == "Player") 
-		{
-			enabled = false;
-			mAnim.Play("Close");
-		}
-	}*/
 }
