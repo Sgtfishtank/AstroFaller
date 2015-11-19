@@ -21,8 +21,9 @@ public class Bullet : MonoBehaviour
 	{
 		if ((col.gameObject != gameObject) && (!col.isTrigger))
 		{
-			mAS.SpawnCollisionEffects(transform.position);
+			mAS.SpawnAstCollisionEffects(transform.position);
 			gameObject.SetActive(false);
+			mAS.SpawnBulletCollisionEffects(transform.position);
 		}
 	}
 }

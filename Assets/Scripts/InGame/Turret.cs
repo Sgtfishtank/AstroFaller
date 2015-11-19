@@ -6,7 +6,6 @@ public class Turret : MonoBehaviour
 	public bool mTargetPlayer;
 
 	private ParticleManager mShotsManager;
-	private GameObject[] mShots;
 	private GameObject mShootEffect;
 	private GameObject mBase;
 	private float mRotation;

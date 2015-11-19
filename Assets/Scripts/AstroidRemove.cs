@@ -49,7 +49,7 @@ public class AstroidRemove : MonoBehaviour
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mPlayer.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
+			mAstroidSpawn.SpawnAstCollisionEffects(coll.contacts[0].point);
 		}
 	}
 

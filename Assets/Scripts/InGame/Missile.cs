@@ -59,8 +59,8 @@ public class Missile : MonoBehaviour
 	{
 		if (coll.gameObject != gameObject)
 		{
-			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
-
+			mAstroidSpawn.SpawnAstCollisionEffects(coll.contacts[0].point);
+			mAstroidSpawn.SpawnMissileCollisionEffects(transform.position);
 			mAstroidSpawn.RemoveAstroid(gameObject);
 		}
 	}
