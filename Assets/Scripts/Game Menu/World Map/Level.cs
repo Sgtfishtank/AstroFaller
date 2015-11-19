@@ -31,6 +31,17 @@ public class Level : PlayableLevel
 		mPictureImage = mLevel.transform.Find ("level picture").GetComponent<MeshRenderer> ();
 		mFrame = mLevel.transform.Find ("big_frame").GetComponent<MeshRenderer> ();
 		mFrame2 = mLevel.transform.Find ("small_frame 2/small_frame").GetComponent<MeshRenderer> ();
+		
+		mPlayButton.SetActive (false);
+		
+		
+		mPictureImage.enabled = false;
+		
+		// add default
+		if (mLevelName.Length < 1)
+		{
+			mLevelName = gameObject.name;
+		}
 	}
 
 	// Use this for initialization
@@ -40,16 +51,6 @@ public class Level : PlayableLevel
 
 	public override void Init()
 	{
-		mPlayButton.SetActive (false);
-
-		
-		mPictureImage.enabled = false;
-		
-		// add default
-		if (mLevelName.Length < 1)
-		{
-			mLevelName = gameObject.name;
-		}
 	}
 
 	// Update is called once per frame

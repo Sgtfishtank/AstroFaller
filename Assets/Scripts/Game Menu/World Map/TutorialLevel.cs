@@ -26,6 +26,16 @@ public class TutorialLevel : PlayableLevel
 		mTitleText = mTutorial.transform.Find ("level name text").GetComponent<TextMesh> ();
 		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
 		mFrame = mTutorial.transform.Find ("small_frame").GetComponent<MeshRenderer> ();
+		
+		mPlayButton.SetActive (false);
+		
+		mPictureImage.enabled = false;
+		
+		// add default
+		if (mLevelName.Length < 1)
+		{
+			mLevelName = gameObject.name;
+		}
 	}
 
 	// Use this for initialization
@@ -35,15 +45,6 @@ public class TutorialLevel : PlayableLevel
 	
 	public override void Init()
 	{
-		mPlayButton.SetActive (false);
-
-		mPictureImage.enabled = false;
-		
-		// add default
-		if (mLevelName.Length < 1)
-		{
-			mLevelName = gameObject.name;
-		}
 	}
 	
 	// Update is called once per frame

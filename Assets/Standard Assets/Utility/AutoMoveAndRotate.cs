@@ -19,7 +19,8 @@ namespace UnityStandardAssets.Utility
         {
             m_LastRealTime = Time.realtimeSinceStartup;
 			rotateDegreesPerSecond.value = new Vector3 (UnityEngine.Random.Range (xValues.x, xValues.y), UnityEngine.Random.Range (yValues.x, yValues.y), UnityEngine.Random.Range (zValues.x, zValues.y));
-        }
+			Destroy (this);
+		}
 
 
         // Update is called once per frame
