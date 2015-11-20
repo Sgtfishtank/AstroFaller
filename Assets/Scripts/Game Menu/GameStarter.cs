@@ -87,9 +87,4 @@ public class GameStarter : MonoBehaviour
 	{
 	
 	}
-
-	void OnGUI()
-	{
-	
-	}
 }

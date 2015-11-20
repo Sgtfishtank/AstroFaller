@@ -17,9 +17,12 @@ public class Level : PlayableLevel
 	private bool mUnlocked;
 	private	GameObject mPlayButton;
 	private	GameObject mLevel;
-	
+	private TextMesh[] mTextMeshes;
+	private MeshRenderer[] mMeshRenders;
 	void Awake () 
 	{
+		mTotalDistance = -1;
+
 		mLevel = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
 		mLevel.transform.name = "level";
 		
@@ -32,11 +35,9 @@ public class Level : PlayableLevel
 		mFrame = mLevel.transform.Find ("big_frame").GetComponent<MeshRenderer> ();
 		mFrame2 = mLevel.transform.Find ("small_frame 2/small_frame").GetComponent<MeshRenderer> ();
 		
-		mPlayButton.SetActive (false);
-		
-		
-		mPictureImage.enabled = false;
-		
+		mTextMeshes = GetComponentsInChildren<TextMesh> ();
+		mMeshRenders = GetComponentsInChildren<MeshRenderer> ();
+
 		// add default
 		if (mLevelName.Length < 1)
 		{
@@ -47,6 +48,9 @@ public class Level : PlayableLevel
 	// Use this for initialization
 	void Start () 
 	{
+		mPictureImage.enabled = false;
+		mPlayButton.SetActive (false);
+		SetTotalDistance(0);
 	}
 
 	public override void Init()
@@ -57,15 +61,6 @@ public class Level : PlayableLevel
 	void Update () 
 	{
 		mTitleText.text = mLevelName;
-
-		//if (!mUnlocked)
-		{
-			//mTotalDistanceText.text = "Locked. Required distance:\n" + GlobalVariables.Instance.DistanceCritera(mLevelName);
-		}
-		//else
-		{
-			mTotalDistanceText.text = mTotalDistance.ToString();
-		}
 	}
 	
 	public override string LevelName ()
@@ -138,21 +133,29 @@ public class Level : PlayableLevel
 
 		mPlayButton.transform.localPosition += GUICanvas.Instance.MenuGUICanvas().PlayButton().PositionOffset();
 		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
-
-		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
-		for (int i = 0; i < textMeshes.Length; i++) 
+		
+		for (int i = 0; i < mTextMeshes.Length; i++) 
 		{
-			Color x = textMeshes[i].color;
+			Color x = mTextMeshes[i].color;
 			x.a = focusLevel;
-			textMeshes[i].color = x;
+			mTextMeshes[i].color = x;
 		}
 		
-		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
-		for (int i = 0; i < rextMeshes.Length; i++) 
+		for (int i = 0; i < mMeshRenders.Length; i++) 
 		{
-			Color x = rextMeshes[i].material.color;
+			Color x = mMeshRenders[i].material.color;
 			x.a = focusLevel;
-			rextMeshes[i].material.color = x;
+			mMeshRenders[i].material.color = x;
+		}
+	}
+
+	public void SetTotalDistance(int totalDistance)
+	{
+		// avoid string allocations
+		if (mTotalDistance != totalDistance) 
+		{
+			mTotalDistance = totalDistance;
+			mTotalDistanceText.text = totalDistance.ToString();
 		}
 	}
 

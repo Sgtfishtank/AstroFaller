@@ -24,6 +24,10 @@ public class InGameCamera : MonoBehaviour
 	private TextMesh mBoxesText;
 	private TextMesh mLifeText;
 	private Camera mCamera;
+	private int mDistnce;
+	private int mBolts;
+	private int mBoxes;
+	private int mLife;
 
 	void Awake()
 	{
@@ -53,24 +57,38 @@ public class InGameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		int temp = InGame.Instance.Player().colectedBolts();
-		if(temp >= 10000)
-			mBoltsText.text = (temp/1000).ToString()+ "K";
-		else
-			mBoltsText.text = (temp).ToString();
-		temp = InGame.Instance.Player().Distance();
-		if(temp >= 1000000)		
-			mDistnceText.text = (temp/1000000).ToString() + "M";
-		else if(temp >= 10000)
-			mDistnceText.text = (temp/1000).ToString() + "K";
-		else
-			mDistnceText.text = temp.ToString();
-		temp = InGame.Instance.Player().CollectedPerfectDistances();
-		if(temp >= 1000)
-			mBoxesText.text = (temp/1000).ToString()+ " K";
-		else
-			mBoxesText.text = temp.ToString();
-		mLifeText.text = InGame.Instance.Player().LifeRemaining().ToString();
+		// avoid string allocations
+		if (mBolts != InGame.Instance.Player().colectedBolts()) 
+		{
+			mBolts = InGame.Instance.Player().colectedBolts();
+			if(mBolts >= 10000)
+				mBoltsText.text = (mBolts/1000).ToString()+ "K";
+			else
+				mBoltsText.text = mBolts.ToString();
+		}
+		
+		// avoid string allocations
+		if (mDistnce != InGame.Instance.Player().Distance()) 
+		{
+			mDistnce = InGame.Instance.Player().Distance();
+			if(mDistnce >= 1000000)		
+				mDistnceText.text = (mDistnce/1000000).ToString() + "M";
+			else if(mDistnce >= 10000)
+				mDistnceText.text = (mDistnce/1000).ToString() + "K";
+			else
+				mDistnceText.text = mDistnce.ToString();
+		}
+
+		// avoid string allocations
+		if (mBoxes != InGame.Instance.Player().CollectedPerfectDistances()) 
+		{
+			mBoxes = InGame.Instance.Player().CollectedPerfectDistances();
+			if(mBoxes >= 1000)
+				mBoxesText.text = (mBoxes/1000).ToString()+ " K";
+			else
+				mBoxesText.text = mBoxes.ToString();
+			mLifeText.text = InGame.Instance.Player().LifeRemaining().ToString();
+		}
 	}
 
 	public Camera Camera()

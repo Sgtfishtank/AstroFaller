@@ -53,11 +53,13 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mOptionsIcon;
 	private TextMesh mBoltsText;
 	private Camera mCamera;
+	private int mBolts;
 	
 	public GameObject mCotrls;
 
 	void Awake()
 	{
+		mBolts = -1;
 		mCamera = GetComponent<Camera> ();
 		mCotrls = transform.Find("player_controls 1").gameObject;
 		mBoltsText = transform.Find("Bolts/Total_Bolts_Text").GetComponent<TextMesh>();
@@ -90,7 +92,6 @@ public class MenuCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		mBoltsText.text = PlayerData.Instance.bolts().ToString();
 		Vector3 mCameraOffset = GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 		if (mMoving) 
 		{
@@ -160,6 +161,13 @@ public class MenuCamera : MonoBehaviour
 				transform.position = mTargetMenuPosition + mCameraOffset;
 				mMoving = false;
 			}
+		}
+
+		// avoid string allocations
+		if (mBolts != PlayerData.Instance.bolts()) 
+		{
+			mBolts = PlayerData.Instance.bolts();
+			mBoltsText.text = mBolts.ToString();
 		}
 	}
 
@@ -246,8 +254,6 @@ public class MenuCamera : MonoBehaviour
 			break;
 		}
 		//mHelpMenu.SetActive (show);
-
-
 	}
 	
 	public void ShowOptionsMenu (bool show)

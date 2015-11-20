@@ -5,9 +5,7 @@ public class DebugGUI : MonoBehaviour
 {
 	public int mFpsUpdateFrames;
 
-	private bool mShowDebugGUI;
 	private int mDebugGUISizeY;
-
 	private int mF;
 	private float mFT;
 	private float mFps;
@@ -21,71 +19,53 @@ public class DebugGUI : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (mShowDebugGUI)
+		bool touching3 = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
+
+		Player pl = InGame.Instance.Player();
+		
+		if (Input.GetKeyDown(KeyCode.I) || touching3)
 		{
-			bool touching3 = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
-
-			Player pl = InGame.Instance.Player();
-			
-			if (Input.GetKeyDown(KeyCode.I) || touching3)
-			{
-				pl.mInvulnerable = !pl.mInvulnerable;
-			}
-			
-			if (Input.GetKeyDown(KeyCode.F))
-			{
-				pl.Dash();
-			}
-			
-			if (Input.GetKeyDown(KeyCode.Plus))
-			{
-				pl.PlayerHeal(1);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.Minus))
-			{
-				pl.PlayerDamage(1);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.O))
-			{
-				pl.mUseAirReg = !pl.mUseAirReg;
-			}
-			
-			if (Input.GetKeyDown(KeyCode.P))
-			{
-				pl.mUseAirDrain = !pl.mUseAirDrain;
-			}
-			
-			if (Input.GetKeyDown(KeyCode.B))
-			{
-				GUICanvas.Instance.ToggleShowButtons();
-			}
-			
-			if (Input.GetKeyDown(KeyCode.K))
-			{
-				PlayerData.Instance.depositBolts(9999);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.L))
-			{
-				PlayerData.Instance.withdrawBolts(PlayerData.Instance.bolts());
-			}
-
+			pl.mInvulnerable = !pl.mInvulnerable;
 		}
-
-		Input.multiTouchEnabled = true;
-		bool touching = (Input.touchCount >= 4) && (Input.touches [3].phase == TouchPhase.Began);
-
-		if (((Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift))) || (touching))
+		
+		if (Input.GetKeyDown(KeyCode.F))
 		{
-			mShowDebugGUI = !mShowDebugGUI;
-			
-			if (mShowDebugGUI == false)
-			{
-				GUICanvas.Instance.ShowButtons(false);
-				InGame.Instance.Player().mInvulnerable = false;
-			}
+			pl.Dash();
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Plus))
+		{
+			pl.PlayerHeal(1);
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Minus))
+		{
+			pl.PlayerDamage(1);
+		}
+		
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			pl.mUseAirReg = !pl.mUseAirReg;
+		}
+		
+		if (Input.GetKeyDown(KeyCode.P))
+		{
+			pl.mUseAirDrain = !pl.mUseAirDrain;
+		}
+		
+		if (Input.GetKeyDown(KeyCode.B))
+		{
+			GUICanvas.Instance.ToggleShowButtons();
+		}
+		
+		if (Input.GetKeyDown(KeyCode.K))
+		{
+			PlayerData.Instance.depositBolts(9999);
+		}
+		
+		if (Input.GetKeyDown(KeyCode.L))
+		{
+			PlayerData.Instance.withdrawBolts(PlayerData.Instance.bolts());
 		}
 
 		mF++;
@@ -99,11 +79,6 @@ public class DebugGUI : MonoBehaviour
 	
 	void OnGUI()
 	{
-		if (!mShowDebugGUI)
-		{
-			return;
-		}
-		
 		int startX = 10;
 		int startY = 10;
 		int size = 24;

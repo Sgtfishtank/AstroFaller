@@ -14,6 +14,8 @@ public class TutorialLevel : PlayableLevel
 	private	MeshRenderer mFrame;
 	private	GameObject mPlayButton;
 	private	GameObject mTutorial;
+	private TextMesh[] mTextMeshes;
+	private MeshRenderer[] mMeshRenders;
 
 	void Awake () 
 	{
@@ -27,6 +29,9 @@ public class TutorialLevel : PlayableLevel
 		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
 		mFrame = mTutorial.transform.Find ("small_frame").GetComponent<MeshRenderer> ();
 		
+		mTextMeshes = GetComponentsInChildren<TextMesh> ();
+		mMeshRenders = GetComponentsInChildren<MeshRenderer> ();
+
 		mPlayButton.SetActive (false);
 		
 		mPictureImage.enabled = false;
@@ -121,21 +126,19 @@ public class TutorialLevel : PlayableLevel
 		
 		mPlayButton.transform.localPosition += GUICanvas.Instance.MenuGUICanvas().PlayButton().PositionOffset();
 		mPlayButton.transform.localScale = Vector3.one * 0.84f * GUICanvas.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
-		
-		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh> ();
-		for (int i = 0; i < textMeshes.Length; i++) 
+
+		for (int i = 0; i < mTextMeshes.Length; i++) 
 		{
-			Color x = textMeshes[i].color;
+			Color x = mTextMeshes[i].color;
 			x.a = focusLevel;
-			textMeshes[i].color = x;
+			mTextMeshes[i].color = x;
 		}
-		
-		MeshRenderer[] rextMeshes = GetComponentsInChildren<MeshRenderer> ();
-		for (int i = 0; i < rextMeshes.Length; i++) 
+
+		for (int i = 0; i < mMeshRenders.Length; i++) 
 		{
-			Color x = rextMeshes[i].material.color;
+			Color x = mMeshRenders[i].material.color;
 			x.a = focusLevel;
-			rextMeshes[i].material.color = x;
+			mMeshRenders[i].material.color = x;
 		}
 	}
 }

@@ -23,9 +23,11 @@ public class GUICanvas : MonoBehaviour
 	private MenuGUICanvas mMenuGUICanvas;
 	private OptionsGUICanvas mOptionsGUICanvas;
 	private bool mShowButtons;
+	private DebugGUI mDebugGUI;
 
 	void Awake () 
 	{
+		mDebugGUI = GetComponent<DebugGUI>();
 		mInGameGUICanvas = GetComponentsInChildren<InGameGUICanvas>(true)[0];
 		mMenuGUICanvas = GetComponentsInChildren<MenuGUICanvas>(true)[0];
 		mOptionsGUICanvas = GetComponentsInChildren<OptionsGUICanvas>(true)[0];
@@ -37,6 +39,7 @@ public class GUICanvas : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		mDebugGUI.enabled = false;
 		ShowButtons (false);
 	}
 
@@ -127,6 +130,21 @@ public class GUICanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		Input.multiTouchEnabled = true;
+		bool debugTouch = (Input.touchCount >= 4) && (Input.touches [3].phase == TouchPhase.Began);
+		bool debugKey = (Input.GetKey(KeyCode.LeftControl)) && (Input.GetKeyDown(KeyCode.LeftShift));
+
+		if (debugKey || debugTouch)
+		{
+			mDebugGUI.enabled = !mDebugGUI.enabled;
+			
+			if (!mDebugGUI.enabled)
+			{
+				GUICanvas.Instance.ShowButtons(false);
+				InGame.Instance.Player().mInvulnerable = false;
+			}
+		}
+
 	}
 
 	public void ToggleBloom()
