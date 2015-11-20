@@ -32,7 +32,7 @@ public class Missile : MonoBehaviour
 	{
 		mStartTime = Time.time;
 		mHeight = 0.5f + (Random.value * 2.5f);
-		mSpinSpeed = 200 + (Random.value * 800);
+		mSpinSpeed = 40 + (Random.value * 160);
 		mStartPos = transform.position;
 	}
 
