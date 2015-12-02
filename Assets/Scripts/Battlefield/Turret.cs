@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Turret : MonoBehaviour 
@@ -10,7 +10,7 @@ public class Turret : MonoBehaviour
 	private GameObject mBase;
 	private float mRotation;
 	private float mShootT;
-	private AstroidSpawn mAS;
+	private SpawnerBase mAS;
 	private Player mPlayer;
 	private Vector3 mBasePos;
 	private bool mPayerDetected = false;
@@ -28,7 +28,7 @@ public class Turret : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		mAS = InGame.Instance.AstroidSpawn ();
+		mAS = InGame.Instance.BaseSpawner ();
 	}
 
 	void OnEnable()

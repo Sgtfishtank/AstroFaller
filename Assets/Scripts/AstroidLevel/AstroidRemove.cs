@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class AstroidRemove : MonoBehaviour 
 {
 	private WarningArrow mWarning;
 	private Player mPlayer;
-	private AstroidSpawn mAstroidSpawn;
+	private SpawnerBase mAstroidSpawn;
 	private Rigidbody mRb;
 	private FMOD.Studio.EventInstance mClash;
 
@@ -21,7 +21,7 @@ public class AstroidRemove : MonoBehaviour
 	void Start ()
 	{
 		mPlayer = WorldGen.Instance.Player();
-		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
+		mAstroidSpawn = WorldGen.Instance.BaseSpawner ();
 	}
 	
 	void OnDisable()
@@ -49,7 +49,7 @@ public class AstroidRemove : MonoBehaviour
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mPlayer.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			mAstroidSpawn.SpawnAstCollisionEffects(coll.contacts[0].point);
+			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
 		}
 	}
 

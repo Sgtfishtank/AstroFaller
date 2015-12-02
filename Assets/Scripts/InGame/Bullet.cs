@@ -1,14 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Bullet : MonoBehaviour 
 {
-	private AstroidSpawn mAS;
+	private SpawnerBase mAS;
 
 	// Use this for initialization
 	void Start () 
 	{
-		mAS = InGame.Instance.AstroidSpawn ();
+		mAS = InGame.Instance.BaseSpawner ();
 	}
 	
 	// Update is called once per frame
@@ -21,9 +21,9 @@ public class Bullet : MonoBehaviour
 	{
 		if ((col.gameObject != gameObject) && (!col.isTrigger))
 		{
-			mAS.SpawnAstCollisionEffects(transform.position);
+			mAS.SpawnCollisionEffects(transform.position);
 			gameObject.SetActive(false);
-			mAS.SpawnBulletCollisionEffects(transform.position);
+			//mAS.SpawnBulletCollisionEffects(transform.position);
 		}
 	}
 }

@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 	public bool mUseAirDrain;
 	public bool mUseAirReg;
 
-	private AstroidSpawn mAS;
+	private SpawnerBase mAS;
 	private Collider mCurrentAsterodSpawnCollider;
 
 	private float mAirAmount;
@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		mAS = WorldGen.Instance.AstroidSpawn ();
+		mAS = WorldGen.Instance.BaseSpawner ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 	}
 
@@ -471,7 +471,7 @@ public class Player : MonoBehaviour
 			mRb.velocity = new Vector2(0, 0);
 			InGame.Instance.mDeathMenu.SetActive(true);
 			InGame.Instance.DeathMenu().Open();
-			GUICanvas.Instance.InGameGUICanvas().setEnableDeathMenu(true);
+			GUICanvasInGame.Instance.GetGUICanvasInGame().setEnableDeathMenu(true);
 			
 			mAS.StopSpawning();
 

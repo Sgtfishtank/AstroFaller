@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
 			{
 				GameObject thisObject = GameObject.Find("Audio Manager");
 				instance = thisObject.GetComponent<AudioManager>();
+                GameObject.DontDestroyOnLoad(thisObject);
 			}
 			return instance;
 		}

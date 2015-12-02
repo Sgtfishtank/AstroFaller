@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Mine : MonoBehaviour 
 {
-	private SphereCollider mCol;
 	public Animator mAnim;
 	public GameObject mAniobj;
 	public ParticleSystem mDetect;
@@ -17,7 +16,6 @@ public class Mine : MonoBehaviour
 
 	void Awake()
 	{
-		mCol = GetComponent<SphereCollider> ();
 		mAnim = transform.Find ("mine_anim").GetComponent<Animator> ();
 		enabled = false;
 		explotation = GlobalVariables.Instance.MINE_EXPLOTION_FORCE;

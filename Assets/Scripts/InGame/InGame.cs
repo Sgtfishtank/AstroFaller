@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEditor;
 using System.Collections;
 
 public class InGame : MonoBehaviour 
@@ -16,18 +17,18 @@ public class InGame : MonoBehaviour
 			return instance;
 		}
 	}
-	
+	public enum Level {ERROR = 0, ASTROID_BELT, ALIEN_BATTLEFIELD, COSMIC_STORM};
 	public GameObject mPlayerPrefab;
-	public GameObject mAstroidSpawnPrefab;
+	public GameObject[] mSpawnerPrefabs;
 	public GameObject mDirectionalLightPrefab;
 	public GameObject mPerfectDistanceMidPrefab;
 	public GameObject mPerfectDistanceParticlesPrefab;
 	public GameObject mDeathMenuPrefab;
 	
 	private Player mPlayer;
-	public AstroidSpawn mAstroidSpawn;
+	public SpawnerBase mSpawnerBase;
 	public GameObject mDeathMenu;
-	private int mCurrentLevel;
+	private Level mCurrentLevel;
 	
 	public float mUsualShiftkingRailgun = 0;
 	
@@ -57,15 +58,6 @@ public class InGame : MonoBehaviour
 		}
 		mPlayer = playerObj.GetComponent<Player>();
 		
-		GameObject astroidSpawnObj = GameObject.Find("AstroidSpawn");
-		if (astroidSpawnObj == null)
-		{
-			astroidSpawnObj = GameObject.Instantiate(mAstroidSpawnPrefab);
-			astroidSpawnObj.name = mAstroidSpawnPrefab.name;
-			astroidSpawnObj.transform.parent = transform;
-		}
-		mAstroidSpawn = astroidSpawnObj.GetComponent<AstroidSpawn>();
-		
 		GameObject dirLightObj = GameObject.Find("InGame DirectionalLight");
 		if (dirLightObj == null)
 		{
@@ -88,18 +80,30 @@ public class InGame : MonoBehaviour
 
 		mPerfectDistanceMid = GameObject.Instantiate (mPerfectDistanceMidPrefab);
 	}
+
+	void ActivateCorrectSpawner(Level level)
+	{
+		if (mSpawnerBase != null)
+		{
+			Debug.LogError(" Spawner not removed.");
+		}
+		GameObject astroidSpawnObj = GameObject.Instantiate(mSpawnerPrefabs[(int)level-1]);
+		astroidSpawnObj.name = mSpawnerPrefabs[(int)level-1].name;
+		astroidSpawnObj.transform.parent = transform;
+		mSpawnerBase = astroidSpawnObj.GetComponent<SpawnerBase>();
+	}
 	
 	public Player Player ()
 	{
 		return mPlayer;
 	}
 	
-	public AstroidSpawn AstroidSpawn ()
+	public SpawnerBase BaseSpawner ()
 	{
-		return mAstroidSpawn;
+		return mSpawnerBase;
 	}
 	
-	public int CurrentLevel()
+	public Level CurrentLevel()
 	{
 		return mCurrentLevel;
 	}
@@ -112,6 +116,11 @@ public class InGame : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+        System.GC.Collect();
+        Lightmapping.Clear();
+        //Lightmapping.Bake();
+        Enable();
+
 	}
 	private float startdelay = -1;
 	// Update is called once per frame
@@ -134,11 +143,11 @@ public class InGame : MonoBehaviour
 			Color fadeColor = Color.black;
 			fadeColor.a = 1f - mIntroPhaseT;
 
-			GUICanvas.Instance.InGameGUICanvas().SetFadeColor(fadeColor);
+			GUICanvasInGame.Instance.GetGUICanvasInGame().SetFadeColor(fadeColor);
 			
 			if (mIntroPhaseT >= 1f)
 			{
-				GUICanvas.Instance.InGameGUICanvas().SetFadeColor(new Color(0, 0, 0, 0));
+				GUICanvasInGame.Instance.GetGUICanvasInGame().SetFadeColor(new Color(0, 0, 0, 0));
 				mIntroPhase = false;
 				StartGame();
 			}
@@ -160,7 +169,7 @@ public class InGame : MonoBehaviour
 	public void StartGame ()
 	{
 		AudioManager.Instance.PlayMusic(fmodMusic);
-		mAstroidSpawn.RemoveAllAstroids();
+		mSpawnerBase.Reset();
 		mWorldGen.DespawnSegments();
 		mPlayer.StartGame();
 		
@@ -210,7 +219,7 @@ public class InGame : MonoBehaviour
 		mBgGen.ShiftBack(shift);
 		mWorldGen.ShiftBack(shift);
 		mPlayer.ShiftBack(shift);
-		mAstroidSpawn.ShiftBack(shift);
+		mSpawnerBase.ShiftBack(shift);
 
 		mPerfectDistanceMid.transform.position -= new Vector3 (0, shift, 0);
 		if (!mPlayer.isDead ())
@@ -220,12 +229,10 @@ public class InGame : MonoBehaviour
 	void ShowComponents(bool show)
 	{
 		InGameCamera.Instance.gameObject.SetActive (show);
-		GUICanvas.Instance.ShowInGameButtons(show);
-		GUICanvas.Instance.ShowOptionButtons (false);
+		GUICanvasInGame.Instance.ShowInGameButtons(show);
 		
 		mPerfectDistanceMid.gameObject.SetActive (false);
 
-		mAstroidSpawn.gameObject.SetActive (show);
 		mDirectionalLight.SetActive (show);
 		gameObject.SetActive (show);
 		mPlayer.gameObject.SetActive (show);
@@ -241,31 +248,38 @@ public class InGame : MonoBehaviour
 		mWorldGen.UnloadSegments ();
 		mBgGen.UnloadSegments ();
 		
-		mAstroidSpawn.UnloadAsteroids();
+		if (mSpawnerBase != null) 
+		{
+			mSpawnerBase.UnloadObjects ();
+			Destroy (mSpawnerBase);
+			mSpawnerBase = null;
+		}
 
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
 		mStartTime = -1;
 	}
 	
-	public void Enable(int levelIndex)
+	public void Enable()
 	{
-		mCurrentLevel = levelIndex;
+        mCurrentLevel = PlayerData.Instance.LevelToLoad;
 
 		ShowComponents(true);
 		
-		mBgGen.LoadSegments("Parralax", 120, 5);
-		mWorldGen.LoadSegments("Level" + levelIndex, 50, -1);
-		
-		mAstroidSpawn.LoadAsteroids(levelIndex);
+		mBgGen.LoadSegments("Parralax"/*+(int)mCurrentLevel*/, 120, 5);
+		mWorldGen.LoadSegments("Level" + (int)mCurrentLevel, 50, -1);
+		ActivateCorrectSpawner(mCurrentLevel);
+		mSpawnerBase.LoadObjects();
 
 		mBgGen.StartSpawnSegments(0);
 
 		mPlayer.IntroLoad();
 
+
+
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
-		GUICanvas.Instance.InGameGUICanvas().SetFadeColor(Color.black);
+		GUICanvasInGame.Instance.GetGUICanvasInGame().SetFadeColor(Color.black);
 	}
 
 	public GameObject GUIObject (string name)

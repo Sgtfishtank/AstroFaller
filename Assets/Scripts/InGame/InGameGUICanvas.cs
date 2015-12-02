@@ -65,12 +65,7 @@ public class InGameGUICanvas : MonoBehaviour
 	// pressed back to menu
 	public void BackToMenu()
 	{
-		clear();
-		WorldGen.Instance.Disable();
-		MainGameMenu.Instance.Enable(0);
-		setEnableDeathMenu(false);
-		InGame.Instance.mDeathMenu.SetActive(false);
-		InGame.Instance.DeathMenu().Close();
+        Application.LoadLevel("MainMenuLevel");
 	}
 
 	// death

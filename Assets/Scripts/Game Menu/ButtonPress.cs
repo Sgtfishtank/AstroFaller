@@ -39,7 +39,11 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		ButtonPress[] bp = GetComponents<ButtonPress>();
 		if (bp.Length < 2)
 		{
-			mObj = GUICanvas.Instance.GUIObject(name);
+            print(Application.loadedLevelName);
+            if (Application.loadedLevelName == "MainMenuLevel")
+                mObj = GUICanvasMenu.Instance.GUIObject(name);
+            else
+                mObj = GUICanvasInGame.Instance.GUIObject(name);
 		}
 		else
 		{
@@ -47,7 +51,10 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			{
 				if (bp[i] == this) 
 				{
-					mObj = GUICanvas.Instance.GUIObject(name + " " + i);
+                    if (Application.loadedLevelName == "MainMenuLevel")
+                        mObj = GUICanvasMenu.Instance.GUIObject(name + " " + i);
+                    else
+                        mObj = GUICanvasInGame.Instance.GUIObject(name + " " + i);
 				}
 			}
 		}

@@ -66,6 +66,8 @@ public class MainGameMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+        System.GC.Collect();
+        Enable(0);
 	}
 
 	// Update is called once per frame
@@ -84,7 +86,7 @@ public class MainGameMenu : MonoBehaviour
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
 
-		GUICanvas.Instance.ShowMenuButtons(show);
+		GUICanvasMenu.Instance.ShowMenuButtons(show);
 		mBackground.gameObject.SetActive (show);
 		gameObject.SetActive (show);
 	}
@@ -110,7 +112,7 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].Unfocus();
 		}
 		
-		GUICanvas.Instance.MenuGUICanvas().SetFadeColor(Color.clear);
+		GUICanvasMenu.Instance.MenuGUICanvas().SetFadeColor(Color.clear);
 
 		ResetAllMenusAndButtons ();
 
@@ -140,19 +142,19 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
-		GUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
+		GUICanvasMenu.Instance.ShowOptionButtons(mShowOptionsMenu);
 
 		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
-		GUICanvas.Instance.MenuGUICanvas().ShowPopupCraftingButton(mShowPopupCraftingMenu);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupCraftingButton(mShowPopupCraftingMenu);
 
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
-		GUICanvas.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
 
-		GUICanvas.Instance.MenuGUICanvas().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
-		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -246,7 +248,7 @@ public class MainGameMenu : MonoBehaviour
 		{
 			// apply backup state on close options if cancel changes made in options
 			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
-			GUICanvas.Instance.OptionsGUICanvas().UpdateOptions();
+			GUICanvasMenu.Instance.OptionsGUICanvas().UpdateOptions();
 		}
 
 		UpdateMenusAndButtons ();

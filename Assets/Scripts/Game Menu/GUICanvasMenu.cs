@@ -2,24 +2,23 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class GUICanvas : MonoBehaviour 
+public class GUICanvasMenu : MonoBehaviour 
 {
 	// snigleton
-	private static GUICanvas instance = null;
-	public static GUICanvas Instance
+	private static GUICanvasMenu instance = null;
+	public static GUICanvasMenu Instance
 	{
 		get
 		{
 			if (instance == null)
 			{
 				GameObject thisObject = GameObject.Find("GUICanvas");
-				instance = thisObject.GetComponent<GUICanvas>();
+				instance = thisObject.GetComponent<GUICanvasMenu>();
 			}
 			return instance;
 		}
 	}
 
-	private InGameGUICanvas mInGameGUICanvas;
 	private MenuGUICanvas mMenuGUICanvas;
 	private OptionsGUICanvas mOptionsGUICanvas;
 	private bool mShowButtons;
@@ -28,10 +27,8 @@ public class GUICanvas : MonoBehaviour
 	void Awake () 
 	{
 		mDebugGUI = GetComponent<DebugGUI>();
-		mInGameGUICanvas = GetComponentsInChildren<InGameGUICanvas>(true)[0];
 		mMenuGUICanvas = GetComponentsInChildren<MenuGUICanvas>(true)[0];
 		mOptionsGUICanvas = GetComponentsInChildren<OptionsGUICanvas>(true)[0];
-		mInGameGUICanvas.gameObject.SetActive (true);
 		mMenuGUICanvas.gameObject.SetActive (true);
 		mOptionsGUICanvas.gameObject.SetActive (true);
 	}
@@ -54,12 +51,6 @@ public class GUICanvas : MonoBehaviour
 	{
 		mOptionsGUICanvas.gameObject.SetActive (show);
 	}
-	
-	// show ingame buttons
-	public void ShowInGameButtons(bool show)
-	{
-		mInGameGUICanvas.gameObject.SetActive (show);
-	}
 
 	public void ToggleShowButtons ()
 	{
@@ -75,7 +66,6 @@ public class GUICanvas : MonoBehaviour
 
 	void UpdateButtons ()
 	{
-		ShowButtons(mInGameGUICanvas.GetButtons(), mShowButtons);
 		ShowButtons(mOptionsGUICanvas.GetButtons(), mShowButtons);
 		ShowButtons(mMenuGUICanvas.GetButtons(), mShowButtons);
 	}
@@ -83,11 +73,6 @@ public class GUICanvas : MonoBehaviour
 	public MenuGUICanvas MenuGUICanvas ()
 	{
 		return mMenuGUICanvas;
-	}
-	
-	public InGameGUICanvas InGameGUICanvas ()
-	{
-		return mInGameGUICanvas;
 	}
 
 	public OptionsGUICanvas OptionsGUICanvas ()
@@ -140,7 +125,7 @@ public class GUICanvas : MonoBehaviour
 			
 			if (!mDebugGUI.enabled)
 			{
-				GUICanvas.Instance.ShowButtons(false);
+				GUICanvasMenu.Instance.ShowButtons(false);
 				InGame.Instance.Player().mInvulnerable = false;
 			}
 		}
@@ -170,10 +155,10 @@ public class GUICanvas : MonoBehaviour
 			ret = MainGameMenu.Instance.GUIObject(name);
 		}
 
-		if (ret == null)
+		/*if (ret == null)
 		{
 			ret = InGame.Instance.GUIObject(name);
-		}
+		}*/
 
 		if (ret == null) 
 		{

@@ -49,13 +49,14 @@ public class WorldMapMenu : GameMenu
 			{
 				mPlayLevelPhase = false;
 				MainGameMenu.Instance.Disable();
-				WorldGen.Instance.Enable(mPlayLevelIndex);
+                PlayerData.Instance.LevelToLoad = (InGame.Level)mPlayLevelIndex;
+                Application.LoadLevel("InGameLevel");
 			}
 			else
 			{
 				Color fadeColor = Color.black;
 				fadeColor.a = MenuCamera.Instance.MovingT();
-				GUICanvas.Instance.MenuGUICanvas().SetFadeColor(fadeColor);
+				GUICanvasMenu.Instance.MenuGUICanvas().SetFadeColor(fadeColor);
 			}
 		}
 		else 
@@ -151,7 +152,7 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
 	}
 
 	public override void BuyWithBolts()
@@ -291,8 +292,8 @@ public class WorldMapMenu : GameMenu
 	{
 		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
 		mPlayLevelPhase = true;
-		GUICanvas.Instance.MenuGUICanvas().ShowIconButtons(false);
-		GUICanvas.Instance.MenuGUICanvas().ShowPlayLevelButton(false);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowIconButtons(false);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
 }

@@ -55,7 +55,10 @@ public class DebugGUI : MonoBehaviour
 		
 		if (Input.GetKeyDown(KeyCode.B))
 		{
-			GUICanvas.Instance.ToggleShowButtons();
+            if (Application.loadedLevelName == "MainMenuLevel")
+                GUICanvasMenu.Instance.ToggleShowButtons();
+            else
+                GUICanvasInGame.Instance.ToggleShowButtons();
 		}
 		
 		if (Input.GetKeyDown(KeyCode.K))

@@ -8,10 +8,10 @@ public class GlobalVariables : MonoBehaviour
 
 	/*----------------------------------------AstroidSpawn----------------------------------*/
 	public float ASTROID_SPAWN_SPAWNRATE 				= 5f   ;
-	public float ASTROID_SPAWN_XOFFSET					= 10f  ; 
+	public float SPAWNOBJ_LELVEL_BOUNDS_X				= 10f  ; 
 	public float ASTROID_SPAWN_ROTATION_SPEED 			= 10f ;
-	public int ASTROID_SPAWN_MAX_ASTROIDS				= 5;
-	public int ASTROID_SPAWN_MAX_PARTICLES				= 3;
+	public int MAX_SPAWN_OBJECTS						= 5;
+	public int SPAWN_COLLISON_MAX_PARTICLES				= 3;
 	public int ASTROID_SPAWN_IMPACT_FACTOR				= 25;
 
 	/*----------------------------------------Player----------------------------------------*/
@@ -195,6 +195,7 @@ public class GlobalVariables : MonoBehaviour
 			{
 				GameObject _thisObject = GameObject.Find("GlobalVaribelsPrefab");
 				instance = _thisObject.GetComponent<GlobalVariables>();
+                GameObject.DontDestroyOnLoad(_thisObject);
 			}
 			return instance;
 		}

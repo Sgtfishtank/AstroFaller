@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Missile : MonoBehaviour 
 {
 	public float mStartTime;
-	private Player mPlayer;
-	private AstroidSpawn mAstroidSpawn;
+	private SpawnerBase mMissileSpawn;
 	private Rigidbody mRb;
 	
 	private Vector3 mStartPos;
@@ -20,8 +19,7 @@ public class Missile : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		mPlayer = WorldGen.Instance.Player();
-		mAstroidSpawn = WorldGen.Instance.AstroidSpawn ();
+		mMissileSpawn = WorldGen.Instance.BaseSpawner ();
 	}
 	
 	void OnDisable()
@@ -66,9 +64,9 @@ public class Missile : MonoBehaviour
 	{
 		if (coll.gameObject != gameObject)
 		{
-			mAstroidSpawn.SpawnAstCollisionEffects(coll.contacts[0].point);
-			mAstroidSpawn.SpawnMissileCollisionEffects(transform.position);
-			mAstroidSpawn.RemoveAstroid(gameObject);
+			mMissileSpawn.SpawnCollisionEffects(coll.contacts[0].point);
+			//mAstroidSpawn.SpawnMissileCollisionEffects(transform.position);
+			gameObject.SetActive(false);
 		}
 	}
 

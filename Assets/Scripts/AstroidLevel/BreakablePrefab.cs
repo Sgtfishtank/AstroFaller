@@ -41,7 +41,6 @@ public class BreakablePrefab : MonoBehaviour {
 	}
 	void Awake()
 	{
-		print("hej "+gameObject.name);
 		time = Time.time + mDealay;
 		first=true;
 	}

@@ -31,15 +31,15 @@ public class GameStarter : MonoBehaviour
 		}
 
 		// triger static instance init
-		currInstance = InGame.Instance.gameObject;
+		//currInstance = InGame.Instance.gameObject;
 		currInstance = MainGameMenu.Instance.gameObject;
 
-		currInstance = InGameCamera.Instance.gameObject;
+		//currInstance = InGameCamera.Instance.gameObject;
 		currInstance = MenuCamera.Instance.gameObject;
 
 		currInstance = GlobalVariables.Instance.gameObject;
 		currInstance = PlayerData.Instance.gameObject;
-		currInstance = GUICanvas.Instance.gameObject;
+		currInstance = GUICanvasMenu.Instance.gameObject;
 		currInstance = AudioManager.Instance.gameObject;
 
 		currInstance = this.gameObject;
@@ -50,29 +50,20 @@ public class GameStarter : MonoBehaviour
 	{
 		switch (mStartState) 
 		{
-		case StartState.WorldMap:
-			WorldGen.Instance.Disable();
+            case StartState.WorldMap:
 			MainGameMenu.Instance.Enable(0);
 			break;
 		case StartState.Perks:
-			WorldGen.Instance.Disable();
+			
 			MainGameMenu.Instance.Enable(1);
 			break;
 		case StartState.Items:
-			WorldGen.Instance.Disable();
+			
 			MainGameMenu.Instance.Enable(2);
 			break;
 		case StartState.CrystalShop:
-			WorldGen.Instance.Disable();
+			
 			MainGameMenu.Instance.Enable(3);
-			break;
-		case StartState.AstroidLevel:
-			MainGameMenu.Instance.Disable();
-			WorldGen.Instance.Enable(1);
-			break;
-		case StartState.AlienLevel:
-			MainGameMenu.Instance.Disable();
-			WorldGen.Instance.Enable(2);
 			break;
 		default:
 			print("ERROR: StartState " + mStartState);

@@ -124,14 +124,9 @@ public class MovementControls
 			Vector3 pendVel = Vector3.Cross(new Vector3(0, 0, 1), mPlayer.Rigidbody().velocity);
 			
 			Vector3 offset = (pendVel * Mathf.Sin (time * freq) * hegiht);
-			Vector3 offset2 = (pendVel * Mathf.Cos(time * freq) * freq * hegiht);
 			
 			Vector3 pos = mStartPos + (mPlayer.Rigidbody().velocity * time) + offset;
-			Vector3 vel = (mPlayer.Rigidbody().velocity) + offset2;
-			
-			//mPlayer.transform.LookAt(mPlayer.transform.position + vel);
-			
-			//Debug.DrawLine (transform.position, transform.position + (vel * Time.deltaTime), Color.green, 100);
+
 			mPlayer.transform.position = pos;
 			// no player monent if hover failed
 

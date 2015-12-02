@@ -19,6 +19,7 @@ public class PlayerData : MonoBehaviour
 			{
 				GameObject thisObject = GameObject.Find("PlayerData");
 				instance = thisObject.GetComponent<PlayerData>();
+                GameObject.DontDestroyOnLoad(thisObject);
 			}
 			return instance;
 		}
@@ -33,6 +34,7 @@ public class PlayerData : MonoBehaviour
 	public int mAirPerkUnlockedLevel;
 	public int mLifePerkUnlockedLevel;
 	public int mBurstPerkUnlockedLevel;
+    public InGame.Level LevelToLoad;
 
 	// Use this for initialization
 	void Start () 

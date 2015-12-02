@@ -131,8 +131,8 @@ public class Level : PlayableLevel
 		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 		mPlayButton.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
 
-		mPlayButton.transform.localPosition += GUICanvas.Instance.MenuGUICanvas().PlayButton().PositionOffset();
-		mPlayButton.transform.localScale = Vector3.one * GUICanvas.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
+		mPlayButton.transform.localPosition += GUICanvasMenu.Instance.MenuGUICanvas().PlayButton().PositionOffset();
+		mPlayButton.transform.localScale = Vector3.one * GUICanvasMenu.Instance.MenuGUICanvas().PlayButton().ScaleFactor();
 		
 		for (int i = 0; i < mTextMeshes.Length; i++) 
 		{

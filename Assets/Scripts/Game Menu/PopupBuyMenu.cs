@@ -37,7 +37,7 @@ public class PopupBuyMenu : MonoBehaviour
 	void Start()
 	{
 		gameObject.SetActive(false);
-		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
 	}
 
 	// Update is called once per frame
@@ -70,7 +70,7 @@ public class PopupBuyMenu : MonoBehaviour
 		mOpen = true;
 		gameObject.SetActive(true);
 
-		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (true);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupBuyButton (true);
 	}
 
 	public void Close()
@@ -87,7 +87,7 @@ public class PopupBuyMenu : MonoBehaviour
 
 		mOpen = false;
 		gameObject.SetActive(false);
-		GUICanvas.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
+		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupBuyButton (false);
 	}
 
 	public bool IsOpen ()
