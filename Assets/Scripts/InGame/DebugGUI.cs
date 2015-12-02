@@ -21,37 +21,40 @@ public class DebugGUI : MonoBehaviour
 	{
 		bool touching3 = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
 
-		Player pl = InGame.Instance.Player();
-		
-		if (Input.GetKeyDown(KeyCode.I) || touching3)
-		{
-			pl.mInvulnerable = !pl.mInvulnerable;
-		}
-		
-		if (Input.GetKeyDown(KeyCode.F))
-		{
-			pl.Dash();
-		}
-		
-		if (Input.GetKeyDown(KeyCode.Plus))
-		{
-			pl.PlayerHeal(1);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.Minus))
-		{
-			pl.PlayerDamage(1);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			pl.mUseAirReg = !pl.mUseAirReg;
-		}
-		
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			pl.mUseAirDrain = !pl.mUseAirDrain;
-		}
+        if (Application.loadedLevelName != "MainMenuLevel")
+        {
+            Player pl = InGame.Instance.Player();
+
+            if (Input.GetKeyDown(KeyCode.I) || touching3)
+            {
+                pl.mInvulnerable = !pl.mInvulnerable;
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                pl.Dash();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Plus))
+            {
+                pl.PlayerHeal(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Minus))
+            {
+                pl.PlayerDamage(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                pl.mUseAirReg = !pl.mUseAirReg;
+            }
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                pl.mUseAirDrain = !pl.mUseAirDrain;
+            } 
+        }
 		
 		if (Input.GetKeyDown(KeyCode.B))
 		{
@@ -90,8 +93,8 @@ public class DebugGUI : MonoBehaviour
 		GUI.Box(new Rect(10, 10, 200, mDebugGUISizeY - startY), "Debug Window");
 		startX += 10;
 		startY += size;
-		
-		if (InGame.Instance.gameObject.activeSelf) 
+
+        if (Application.loadedLevelName != "MainMenuLevel")
 		{
 			GUI.Label (new Rect (startX, startY, 180, size), "Level: " + InGame.Instance.CurrentLevel ());
 			startY += size;
@@ -124,7 +127,7 @@ public class DebugGUI : MonoBehaviour
 		GUI.Label (new Rect(startX, startY, 180, size), "Live: " + PlayerData.Instance.mLifePerkUnlockedLevel);
 		startY += size;
 
-		if (InGame.Instance.Player().gameObject.activeInHierarchy) 
+        if (Application.loadedLevelName != "MainMenuLevel")
 		{
 			GUI.Label (new Rect (startX, startY, 180, size), "Player Air: " + InGame.Instance.Player ().AirAmount ());
 			startY += size;
