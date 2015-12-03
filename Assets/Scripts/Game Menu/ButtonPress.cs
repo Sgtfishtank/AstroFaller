@@ -26,43 +26,39 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private FMOD.Studio.EventInstance mPressSound;
 
 	void Awake()
-	{
-		mPressSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuQuestionMark/QuestionMark");
+    {
+        mPressSound = AudioManager.Instance.GetSoundsEvent("MenuQuestionMark/QuestionMark");
 	}
 
 	void Start()
-	{
-	}
-
-	public void Init()
-	{
-		ButtonPress[] bp = GetComponents<ButtonPress>();
-		if (bp.Length < 2)
-		{
+    {
+        ButtonPress[] bp = GetComponents<ButtonPress>();
+        if (bp.Length < 2)
+        {
             if (Application.loadedLevelName == "MainMenuLevel")
-                mObj = GUICanvasMenu.Instance.GUIObject(name);
+                mObj = MenuGUICanvas.Instance.GUIObject(name);
             else
-                mObj = GUICanvasInGame.Instance.GUIObject(name);
-		}
-		else
-		{
-			for (int i = 0; i < bp.Length; i++) 
-			{
-				if (bp[i] == this) 
-				{
+                mObj = InGameGUICanvas.Instance.GUIObject(name);
+        }
+        else
+        {
+            for (int i = 0; i < bp.Length; i++)
+            {
+                if (bp[i] == this)
+                {
                     if (Application.loadedLevelName == "MainMenuLevel")
-                        mObj = GUICanvasMenu.Instance.GUIObject(name + " " + i);
+                        mObj = MenuGUICanvas.Instance.GUIObject(name + " " + i);
                     else
-                        mObj = GUICanvasInGame.Instance.GUIObject(name + " " + i);
-				}
-			}
-		}
+                        mObj = InGameGUICanvas.Instance.GUIObject(name + " " + i);
+                }
+            }
+        }
 
-		if (mObj != null)
-		{
-			mBaseScale = mObj.transform.localScale;
-			mBasePosition = mObj.transform.localPosition;
-		}
+        if (mObj != null)
+        {
+            mBaseScale = mObj.transform.localScale;
+            mBasePosition = mObj.transform.localPosition;
+        }
 	}
 
 	public void OnPointerDown (PointerEventData eventData) 

@@ -56,7 +56,7 @@ public class WorldMapMenu : GameMenu
 			{
 				Color fadeColor = Color.black;
 				fadeColor.a = MenuCamera.Instance.MovingT();
-				GUICanvasMenu.Instance.MenuGUICanvas().SetFadeColor(fadeColor);
+				MenuGUICanvas.Instance.SetFadeColor(fadeColor);
 			}
 		}
 		else 
@@ -152,7 +152,7 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
+		MenuGUICanvas.Instance.ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
 	}
 
 	public override void BuyWithBolts()
@@ -292,8 +292,8 @@ public class WorldMapMenu : GameMenu
 	{
 		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
 		mPlayLevelPhase = true;
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowIconButtons(false);
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowPlayLevelButton(false);
+		MenuGUICanvas.Instance.ShowIconButtons(false);
+		MenuGUICanvas.Instance.ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
 }

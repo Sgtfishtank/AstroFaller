@@ -67,7 +67,7 @@ public class PerksMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{		
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowPerkButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		MenuGUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public void ViewNextPerk()
@@ -153,7 +153,7 @@ public class PerksMenu : GameMenu
 		MenuCamera.Instance.PopupBuyMenu().Close();
 	}
 
-	public void BuyAirPerk ()
+	public void BuyPerk()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
 		
@@ -161,22 +161,5 @@ public class PerksMenu : GameMenu
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
-	
-	public void BuyLifePerk ()
-	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons();
-		
-		OpenBuyPerkMenu(mPerkIndex);
-		
-		MainGameMenu.Instance.UpdateMenusAndButtons();
-	}
-	
-	public void BuyBurstPerk ()
-	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons();
-		
-		OpenBuyPerkMenu(mPerkIndex);
 
-		MainGameMenu.Instance.UpdateMenusAndButtons();
-	}
 }

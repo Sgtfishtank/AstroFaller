@@ -19,7 +19,7 @@ public class MenuStarter : MonoBehaviour
         currInstance = EventManager.Instance.gameObject;
 
         // triger static instance init
-        currInstance = GUICanvasMenu.Instance.gameObject;
+        currInstance = MenuGUICanvas.Instance.gameObject;
         currInstance = MenuCamera.Instance.gameObject;
         currInstance = MainGameMenu.Instance.gameObject;
 	}

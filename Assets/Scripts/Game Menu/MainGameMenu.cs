@@ -97,7 +97,7 @@ public class MainGameMenu : MonoBehaviour
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
 
-		GUICanvasMenu.Instance.ShowMenuButtons(show);
+		MenuGUICanvas.Instance.ShowMenuButtons(show);
 		mBackground.gameObject.SetActive (show);
 		gameObject.SetActive (show);
 	}
@@ -123,7 +123,7 @@ public class MainGameMenu : MonoBehaviour
 			mGameMenus[i].Unfocus();
 		}
 		
-		GUICanvasMenu.Instance.MenuGUICanvas().SetFadeColor(Color.clear);
+		MenuGUICanvas.Instance.SetFadeColor(Color.clear);
 
 		ResetAllMenusAndButtons ();
 
@@ -153,19 +153,19 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
-		GUICanvasMenu.Instance.ShowOptionButtons(mShowOptionsMenu);
+		MenuGUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
 
 		MenuCamera.Instance.ShowPopupCraftingMenu(mShowPopupCraftingMenu);
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupCraftingButton(mShowPopupCraftingMenu);
+		MenuGUICanvas.Instance.ShowPopupCraftingButton(mShowPopupCraftingMenu);
 
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
+		MenuGUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
 
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
+		MenuGUICanvas.Instance.ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
+		MenuGUICanvas.Instance.ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -259,7 +259,7 @@ public class MainGameMenu : MonoBehaviour
 		{
 			// apply backup state on close options if cancel changes made in options
 			mSettingAudioManagerBackup.CopyState(AudioManager.Instance);
-			GUICanvasMenu.Instance.OptionsGUICanvas().UpdateOptions();
+			MenuGUICanvas.Instance.OptionsGUICanvas().UpdateOptions();
 		}
 
 		UpdateMenusAndButtons ();

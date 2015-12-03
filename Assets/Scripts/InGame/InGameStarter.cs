@@ -6,14 +6,8 @@ public class InGameStarter : MonoBehaviour
 {
     public InGame.Level mStartLevel;
 
-    public GameObject[] mEscenncialPrefabs;
-    public GameObject[] mMenuPrefabs;
-
 	void Awake()
 	{
-        Init(mEscenncialPrefabs);
-        Init(mMenuPrefabs);
-
         GameObject currInstance;
         currInstance = AudioManager.Instance.gameObject;
         currInstance = GlobalVariables.Instance.gameObject;
@@ -21,24 +15,11 @@ public class InGameStarter : MonoBehaviour
         currInstance = EventManager.Instance.gameObject;
 
         // triger static instance init
-        currInstance = GUICanvasInGame.Instance.gameObject;
+        currInstance = InGameGUICanvas.Instance.gameObject;
         currInstance = InGameCamera.Instance.gameObject;
 		currInstance = InGame.Instance.gameObject;
 
 	}
-
-    private void Init(GameObject[] mPrefabs)
-    {
-        for (int i = 0; i < mPrefabs.Length; i++)
-        {
-            GameObject go = GameObject.Find(mPrefabs[i].name);
-            if (go == null)
-            {
-                //go = Instantiate(mPrefabs[i]) as GameObject;
-                //go.name = mPrefabs[i].name;
-            }
-        }
-    }
 
 	// Use this for initialization
 	void Start ()

@@ -470,7 +470,7 @@ public class Player : MonoBehaviour
 			mRb.velocity = new Vector2(0, 0);
 			InGame.Instance.mDeathMenu.SetActive(true);
 			InGame.Instance.DeathMenu().Open();
-			GUICanvasInGame.Instance.GetGUICanvasInGame().setEnableDeathMenu(true);
+			InGameGUICanvas.Instance.setEnableDeathMenu(true);
 			
 			mAS.StopSpawning();
 

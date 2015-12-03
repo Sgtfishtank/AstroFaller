@@ -63,7 +63,7 @@ public class ItemMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		GUICanvasMenu.Instance.MenuGUICanvas().ShowItemButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+		MenuGUICanvas.Instance.ShowItemButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()

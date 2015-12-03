@@ -45,6 +45,21 @@ public class AudioManager : MonoBehaviour
 	{
 	}
 
+    public FMOD.Studio.EventInstance GetEvent(string path)
+	{
+        return FMOD_StudioSystem.instance.GetEvent("event:/ + " + path);
+    }
+
+    public FMOD.Studio.EventInstance GetMusicEvent(string path)
+    {
+        return FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path);
+    }
+
+    public FMOD.Studio.EventInstance GetSoundsEvent(string path)
+    {
+        return FMOD_StudioSystem.instance.GetEvent("event:/Sounds/" + path);
+    }
+
 	public void CopyState(AudioManager mOtherAudioManager)
 	{
 		// set state to other state

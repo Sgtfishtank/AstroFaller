@@ -11,7 +11,7 @@ public class OptionsGUICanvas : MonoBehaviour
 
 	private bool mShowButtons;
 	private Button[] mButtons;
-	private ButtonPress[] mButtonPresss;
+	//private ButtonPress[] mButtonPresss;
 	
 	void Awake () 
 	{
@@ -22,7 +22,7 @@ public class OptionsGUICanvas : MonoBehaviour
 		mMusicButtons = mOptionButtons.transform.Find("Music").gameObject;
 		mOptionButtons.SetActive (true);
 
-		mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
+		//mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
 		mButtons = GetComponentsInChildren<Button>(true);
 	}
 	
@@ -30,11 +30,6 @@ public class OptionsGUICanvas : MonoBehaviour
 	void Start () 
 	{
 		UpdateOptions ();
-		
-		for (int i = 0; i < mButtonPresss.Length; i++) 
-		{
-			mButtonPresss[i].Init();	
-		}
 	}
 	
 	// Update is called once per frame
