@@ -42,6 +42,11 @@ public class MenuGUICanvas : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+        if (!PlayerData.Instance.mShowControls)
+        {
+            MenuCamera.Instance.mCotrls.SetActive(false);
+        }
+
 		for (int i = 0; i < mButtonPresss.Length; i++) 
 		{
 			mButtonPresss[i].Init();	
@@ -58,7 +63,8 @@ public class MenuGUICanvas : MonoBehaviour
 	public void Deselect()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons ();
-		MenuCamera.Instance.mCotrls.SetActive(false);
+        MenuCamera.Instance.mCotrls.SetActive(false);
+        PlayerData.Instance.mShowControls = false;
 		MainGameMenu.Instance.UpdateMenusAndButtons ();
 	}
 

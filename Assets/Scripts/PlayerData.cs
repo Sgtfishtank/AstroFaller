@@ -3,12 +3,6 @@ using System.Collections;
 
 public class PlayerData : MonoBehaviour 
 {
-	private enum CashType
-	{
-		Bolts,
-		Crystals
-	}
-
 	// snigleton
 	private static PlayerData instance = null;
 	public static PlayerData Instance
@@ -16,10 +10,9 @@ public class PlayerData : MonoBehaviour
 		get
 		{
 			if (instance == null)
-			{
-				GameObject thisObject = GameObject.Find("PlayerData");
-				instance = thisObject.GetComponent<PlayerData>();
-                GameObject.DontDestroyOnLoad(thisObject);
+            {
+                instance = Singleton<PlayerData>.CreateInstance("Prefab/Essential/PlayerData");
+                GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
@@ -34,7 +27,13 @@ public class PlayerData : MonoBehaviour
 	public int mAirPerkUnlockedLevel;
 	public int mLifePerkUnlockedLevel;
 	public int mBurstPerkUnlockedLevel;
-    public InGame.Level LevelToLoad;
+    public InGame.Level LevelToLoad = InGame.Level.ERROR;
+    public MainGameMenu.State StateToLoad = MainGameMenu.State.ERROR;
+    public bool mShowControls = true;
+
+    void Awake()
+    {
+    }
 
 	// Use this for initialization
 	void Start () 

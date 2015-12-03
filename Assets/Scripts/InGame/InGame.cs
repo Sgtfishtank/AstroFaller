@@ -1,23 +1,39 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 using System.Collections;
 
 public class InGame : MonoBehaviour 
 {
 	private static InGame instance = null;
+
 	public static InGame Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName == "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
-			{
-				GameObject thisObject = GameObject.Find("Game");
-				instance = thisObject.GetComponent<InGame>();
+            {
+                instance = Singleton<InGame>.CreateInstance("Prefab/Essential/InGame/Game");
 			}
 			return instance;
 		}
 	}
-	public enum Level {ERROR = 0, ASTROID_BELT, ALIEN_BATTLEFIELD, COSMIC_STORM};
+
+	public enum Level 
+    {
+        ERROR = 0, 
+        ASTROID_BELT = 1, 
+        ALIEN_BATTLEFIELD, 
+        COSMIC_STORM,
+
+        DEFAULT = ASTROID_BELT,
+    };
+
 	public GameObject mPlayerPrefab;
 	public GameObject[] mSpawnerPrefabs;
 	public GameObject mDirectionalLightPrefab;
@@ -43,10 +59,16 @@ public class InGame : MonoBehaviour
 	private WorldGen mWorldGen;
 	private WorldGen mBgGen;
 
-	private GameObject mPerfectDistanceMid;
+    private GameObject mPerfectDistanceMid;
+    private float startdelay = -1;
 
 	void Awake()
 	{
+        if (instance == null)
+        {
+            instance = this;
+        }
+
 		mWorldGen = transform.Find("WorldGen").GetComponent<WorldGen>();
 		mBgGen = transform.Find("BgGen").GetComponent<WorldGen>();
 
@@ -117,12 +139,8 @@ public class InGame : MonoBehaviour
 	void Start () 
 	{
         System.GC.Collect();
-        Lightmapping.Clear();
-        //Lightmapping.Bake();
-        Enable();
-
 	}
-	private float startdelay = -1;
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -131,13 +149,13 @@ public class InGame : MonoBehaviour
 			if(startdelay == -1)
 			{
 				startdelay = Time.time+GlobalVariables.Instance.LOAD_LEVEL_DELAY;
-				//print(startdelay);
-
 			}
+
 			if(startdelay > Time.time)
 			{
 				return;
 			}
+
 			mIntroPhaseT = Mathf.Clamp01(mIntroPhaseT + (Time.deltaTime / GlobalVariables.Instance.WORLD_GEN_INTRO_TIME));
 			
 			Color fadeColor = Color.black;
@@ -260,9 +278,9 @@ public class InGame : MonoBehaviour
 		mStartTime = -1;
 	}
 	
-	public void Enable()
+	public void Enable(InGame.Level level)
 	{
-        mCurrentLevel = PlayerData.Instance.LevelToLoad;
+        mCurrentLevel = level;
 
 		ShowComponents(true);
 		
@@ -274,8 +292,6 @@ public class InGame : MonoBehaviour
 		mBgGen.StartSpawnSegments(0);
 
 		mPlayer.IntroLoad();
-
-
 
 		mIntroPhase = true;
 		mIntroPhaseT = 0;

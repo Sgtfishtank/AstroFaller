@@ -174,10 +174,13 @@ public class GlobalVariables : MonoBehaviour
 	public string SHOCKWAVE_DESCRIPTION = "---";
 	public string SHOCKWAVE_LEVELS_UNIT = "---";
 
+    void Awake()
+    {
+    }
+
 	// Use this for initialization
 	void Start ()
 	{
-		DontDestroyOnLoad(this.gameObject);
 	}
 	
 	// Update is called once per frame
@@ -192,10 +195,9 @@ public class GlobalVariables : MonoBehaviour
 		get
 		{
 			if (instance == null)
-			{
-				GameObject _thisObject = GameObject.Find("GlobalVaribelsPrefab");
-				instance = _thisObject.GetComponent<GlobalVariables>();
-                GameObject.DontDestroyOnLoad(_thisObject);
+            {
+                instance = Singleton<GlobalVariables>.CreateInstance("Prefab/Essential/GlobalVaribelsPrefab");
+                GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}

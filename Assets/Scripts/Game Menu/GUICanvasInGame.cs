@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 using UnityEngine.UI;
 
 public class GUICanvasInGame : MonoBehaviour 
@@ -9,11 +10,15 @@ public class GUICanvasInGame : MonoBehaviour
 	public static GUICanvasInGame Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName == "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
 			{
-				GameObject thisObject = GameObject.Find("GUICanvas");
-				instance = thisObject.GetComponent<GUICanvasInGame>();
+                instance = Singleton<GUICanvasInGame>.CreateInstance("Prefab/Essential/InGame/GUICanvas");
 			}
 			return instance;
 		}

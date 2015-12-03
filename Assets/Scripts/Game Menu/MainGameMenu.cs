@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class MainGameMenu : MonoBehaviour 
@@ -8,23 +9,33 @@ public class MainGameMenu : MonoBehaviour
 	public static MainGameMenu Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName != "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
-			{
-				GameObject thisObject = GameObject.Find("Game Menu Base");
-				instance = thisObject.GetComponent<MainGameMenu>();
+            {
+                instance = Singleton<MainGameMenu>.CreateInstance("Prefab/Essential/Menu/Game Menu Base");
 			}
 			return instance;
 		}
 	}
 
+    public enum State
+    {
+        ERROR = -1,
+        WORLD_MAP = 0,
+        ITEMS = 2,
+        PERKS = 1,
+        CRYSTAL_SHOP = 3,
+
+        DEFAULT = WORLD_MAP,
+    };
+
 	public GameObject mBackgroundPrefab;
 	public GameObject mBackground;
-
-	private int WORLD_MAP_MENU_INDEX = 0;
-	private int PERKS_MENU_INDEX = 1;
-	private int ITEMS_MENU_INDEX = 2;
-	private int CRYSTAL_SHOP_MENU_INDEX = 3;
 
 	private GameMenu[] mGameMenus;
 	public GameMenu mCurrentGameMenu;
@@ -98,13 +109,13 @@ public class MainGameMenu : MonoBehaviour
 		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 	}
 	
-	public void Enable(int menuIndex) 
+	public void Enable(State menuState) 
 	{
 		AudioManager.Instance.PlayMusic(fmodMusic);
 
 		ShowComponents(true);
 
-		MenuCamera.Instance.transform.position = mGameMenus[menuIndex].transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
+        MenuCamera.Instance.transform.position = mGameMenus[(int)menuState].transform.position + GlobalVariables.Instance.MAIN_CAMERA_OFFSET;
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -117,7 +128,7 @@ public class MainGameMenu : MonoBehaviour
 		ResetAllMenusAndButtons ();
 
 		mNextGameMenu = null;
-		mCurrentGameMenu = mGameMenus[menuIndex];
+        mCurrentGameMenu = mGameMenus[(int)menuState];
 		mCurrentGameMenu.gameObject.SetActive (true);
 		mCurrentGameMenu.Focus();
 
@@ -150,7 +161,7 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
 		GUICanvasMenu.Instance.MenuGUICanvas().ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
-		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[WORLD_MAP_MENU_INDEX] != mCurrentGameMenu) && (!mMenuChangePhase));
+		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
 
 		GUICanvasMenu.Instance.MenuGUICanvas().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
@@ -175,42 +186,42 @@ public class MainGameMenu : MonoBehaviour
 
 	public void ChangeToWorldMapMenu()
 	{
-		StartChangeGameMenu(WORLD_MAP_MENU_INDEX);
+		StartChangeGameMenu(State.WORLD_MAP);
 	}
 	
 	public void ChangeToPerksMenu()
 	{
-		StartChangeGameMenu(PERKS_MENU_INDEX);
+		StartChangeGameMenu(State.PERKS);
 	}
 	
 	public void ChangeToItemsMenu()
 	{
-		StartChangeGameMenu(ITEMS_MENU_INDEX);
+		StartChangeGameMenu(State.ITEMS);
 	}
 	
 	public void ChangeToChrystalShopMenu()
 	{
-		StartChangeGameMenu(CRYSTAL_SHOP_MENU_INDEX);
+		StartChangeGameMenu(State.CRYSTAL_SHOP);
 	}
 
 	public PerksMenu PerksMenu ()
 	{
-		return (PerksMenu)mGameMenus[PERKS_MENU_INDEX];
+        return (PerksMenu)mGameMenus[(int)State.PERKS];
 	}
 	
 	public ItemMenu ItemsMenu()
 	{
-		return (ItemMenu)mGameMenus[ITEMS_MENU_INDEX];
+        return (ItemMenu)mGameMenus[(int)State.ITEMS];
 	}
 
 	public WorldMapMenu WorldMapMenu ()
 	{
-		return (WorldMapMenu)mGameMenus[WORLD_MAP_MENU_INDEX];
+		return (WorldMapMenu)mGameMenus[(int)State.WORLD_MAP];
 	}
 	
 	public CrystalShopMenu CrystalShopMenu()
 	{
-		return (CrystalShopMenu)mGameMenus[CRYSTAL_SHOP_MENU_INDEX];
+        return (CrystalShopMenu)mGameMenus[(int)State.CRYSTAL_SHOP];
 	}
 
 	public void ResetAllMenusAndButtons ()
@@ -304,9 +315,9 @@ public class MainGameMenu : MonoBehaviour
 		UpdateMenusAndButtons ();
 	}
 
-	void StartChangeGameMenu (int index)
+	void StartChangeGameMenu (State state)
 	{
-		if (mCurrentGameMenu == mGameMenus[index])
+        if (mCurrentGameMenu == mGameMenus[(int)state])
 		{
 			if (mMenuChangePhase)
 			{
@@ -326,7 +337,7 @@ public class MainGameMenu : MonoBehaviour
 		ResetAllMenusAndButtons ();
 
 		mMenuChangePhase = true;
-		mNextGameMenu = mGameMenus[index];
+        mNextGameMenu = mGameMenus[(int)state];
 
 		mCurrentGameMenu.Unfocus();
 		mNextGameMenu.gameObject.SetActive (true);

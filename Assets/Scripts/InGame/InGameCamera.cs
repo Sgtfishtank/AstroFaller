@@ -1,19 +1,24 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public class InGameCamera : MonoBehaviour 
 {
-	public GameObject crash = null;
 	// snigleton
 	private static InGameCamera instance = null;
+
 	public static InGameCamera Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName == "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
-			{
-				GameObject thisObject = GameObject.Find("InGame Camera");
-				instance = thisObject.GetComponent<InGameCamera>();
+            {
+                instance = Singleton<InGameCamera>.CreateInstance("Prefab/Essential/InGame/InGame Camera");
 			}
 			return instance;
 		}
@@ -27,7 +32,8 @@ public class InGameCamera : MonoBehaviour
 	private int mDistnce;
 	private int mBolts;
 	private int mBoxes;
-	private int mLife;
+    public int mLife;
+    public GameObject crash = null;
 
 	void Awake()
 	{
@@ -52,6 +58,10 @@ public class InGameCamera : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+        UpdateBoltsText();
+        UpdateDistnceText();
+        UpdateBoxesText();
+        UpdateLifeText();
 	}
 
 	// Update is called once per frame
@@ -61,35 +71,61 @@ public class InGameCamera : MonoBehaviour
 		if (mBolts != InGame.Instance.Player().colectedBolts()) 
 		{
 			mBolts = InGame.Instance.Player().colectedBolts();
-			if(mBolts >= 10000)
-				mBoltsText.text = (mBolts/1000).ToString()+ "K";
-			else
-				mBoltsText.text = mBolts.ToString();
+            UpdateBoltsText();
 		}
 		
 		// avoid string allocations
 		if (mDistnce != InGame.Instance.Player().Distance()) 
 		{
 			mDistnce = InGame.Instance.Player().Distance();
-			if(mDistnce >= 1000000)		
-				mDistnceText.text = (mDistnce/1000000).ToString() + "M";
-			else if(mDistnce >= 10000)
-				mDistnceText.text = (mDistnce/1000).ToString() + "K";
-			else
-				mDistnceText.text = mDistnce.ToString();
+            UpdateDistnceText();
 		}
 
 		// avoid string allocations
 		if (mBoxes != InGame.Instance.Player().CollectedPerfectDistances()) 
 		{
 			mBoxes = InGame.Instance.Player().CollectedPerfectDistances();
-			if(mBoxes >= 1000)
-				mBoxesText.text = (mBoxes/1000).ToString()+ " K";
-			else
-				mBoxesText.text = mBoxes.ToString();
-			mLifeText.text = InGame.Instance.Player().LifeRemaining().ToString();
+            UpdateBoxesText();
 		}
+
+        // avoid string allocations
+        if (mLife != InGame.Instance.Player().LifeRemaining())
+        {
+            mLife = InGame.Instance.Player().LifeRemaining();
+            UpdateLifeText();
+        }
 	}
+
+    private void UpdateDistnceText()
+    {
+        if (mDistnce >= 1000000)
+            mDistnceText.text = (mDistnce / 1000000).ToString() + "M";
+        else if (mDistnce >= 10000)
+            mDistnceText.text = (mDistnce / 1000).ToString() + "K";
+        else
+            mDistnceText.text = mDistnce.ToString();
+    }
+
+    private void UpdateBoltsText()
+    {
+        if (mBolts >= 10000)
+            mBoltsText.text = (mBolts / 1000).ToString() + "K";
+        else
+            mBoltsText.text = mBolts.ToString();
+    }
+
+    private void UpdateBoxesText()
+    {
+        if (mBoxes >= 1000)
+            mBoxesText.text = (mBoxes / 1000).ToString() + " K";
+        else
+            mBoxesText.text = mBoxes.ToString();
+    }
+
+    private void UpdateLifeText()
+    {
+        mLifeText.text = InGame.Instance.Player().LifeRemaining().ToString();
+    }
 
 	public Camera Camera()
 	{

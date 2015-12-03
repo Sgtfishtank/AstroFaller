@@ -63,8 +63,7 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Awake() 
 	{
-		// keep player along levels 
-		DontDestroyOnLoad(transform.gameObject);
+		// keep player along levels
 		mBoltParticleManager = GetComponents<ParticleManager>()[1];
 		mPickupTextManager = GetComponents<ParticleManager>()[0];
 		// init compoments
