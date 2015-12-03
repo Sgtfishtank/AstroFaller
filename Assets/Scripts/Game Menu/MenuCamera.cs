@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class MenuCamera : MonoBehaviour 
@@ -8,11 +9,15 @@ public class MenuCamera : MonoBehaviour
 	public static MenuCamera Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName != "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
 			{
-				GameObject thisObject = GameObject.Find("Menu Camera");
-				instance = thisObject.GetComponent<MenuCamera>();
+                instance = Singleton<MenuCamera>.CreateInstance("Prefab/Essential/Menu/Menu Camera");
 			}
 			return instance;
 		}

@@ -22,9 +22,8 @@ public class AudioManager : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				GameObject thisObject = GameObject.Find("Audio Manager");
-				instance = thisObject.GetComponent<AudioManager>();
-                GameObject.DontDestroyOnLoad(thisObject);
+                instance = Singleton<AudioManager>.CreateInstance("Prefab/Essential/Audio Manager");
+                GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}

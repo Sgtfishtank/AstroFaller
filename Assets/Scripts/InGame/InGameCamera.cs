@@ -1,19 +1,24 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public class InGameCamera : MonoBehaviour 
 {
-	public GameObject crash = null;
 	// snigleton
 	private static InGameCamera instance = null;
+
 	public static InGameCamera Instance
 	{
 		get
-		{
+        {
+            if (Application.loadedLevelName == "MainMenuLevel")
+            {
+                throw new NotImplementedException();
+            }
+            
 			if (instance == null)
-			{
-				GameObject thisObject = GameObject.Find("InGame Camera");
-				instance = thisObject.GetComponent<InGameCamera>();
+            {
+                instance = Singleton<InGameCamera>.CreateInstance("Prefab/Essential/InGame/InGame Camera");
 			}
 			return instance;
 		}
@@ -27,7 +32,8 @@ public class InGameCamera : MonoBehaviour
 	private int mDistnce;
 	private int mBolts;
 	private int mBoxes;
-	private int mLife;
+    private int mLife;
+    public GameObject crash = null;
 
 	void Awake()
 	{

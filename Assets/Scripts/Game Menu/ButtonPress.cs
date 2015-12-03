@@ -39,7 +39,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		ButtonPress[] bp = GetComponents<ButtonPress>();
 		if (bp.Length < 2)
 		{
-            print(Application.loadedLevelName);
             if (Application.loadedLevelName == "MainMenuLevel")
                 mObj = GUICanvasMenu.Instance.GUIObject(name);
             else
