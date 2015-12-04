@@ -17,15 +17,43 @@ public class DebugGUI : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
-		bool touching3 = (Input.touchCount >= 3) && (Input.touches [2].phase == TouchPhase.Began);
+	void Update ()
+    {
+        bool touching2 = (Input.touchCount >= 2) && (Input.touches[1].phase == TouchPhase.Began);
+        bool touching3 = (Input.touchCount >= 3) && (Input.touches[2].phase == TouchPhase.Began) && (!touching2);
+
+        if (Input.GetKeyDown(KeyCode.M) || touching2)
+        {
+            MeshRenderer[] fs = GameObject.FindObjectsOfType<MeshRenderer>();
+            for (int i = 0; i < fs.Length; i++)
+            {
+                print("MeshRenderer: " + fs[i].name);
+                fs[i].enabled = !fs[i].enabled;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.N) || touching3)
+        {
+            LensFlare[] fs = GameObject.FindObjectsOfType<LensFlare>();
+            for (int i = 0; i < fs.Length; i++)
+            {
+                print("LensFlare: " + fs[i].name);
+                fs[i].enabled = !fs[i].enabled;
+            }
+
+            Light[] fs2 = GameObject.FindObjectsOfType<Light>();
+            for (int i = 0; i < fs2.Length; i++)
+            {
+                print("Light: " + fs2[i].name);
+                fs2[i].enabled = !fs2[i].enabled;
+            }
+        }
 
         if (Application.loadedLevelName != "MainMenuLevel")
         {
             Player pl = InGame.Instance.Player();
 
-            if (Input.GetKeyDown(KeyCode.I) || touching3)
+            if (Input.GetKeyDown(KeyCode.I))
             {
                 pl.mInvulnerable = !pl.mInvulnerable;
             }
