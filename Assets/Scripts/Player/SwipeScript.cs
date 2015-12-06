@@ -13,6 +13,11 @@ public class SwipeScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{	
+		if (mPlayer.isDead() || (!mPlayer.IsPlaying())) 
+		{
+			return;
+		}
+
 		if(Input.touchCount > 0)
 		{
 			switch (Input.touches[0].phase)
