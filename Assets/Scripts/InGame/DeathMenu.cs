@@ -3,25 +3,50 @@ using System.Collections;
 
 public class DeathMenu : MonoBehaviour
 {
-	TextMesh[] mTexts;
-	Player mPlayer;
-	public int boxes;
+	//Player mPlayer;
+	//public int boxes;
 	public GameObject[] mBoxObj;
 	public GameObject puff;
 	public float mCalcT;
 	public float mCalcDuration = 2f;
-	
+
+	private TextMesh[] mTexts;
+	private TextMesh mMultiText;
+	private TextMesh mDisText;
+	private TextMesh mTotalBoltsText;
+	private TextMesh mBoltsText;
+	private float mMulti;
+	private int mDis;
+	private int mTotalBolts;
+	private int mBolts;
 	private FMOD.Studio.EventInstance mDisDown;
 	private FMOD.Studio.EventInstance mCoinUp;
 	private FMOD.Studio.EventInstance fmodDeathMusic;
 	private bool runSound; 
+	private int mDistance;
+	private int mBoxes;
+	private int mBolts2;
+
 
 	void Awake()
 	{
-		fmodDeathMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/Scrapscoremusic/ScrapScoreMusic");
-		mDisDown = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerBolts/TickerBolts");
-		mCoinUp = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/RewardTickerDistance/TickerDistance");
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
+		
+		for (int i = 0; i < mTexts.Length; i++)
+		{
+			if (mTexts[i].gameObject.name == "bolts gathered")
+				mBoltsText = mTexts[i];
+			if (mTexts[i].gameObject.name == "distance total")
+				mDisText = mTexts[i];
+			else if (mTexts[i].gameObject.name == "multiplier number")
+				mMultiText = mTexts[i];
+			else if (mTexts[i].gameObject.name == "bolts total")
+				mTotalBoltsText = mTexts[i];
+		}
+
+		fmodDeathMusic = AudioManager.Instance.GetEvent("Music/Scrapscoremusic/ScrapScoreMusic");
+		mDisDown = AudioManager.Instance.GetEvent("Sounds/RewardTickerBolts/TickerBolts");
+		mCoinUp = AudioManager.Instance.GetEvent("Sounds/RewardTickerDistance/TickerDistance");
 	}
 
 	// Use this for initialization
@@ -31,15 +56,27 @@ public class DeathMenu : MonoBehaviour
 
 	void OnEnable ()
 	{
+		mMulti = -1;
+		mDis = -1;
+		mTotalBolts = -1;
+		mBolts = -1;
 		mCalcT = Time.time + mCalcDuration;
-		mPlayer = InGame.Instance.Player();
-		boxes = mPlayer.CollectedPerfectDistances();
 		setBoxes();
+
+		UpdateDistanceText(0);
+		UpdateMultiplierText(0);
+		UpdateTotalBoltsText(0);
+		UpdateBoltsText(0);
 	}
 
-	public void Open()
+	public void Open(int distance, int bolts, int boxes)
 	{
+		mDistance = distance;
+		mBoxes = boxes;
+		mBolts2 = bolts;
+		setBoxes();
 		AudioManager.Instance.PlayMusic(fmodDeathMusic);
+		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(true);
 	}
 	
 	public void Close()
@@ -47,6 +84,12 @@ public class DeathMenu : MonoBehaviour
 		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(false);
+	}
+
+	public void Skip ()
+	{
+		mCalcT = 0;
 	}
 
 	void OnDisable()
@@ -60,7 +103,6 @@ public class DeathMenu : MonoBehaviour
 		{
 			mCalcT = Time.time - mCalcDuration + 0.8f;
 		}
-
 
 		float deltaT = 1f - ((mCalcT + 0.8f - Time.time) / mCalcDuration);
 		deltaT = Mathf.Clamp01(deltaT);
@@ -79,25 +121,58 @@ public class DeathMenu : MonoBehaviour
 		}
 
 		float multi = (int)(Mathf.Lerp(1, calculateMultiplier(), deltaT) * 100f);
-		int dis = (int)Mathf.Lerp(mPlayer.Distance(), 0, deltaT);
-		int totl = (int)Mathf.Lerp(mPlayer.colectedBolts(), calculateMultiplier() * mPlayer.colectedBolts(), deltaT);
+		int dis = (int)Mathf.Lerp(mDistance, 0, deltaT);
+		int totalBolts = (int)Mathf.Lerp(mBolts2, calculateMultiplier() * mBolts2, deltaT);
 
-		for (int i = 0; i < mTexts.Length; i++)
+		UpdateDistanceText(dis);
+		UpdateMultiplierText(multi);
+		UpdateTotalBoltsText(totalBolts);
+		UpdateBoltsText(mBolts2);
+	}
+
+	void UpdateTotalBoltsText(int totalBolts)
+	{
+		// avoid string allocations
+		if (mTotalBolts != totalBolts) 
 		{
-			if (mTexts[i].gameObject.name == "distance total")
-				mTexts[i].text = dis.ToString();
-			else if (mTexts[i].gameObject.name == "bolts gathered")
-				mTexts[i].text = mPlayer.colectedBolts ().ToString();
-			else if (mTexts[i].gameObject.name == "multiplier number")
-				mTexts[i].text = multi.ToString() + "";
-			else if (mTexts[i].gameObject.name == "bolts total")
-				mTexts[i].text = totl.ToString();
+			mTotalBolts = totalBolts;
+			mTotalBoltsText.text = mTotalBolts.ToString();
+		}
+	}
+
+	void UpdateMultiplierText(float multi)
+	{
+		// avoid string allocations
+		if (mMulti != multi) 
+		{
+			mMulti = multi;
+			mMultiText.text = mMulti.ToString();
+		}
+	}
+
+	void UpdateDistanceText(int dis)
+	{
+		// avoid string allocations
+		if (mDis != dis) 
+		{
+			mDis = dis;
+			mDisText.text = mDis.ToString();
+		}
+	}
+	
+	void UpdateBoltsText(int bolts)
+	{
+		// avoid string allocations
+		if (mBolts != bolts) 
+		{
+			mBolts = bolts;
+			mBoltsText.text = mBolts.ToString();
 		}
 	}
 
 	float calculateMultiplier()
 	{
-		return 1 + (mPlayer.Distance() / 5000f);
+		return 1 + (mDistance / 5000f);
 	}
 
 	public void setBoxes()
@@ -106,18 +181,20 @@ public class DeathMenu : MonoBehaviour
 		{
 			mBoxObj[i].SetActive(true);
 		}
-		for(int i = mPlayer.CollectedPerfectDistances(); i < mBoxObj.Length; i++)
+
+		for(int i = mBoxes; i < mBoxObj.Length; i++)
 		{
 			mBoxObj[i].SetActive(false);
 		}
-		if(mPlayer.CollectedPerfectDistances() >4)
+
+		if(mBoxes > 4)
 		{
 			for(int i = 1; i < mBoxObj.Length; i++)
 			{
 				mBoxObj[i].SetActive(false);
 			}
 		}
-		switch (mPlayer.CollectedPerfectDistances())
+		switch (mBoxes)
 		{
 		case 0:
 			break;
@@ -144,6 +221,7 @@ public class DeathMenu : MonoBehaviour
 			break;
 		}
 	}
+
 	public void removeBox(int id)
 	{
 		Instantiate(puff,new Vector3(mBoxObj[id-1].transform.position.x,mBoxObj[id-1].transform.position.y,-6),Quaternion.identity);
