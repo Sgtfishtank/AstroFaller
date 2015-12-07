@@ -3,28 +3,31 @@ using System.Collections;
 
 public class PerksMenu : GameMenu 
 {
-	//private int AIR_PERK_INDEX = 1;
-	//private int LIFE_PERK_INDEX = 2;
-	//private int BURST_PERK_INDEX = 0;
-
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
 	private bool mFocused;
-	private int mPerkIndex;
-	private GameObject mPrevObj;
-	private GameObject mNextObj;
-
+	private int mPerkIndex = 1; // start in the middle
+	private ButtonManager mPrevObj;
+	private ButtonManager mNextObj;
+	private ButtonManager[] mPerkButtons;
+	
 	void Awake()
 	{
-		mPrevObj = transform.Find("Prev").gameObject;
-		mNextObj = transform.Find("Next").gameObject;
 		mPerks = GetComponentsInChildren<Perk> ();
-		mPerkIndex = 1; // start in the middle
+		mPerkButtons = new ButtonManager[3];
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		PerksGUI gui = MenuGUICanvas.Instance.PerksGUI ();
+		mPrevObj = ButtonManager.CreateButton(gameObject, "Prev", "PrevButton", gui);
+		mNextObj = ButtonManager.CreateButton(gameObject, "Next", "NextButton", gui);
+		
+		mPerkButtons[0] = ButtonManager.CreateButton(gameObject, "Perks Burst/perk_burst/Anim_BurstPerk", "LifePerk/Button 4", gui);
+		mPerkButtons[1] = ButtonManager.CreateButton(gameObject, "Perks Air/perk_air/Anim_AirPerk", "LifePerk/Button 4", gui);
+		mPerkButtons[2] = ButtonManager.CreateButton(gameObject, "Perks Life/perk_life/Anim_LifePerk", "LifePerk/Button 4", gui);
+
 		UpdateViewPerk ();
 	}
 	
@@ -46,13 +49,11 @@ public class PerksMenu : GameMenu
 	public override void Focus()
 	{
 		mFocused = true;
-		enabled = true;
 	}
 	
 	public override void Unfocus()
 	{
 		mFocused = false;
-		enabled = false;
 
 		if (mCurrentPerk != null)
 		{
@@ -92,8 +93,8 @@ public class PerksMenu : GameMenu
 		}
 
 		mPerks[mPerkIndex].gameObject.SetActive(true);
-		mPrevObj.SetActive (mPerkIndex > 0);
-		mNextObj.SetActive (mPerkIndex < (mPerks.Length - 1));
+		mPrevObj.mObj.SetActive (mPerkIndex > 0);
+		mNextObj.mObj.SetActive (mPerkIndex < (mPerks.Length - 1));
 	}
 
 	public override void BuyWithBolts()

@@ -15,50 +15,20 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	public bool mUseSmoothStep;
 	public float mMoveBackDistance;
 	public float mScaleDownFactor;
-	public GameObject mObj;
 	
-	private float mMoveT;
+	public float mMoveT;
 	private bool mPressed;
-	private Vector3 mBaseScale = Vector3.zero;
-	private Vector3 mBasePosition;
-	private Vector3 mOffset;
-	private float mScale;
+	private Vector3 mOffset = Vector3.zero;
+	private float mScale = 1;
 	private FMOD.Studio.EventInstance mPressSound;
 
 	void Awake()
-    {
-        mPressSound = AudioManager.Instance.GetSoundsEvent("MenuQuestionMark/QuestionMark");
+	{
+		mPressSound = AudioManager.Instance.GetSoundsEvent("MenuQuestionMark/QuestionMark");
 	}
 
 	void Start()
-    {
-        ButtonPress[] bp = GetComponents<ButtonPress>();
-        if (bp.Length < 2)
-        {
-            if (Application.loadedLevelName == "MainMenuLevel")
-                mObj = MenuGUICanvas.Instance.GUIObject(name);
-            else
-                mObj = InGameGUICanvas.Instance.GUIObject(name);
-        }
-        else
-        {
-            for (int i = 0; i < bp.Length; i++)
-            {
-                if (bp[i] == this)
-                {
-                    if (Application.loadedLevelName == "MainMenuLevel")
-                        mObj = MenuGUICanvas.Instance.GUIObject(name + " " + i);
-                    else
-                        mObj = InGameGUICanvas.Instance.GUIObject(name + " " + i);
-                }
-            }
-        }
-
-        if (mObj != null)
-        {
-            mBaseScale = mObj.transform.localScale;
-            mBasePosition = mObj.transform.localPosition;
-        }
+	{
 	}
 
 	public void OnPointerDown (PointerEventData eventData) 
@@ -76,21 +46,14 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		return mPressed;
 	}
 
-	void OnDisable() 
+	public void Reset()
 	{
-	}
-	
-	void OnEnable() 
-	{
-		/*if (mBaseScale == Vector3.zero)
+		if (mMoveT > 0) 
 		{
-			mBaseScale = mObj.transform.localScale;
-			mBasePosition = mObj.transform.localPosition;
-		}*/
-		
-		mPressed = false;
-		mMoveT = 0;
-		UpdateObj (mMoveT);
+			mPressed = false;
+			mMoveT = 0;
+			UpdateObj (mMoveT);
+		}
 	}
 
 	public void OnPointerUp (PointerEventData eventData) 
@@ -144,12 +107,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		default:
 			print ("ERROR in Update PressAction" + mPressAction);
 			break;
-		}
-
-		if (mObj != null)
-		{
-			mObj.transform.localPosition = mBasePosition + mOffset;
-			mObj.transform.localScale = mBaseScale * mScale;
 		}
 	}
 }

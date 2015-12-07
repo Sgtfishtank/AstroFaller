@@ -19,7 +19,7 @@ public class BonusRewardLevel : LevelBase
 	private bool mUnlocked;
 	private int mReward;
 	private TextMesh[] mTextMeshes;
-	private MeshRenderer[] mMeshRenders;
+    private MeshRenderer[] mMeshRenders;
 
 	void Awake()
 	{
@@ -126,11 +126,12 @@ public class BonusRewardLevel : LevelBase
 	
 	public override void setFocusLevel (float focusLevel)
 	{
-		mFrame.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
-		mPictureImage.transform.localPosition = new Vector3 (0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+		Vector3 mFocusOffset = new Vector3(0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
+        mFrame.transform.localPosition = mFocusOffset;
+        mPictureImage.transform.localPosition = mFocusOffset;
 		
-		for (int i = 0; i < mTextMeshes.Length; i++) 
-		{
+		for (int i = 0; i < mTextMeshes.Length; i++)
+        {
 			Color x = mTextMeshes[i].color;
 			x.a = focusLevel;
 			mTextMeshes[i].color = x;

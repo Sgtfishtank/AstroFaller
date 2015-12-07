@@ -11,17 +11,26 @@ public class ItemMenu : GameMenu
 	private int ROCKET_THRUST_INDEX = 0;
 
 	private Item[] mItems;
+	private ButtonManager[] mItemButtons;
 	private bool mFocused;
 	private Item mCurrentItem;
 
 	void Awake() 
 	{
 		mItems = GetComponentsInChildren<Item> ();
+		mItemButtons = new ButtonManager[6];
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		ItemsGUI gui = MenuGUICanvas.Instance.ItemsGUI();
+		mItemButtons[UNLIMITED_AIR_INDEX] = ButtonManager.CreateButton(gameObject, "Unlimited Air/item_unlimitedair/item_unlimitedair", "UnlimitedAir", gui);
+		mItemButtons[ROCKET_THRUST_INDEX] = ButtonManager.CreateButton(gameObject, "Rocket Thrust/item_megaburst/item_megaburst", "RocketThrust", gui);
+		mItemButtons[SHOCKWAVE_INDEX] = ButtonManager.CreateButton(gameObject, "Shockwave/item_shockwave/item_shockwave", "Shockwave", gui);
+		mItemButtons[FORCE_FIELD_INDEX] = ButtonManager.CreateButton(gameObject, "Force Field/item_shield/item_shield","ForceField", gui);
+		mItemButtons[BOLTS_MAGNETS_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Magnet/item_boltmagnet/item_boltmagnet", "BoltsMagnet", gui);
+		mItemButtons[BOLTS_MULTIPLIER_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Multiplier/item_boltmultiplier/item_boltmultiplier", "BoltsMultiplier", gui);
 	}
 	
 	// Update is called once per frame
@@ -42,13 +51,11 @@ public class ItemMenu : GameMenu
 	public override void Focus()
 	{
 		mFocused = true;
-		enabled = true;
 	}
 	
 	public override void Unfocus()
 	{
 		mFocused = false;
-		enabled = false;
 		
 		if (mCurrentItem != null)
 		{
@@ -102,7 +109,6 @@ public class ItemMenu : GameMenu
 
 	void OpenBuyItemMenu(int index)
 	{
-		return;
 		mCurrentItem = mItems[index];
 		print ("i " + index + " n " + mCurrentItem.name);
 		

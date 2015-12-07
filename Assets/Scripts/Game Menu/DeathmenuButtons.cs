@@ -72,11 +72,12 @@ public class DeathmenuButtons : MonoBehaviour
 		}
 		t = null;
 	}
+
 	public void disableSpecific(int value)
 	{
 		t[value].gameObject.SetActive(false);
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{

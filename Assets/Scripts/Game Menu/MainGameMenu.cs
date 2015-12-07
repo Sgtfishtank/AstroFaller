@@ -10,14 +10,14 @@ public class MainGameMenu : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName != "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
-            {
-                instance = Singleton<MainGameMenu>.CreateInstance("Prefab/Essential/Menu/Game Menu Base");
+			{
+				if (Application.loadedLevelName != "MainMenuLevel")
+				{
+					throw new NotImplementedException();
+				}
+
+                Singleton<MainGameMenu>.CreateInstance("Prefab/Essential/Menu/Game Menu Base");
 			}
 			return instance;
 		}
@@ -55,6 +55,11 @@ public class MainGameMenu : MonoBehaviour
 
 	void Awake() 
 	{
+		if (instance == null)
+		{
+			instance = this;
+		}
+
 		mSettingAudioManagerBackup = GetComponent<AudioManager> ();
 
 		if (mBackgroundPrefab != null) 
@@ -65,11 +70,11 @@ public class MainGameMenu : MonoBehaviour
 		{
 			mBackground = new GameObject("Menu Background");
 		}
+		
+		fmodMusic = AudioManager.Instance.GetEvent("Music/DroneMenyMusic/SpaceDrone");
+		fmodSwipe = AudioManager.Instance.GetEvent("Sounds/MenuSectionSwipe/MenuSwipeShort");
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
-
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
-		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
 
 		mCurrentGameMenu = mGameMenus [0];
 	}
@@ -164,7 +169,7 @@ public class MainGameMenu : MonoBehaviour
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
 
-		MenuGUICanvas.Instance.ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
+		MenuGUICanvas.Instance.IconsGUI().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
 		MenuGUICanvas.Instance.ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
@@ -317,6 +322,8 @@ public class MainGameMenu : MonoBehaviour
 
 	void StartChangeGameMenu (State state)
 	{
+		ResetAllMenusAndButtons ();
+
         if (mCurrentGameMenu == mGameMenus[(int)state])
 		{
 			if (mMenuChangePhase)
@@ -326,15 +333,15 @@ public class MainGameMenu : MonoBehaviour
 				mNextGameMenu = mCurrentGameMenu;
 				mCurrentGameMenu = a;
 				MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
-				return;
 			}
 			else
 			{
-				return; // don't move if already there
+				// don't move if already there
 			}
-		}
 
-		ResetAllMenusAndButtons ();
+			UpdateMenusAndButtons();
+			return; 
+		}
 
 		mMenuChangePhase = true;
         mNextGameMenu = mGameMenus[(int)state];
@@ -361,32 +368,5 @@ public class MainGameMenu : MonoBehaviour
 		AudioManager.Instance.StopSound(fmodSwipe, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		
 		UpdateMenusAndButtons();
-	}
-
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "Button 7":
-			//return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
-		case "Button 1":
-			//return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
-		case "Button 4":
-			//return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
-		case "RocketThrust":
-			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
-		case "UnlimitedAir":
-			return ItemsMenu().transform.Find("Unlimited Air/item_unlimitedair/item_unlimitedair").gameObject;
-		case "Shockwave":
-			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
-		case "ForceField":
-			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
-		case "BoltsMagnet":
-			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
-		case "BoltsMultiplier":
-			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
-		default:
-			return null;
-		}
 	}
 }

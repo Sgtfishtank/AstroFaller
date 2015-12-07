@@ -11,8 +11,8 @@ public class PlayerData : MonoBehaviour
 		{
 			if (instance == null)
             {
-                instance = Singleton<PlayerData>.CreateInstance("Prefab/Essential/PlayerData");
-                GameObject.DontDestroyOnLoad(instance.gameObject);
+				instance = Singleton<PlayerData>.CreateInstance("Prefab/Essential/PlayerData");
+				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
@@ -32,7 +32,7 @@ public class PlayerData : MonoBehaviour
     public bool mShowControls = true;
 
     void Awake()
-    {
+	{
     }
 
 	// Use this for initialization

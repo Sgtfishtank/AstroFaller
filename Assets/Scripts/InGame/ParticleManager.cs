@@ -14,11 +14,6 @@ public class ParticleManager : MonoBehaviour
 	{
 	}
 
-	public void Load(int size)
-	{
-		Load(size, InGame.Instance.transform.Find("ParticlesGoesHere").transform);
-	}
-
 	public void Load(int size, Transform parent)
 	{
 		mParticles = new GameObject[size];

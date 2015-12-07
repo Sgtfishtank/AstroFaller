@@ -18,13 +18,11 @@ public class CrystalShopMenu : GameMenu
 	public override void Focus()
 	{
 		mFocused = true;
-		enabled = true;
 	}
 	
 	public override void Unfocus()
 	{
 		mFocused = false;
-		enabled = false;
 	}
 
 	public override bool IsFocused ()

@@ -70,33 +70,41 @@ public class Player : MonoBehaviour
 		mRb = GetComponent<Rigidbody>();
 		mAntenLensFlare = GetComponentInChildren<LensFlare>();
 		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
-		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
-		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
-		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
-		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
-		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
 		mMovementControls = new MovementControls(this);
 		mDash = transform.Find("Burst_Trail").gameObject;
-		mInflateSound.setVolume(100);
-		mDeflateSound.setVolume(100);
 		mIsDead = false;
 		mPlaying = false;
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
-
-		mPickupTextManager.Load(GlobalVariables.Instance.MAX_TEXT_PARTICLES);
-		mBoltParticleManager.Load(GlobalVariables.Instance.MAX_BOLT_PARTICLES);
+		
+		mDownSwipeSound = AudioManager.Instance.GetEvent("Sounds/Downswipe/DownSwipe");
+		mHurtHitSound = AudioManager.Instance.GetEvent("Sounds/TakeDamage/TakeDamage1");
+		mCoinPickUpSound = AudioManager.Instance.GetEvent("Sounds/Screws/ScrewsPling2");
+		mInflateSound = AudioManager.Instance.GetEvent("Sounds/Inflate/Inflate");
+		mDeflateSound = AudioManager.Instance.GetEvent("Sounds/Deflate/Deflate");
+		mInflateSound.setVolume(100);
+		mDeflateSound.setVolume(100);
 	}
 
 	// Use this for initialization
 	void Start()
 	{
+		gameObject.SetActive(true);
+
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mPickupTextManager.Load(maxParticles, parent);
+		mBoltParticleManager.Load(maxParticles, parent);
+
 		mAS = WorldGen.Instance.BaseSpawner ();
 		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
 	}
 
 	public void IntroLoad ()
 	{
+		gameObject.SetActive(true);
+
+		mAS = WorldGen.Instance.BaseSpawner ();
 		mDash.SetActive(false);
 		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
 		mRb.useGravity = true;
@@ -107,6 +115,8 @@ public class Player : MonoBehaviour
 
 	public void StartGame()
 	{
+		gameObject.SetActive(true);
+
 		mPickupTextManager.reset();
 		mBoltParticleManager.reset();
 
@@ -203,7 +213,6 @@ public class Player : MonoBehaviour
 		// do nothing if dead
 		if ((mIsDead) || (!mPlaying))
 		{
-			mStartYValue = CenterPosition().y;
 			transform.position = new Vector3(0, transform.position.y, 0);
 			return;
 		}
@@ -261,6 +270,11 @@ public class Player : MonoBehaviour
 	public bool isBursting()
 	{
 		return (mMaxCurrentFallSpeed > mMaxFallSpeed || mDashTime > Time.time);
+	}
+
+	public bool IsPlaying()
+	{
+		return mPlaying;
 	}
 
 	void LateUpdate()
@@ -410,11 +424,6 @@ public class Player : MonoBehaviour
 
 	public int Distance()
 	{
-		if (!mPlaying)
-		{
-			return 0;
-		}
-
 		int dist = (int)(CenterPosition().y - mStartYValue - WorldGen.Instance.FallShift());
 		return -dist;
 	}
@@ -468,9 +477,9 @@ public class Player : MonoBehaviour
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
+			InGame.Instance.PlayedDeath();
 			InGame.Instance.mDeathMenu.SetActive(true);
-			InGame.Instance.DeathMenu().Open();
-			InGameGUICanvas.Instance.setEnableDeathMenu(true);
+			InGame.Instance.DeathMenu().Open(Distance(), mBoltsCollected, mPerfectDistanceCollected);
 			
 			mAS.StopSpawning();
 
@@ -481,6 +490,8 @@ public class Player : MonoBehaviour
 			InGame.Instance.mDeathMenu.transform.position = a;
 
 			DepositData();
+
+			gameObject.SetActive(false);
 		}
 	}
 

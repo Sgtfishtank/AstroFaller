@@ -175,7 +175,7 @@ public class GlobalVariables : MonoBehaviour
 	public string SHOCKWAVE_LEVELS_UNIT = "---";
 
     void Awake()
-    {
+	{
     }
 
 	// Use this for initialization
@@ -196,8 +196,8 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
             {
-                instance = Singleton<GlobalVariables>.CreateInstance("Prefab/Essential/GlobalVaribelsPrefab");
-                GameObject.DontDestroyOnLoad(instance.gameObject);
+				instance = Singleton<GlobalVariables>.CreateInstance("Prefab/Essential/GlobalVaribelsPrefab");
+				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}

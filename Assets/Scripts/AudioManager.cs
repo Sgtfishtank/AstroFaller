@@ -22,8 +22,8 @@ public class AudioManager : MonoBehaviour
 		{
 			if (instance == null)
 			{
-                instance = Singleton<AudioManager>.CreateInstance("Prefab/Essential/Audio Manager");
-                GameObject.DontDestroyOnLoad(instance.gameObject);
+				instance = Singleton<AudioManager>.CreateInstance("Prefab/Essential/Audio Manager");
+				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;
 		}
@@ -47,7 +47,7 @@ public class AudioManager : MonoBehaviour
 
     public FMOD.Studio.EventInstance GetEvent(string path)
 	{
-        return FMOD_StudioSystem.instance.GetEvent("event:/ + " + path);
+		return FMOD_StudioSystem.instance.GetEvent("event:/" + path);
     }
 
     public FMOD.Studio.EventInstance GetMusicEvent(string path)

@@ -19,17 +19,6 @@ public class WorldMapMenu : GameMenu
 		mPlayLevelIndex = -1;
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
-		
-		for (int i = 0; i < mLevels.Length; i++) 
-		{
-			mLevels[i].Init();
-			
-			UnlockCriteria[] criterias = mLevels[i].GetComponents<UnlockCriteria>();
-			for (int j = 0; j < criterias.Length; j++) 
-			{
-				criterias[j].Init();
-			}
-		}
 
 		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 	}
@@ -134,14 +123,12 @@ public class WorldMapMenu : GameMenu
 	public override void Focus()
 	{
 		mFocused = true;
-		enabled = true;
 		CloseLevels ();
 	}
 	
 	public override void Unfocus()
 	{
 		mFocused = false;
-		enabled = false;
 		CloseLevels ();
 	}
 	

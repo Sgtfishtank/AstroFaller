@@ -10,14 +10,14 @@ public class InGame : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName == "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
-            {
-                instance = Singleton<InGame>.CreateInstance("Prefab/Essential/InGame/Game");
+			{
+				if (Application.loadedLevelName != "InGameLevel")
+				{
+					throw new NotImplementedException();
+				}
+
+				instance = Singleton<InGame>.CreateInstance("Prefab/Essential/InGame/Game");
 			}
 			return instance;
 		}
@@ -63,11 +63,6 @@ public class InGame : MonoBehaviour
 
 	void Awake()
 	{
-        if (instance == null)
-        {
-            instance = this;
-        }
-
 		mWorldGen = transform.Find("WorldGen").GetComponent<WorldGen>();
 		mBgGen = transform.Find("BgGen").GetComponent<WorldGen>();
 
@@ -96,8 +91,8 @@ public class InGame : MonoBehaviour
 		mDeathMenu = deathMenuObj;
 		mDeathMenu.SetActive (false);
 		
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/AsteroidMusicPrototype/AsteroidMusicPrototyp");
-		fmodPerfect = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/PerfectDistance/PerfectDistance");
+		fmodMusic = AudioManager.Instance.GetEvent("Music/AsteroidMusicPrototype/AsteroidMusicPrototyp");
+		fmodPerfect = AudioManager.Instance.GetEvent("Sounds/PerfectDistance/PerfectDistance");
 
 		mPerfectDistanceMid = GameObject.Instantiate (mPerfectDistanceMidPrefab);
 	}
@@ -108,6 +103,7 @@ public class InGame : MonoBehaviour
 		{
 			Debug.LogError(" Spawner not removed.");
 		}
+
 		GameObject astroidSpawnObj = GameObject.Instantiate(mSpawnerPrefabs[(int)level-1]);
 		astroidSpawnObj.name = mSpawnerPrefabs[(int)level-1].name;
 		astroidSpawnObj.transform.parent = transform;
@@ -227,6 +223,14 @@ public class InGame : MonoBehaviour
 
 	}
 
+	public void PlayedDeath ()
+	{
+		mWorldGen.StopSpawnSegments ();
+		mBgGen.StopSpawnSegments ();
+		mWorldGen.DespawnSegments ();
+		mBgGen.DespawnSegments ();
+	}
+
 	void ShiftBackWorld()
 	{
 		float shift = -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL;
@@ -295,18 +299,5 @@ public class InGame : MonoBehaviour
 		mIntroPhase = true;
 		mIntroPhaseT = 0;
 		InGameGUICanvas.Instance.SetFadeColor(Color.black);
-	}
-
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "Restart":
-			return mDeathMenu.transform.Find("button_1_base").gameObject;
-		case "MainMenu":
-			return mDeathMenu.transform.Find("button_2_base").gameObject;
-		default:
-			return null;
-		}
 	}
 }

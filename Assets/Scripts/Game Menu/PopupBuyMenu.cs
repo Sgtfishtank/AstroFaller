@@ -36,6 +36,9 @@ public class PopupBuyMenu : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		GUICanvasBase gui = MenuGUICanvas.Instance;
+		ButtonManager.CreateButton(gameObject, "Popup_item_or_perk/polySurface11", "PopupBuyMenu/BoltsButton", gui);
+
 		gameObject.SetActive(false);
 		MenuGUICanvas.Instance.ShowPopupBuyButton (false);
 	}
@@ -97,7 +100,6 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
-
 		mTitleText.text = title;
 		description = description.Replace("\\n", "\n"); 
 		mDescriptionText.text = description + "\n" + costBolts + " Bolts";

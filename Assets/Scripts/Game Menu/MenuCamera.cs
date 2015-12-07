@@ -10,13 +10,13 @@ public class MenuCamera : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName != "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
 			{
+				if (Application.loadedLevelName != "MainMenuLevel")
+				{
+					throw new NotImplementedException();
+				}
+
                 instance = Singleton<MenuCamera>.CreateInstance("Prefab/Essential/Menu/Menu Camera");
 			}
 			return instance;
@@ -55,12 +55,16 @@ public class MenuCamera : MonoBehaviour
 	private GameObject mOptionsMenu;
 	private GameObject mWorldMapButton;
 	private GameObject mWorldMapIcon;
-	private GameObject mOptionsIcon;
 	private TextMesh mBoltsText;
 	private Camera mCamera;
 	private int mBolts;
 	
 	public GameObject mCotrls;
+	
+	//private ButtonManager mWorkshopIcon; 
+	//private ButtonManager msettingsIcon; 
+	//private ButtonManager mOptionsIcon; 
+	//private ButtonManager mAchivIcon; 
 
 	void Awake()
 	{
@@ -92,6 +96,27 @@ public class MenuCamera : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		// ugly gui setup
+		GUICanvasBase gui = MenuGUICanvas.Instance.IconsGUI ();
+		ButtonManager.CreateButton(gameObject, "Icons/workshop_icon", "CraftingButton", gui);	
+		ButtonManager.CreateButton(gameObject, "Icons/settings_icon", "OptionsButton", gui);	
+		ButtonManager.CreateButton(gameObject, "Icons/info_icon", "HelpButton", gui);	
+		ButtonManager.CreateButton(gameObject, "Icons/achievement_icon", "AchievementsButton", gui);
+		ButtonManager.CreateButton(gameObject, "Icons/worldmap_icon", "WorldMapButton", gui);
+		
+		gui = MenuGUICanvas.Instance.AchievementsMenu();
+		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_1", "PopupAchievementsMenu/QuestsButton", gui);
+		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_2", "PopupAchievementsMenu/StatsButton", gui);
+		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_3", "PopupAchievementsMenu/KimJongUnBoardsButton", gui);
+		
+		gui = MenuGUICanvas.Instance.CraftingMenu();
+		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_1", "PopupCraftingMenu/ItemsButton", gui);
+		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_2", "PopupCraftingMenu/PerksButton", gui);
+		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_3", "PopupCraftingMenu/CrystalStoreButton", gui);
+		
+		gui = MenuGUICanvas.Instance.OptionsGUICanvas();
+		ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_1", "OptionButtons/SettingsYes", gui);
+		ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_2", "OptionButtons/SettingsNo", gui);
 	}
 	
 	// Update is called once per frame
@@ -275,46 +300,4 @@ public class MenuCamera : MonoBehaviour
 	{
 		mPopupAchievementsMenu.SetActive (show);
 	}
-
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "CraftingButton":
-			return transform.Find("Icons/workshop_icon").gameObject;	
-		case "OptionsButton":
-			return transform.Find("Icons/settings_icon").gameObject;			
-		case "HelpButton":
-			return transform.Find("Icons/info_icon").gameObject;			
-		case "AchievementsButton":
-			return transform.Find("Icons/achievement_icon").gameObject;		
-		case "WorldMapButton":
-			return transform.Find("Icons/worldmap_icon").gameObject;	
-		case "QuestsButton":
-			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_1").gameObject;	
-		case "StatsButton":
-			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_2").gameObject;
-		case "KimJongUnBoardsButton":
-			return transform.Find("PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_3").gameObject;
-		case "ItemsButton":
-			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_1").gameObject;
-		case "PerksButton":
-			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_2").gameObject;
-		case "CrystalStoreButton":
-			return transform.Find("PopupCraftingMenu/pop_up_craftingmenu_new/Button_3").gameObject;
-		//case "BoltsButton":
-			//return mPopupBuyMenu.transform.Find("polySurface11").gameObject;
-		//case "CrystalsButton 1":
-		//	return transform.Find("polySurface11").gameObject;
-		//case "BackToMenuButton":
-			//	return null;
-		case "SettingsYes":
-			return transform.Find("Options/settings_pop_up/Button_1").gameObject;
-		case "SettingsNo":
-			return transform.Find("Options/settings_pop_up/Button_2").gameObject;
-		default:
-			return null;
-		}
-	}
-
 }

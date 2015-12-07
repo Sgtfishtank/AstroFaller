@@ -26,10 +26,15 @@ public class DeathMenu : MonoBehaviour
 	private int mDistance;
 	private int mBoxes;
 	private int mBolts2;
-
+	//private ButtonManager mRestatButton;
+	//private ButtonManager mMenuButton;
 
 	void Awake()
 	{
+		DeatMenuGUI gui = InGameGUICanvas.Instance.DeathMenuGUI ();
+		ButtonManager.CreateButton(gameObject, "button_1_base", "Restart", gui);
+		ButtonManager.CreateButton(gameObject, "button_2_base", "MainMenu", gui);
+
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
 		
 		for (int i = 0; i < mTexts.Length; i++)
