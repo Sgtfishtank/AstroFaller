@@ -11,8 +11,8 @@ public class TutorialLevel : PlayableLevel
 	private TextMesh mTitleText;
 	private bool mUnlocked;
 	private	MeshRenderer mPictureImage;
-	private	MeshRenderer mFrame;
-	private	GameObject mPlayButton;
+    private MeshRenderer mFrame;
+    private ButtonManager mPlayButton;
 	private	GameObject mTutorial;
 	private TextMesh[] mTextMeshes;
     private MeshRenderer[] mMeshRenders;
@@ -22,8 +22,8 @@ public class TutorialLevel : PlayableLevel
 		mTutorial = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
 		mTutorial.transform.name = "tutorial";
 		
-		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 0.75f);
-		mPlayButton.transform.name = "PlayLevelButton";
+		GameObject mPlayButton2 = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 0.75f);
+		mPlayButton2.transform.name = "PlayLevelButton";
 		
 		mTitleText = mTutorial.transform.Find ("level name text").GetComponent<TextMesh> ();
 		mPictureImage = mTutorial.transform.Find ("level picture").GetComponent<MeshRenderer> ();
@@ -32,8 +32,6 @@ public class TutorialLevel : PlayableLevel
 		mTextMeshes = GetComponentsInChildren<TextMesh> ();
 		mMeshRenders = GetComponentsInChildren<MeshRenderer> ();
 
-		mPlayButton.SetActive (false);
-		
 		mPictureImage.enabled = false;
 		
 		// add default
@@ -44,9 +42,12 @@ public class TutorialLevel : PlayableLevel
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
-	}	
+	void Start ()
+    {
+        GUICanvasBase gui = MenuGUICanvas.Instance.WorldMapMenu();
+        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton", "PlayLevelButton", gui);
+        mPlayButton.gameObject.SetActive(false);
+	}
 	
 	public override void Init()
 	{
@@ -98,12 +99,12 @@ public class TutorialLevel : PlayableLevel
 	
 	public override void Open()
 	{
-		mPlayButton.SetActive (true);
+		mPlayButton.gameObject.SetActive (true);
 	}
 	
 	public override void Close()
 	{
-		mPlayButton.SetActive (false);
+        mPlayButton.gameObject.SetActive(false);
 	}
 
 	public override bool LockLevel()
@@ -125,9 +126,6 @@ public class TutorialLevel : PlayableLevel
         mPictureImage.transform.localPosition = mFocusOffset;
         mPlayButton.transform.localPosition = mFocusOffset;
 		
-		mPlayButton.transform.localPosition += MenuGUICanvas.Instance.PlayButton().PositionOffset();
-		mPlayButton.transform.localScale = Vector3.one * 0.84f * MenuGUICanvas.Instance.PlayButton().ScaleFactor();
-
 		for (int i = 0; i < mTextMeshes.Length; i++)
         {
 			Color x = mTextMeshes[i].color;

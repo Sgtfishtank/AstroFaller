@@ -15,7 +15,7 @@ public class Level : PlayableLevel
 	private MeshRenderer mFrame;
 	private MeshRenderer mFrame2;
 	private bool mUnlocked;
-	private	GameObject mPlayButton;
+	private	ButtonManager mPlayButton;
 	private	GameObject mLevel;
 	private TextMesh[] mTextMeshes;
     private MeshRenderer[] mMeshRenders;
@@ -27,8 +27,8 @@ public class Level : PlayableLevel
 		mLevel = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
 		mLevel.transform.name = "level";
 		
-		mPlayButton = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 1);
-		mPlayButton.transform.name = "PlayLevelButton";
+		GameObject mPlayButton2 = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 1);
+		mPlayButton2.transform.name = "PlayLevelButton";
 		
 		mTitleText = mLevel.transform.Find ("level name text").GetComponent<TextMesh> ();
 		mTotalDistanceText = mLevel.transform.Find ("top distance text").GetComponent<TextMesh> ();
@@ -51,7 +51,9 @@ public class Level : PlayableLevel
 	// Use this for initialization
 	void Start () 
 	{
-		mPlayButton.SetActive (false);
+        GUICanvasBase gui = MenuGUICanvas.Instance.WorldMapMenu();
+        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton", "PlayLevelButton", gui);
+		mPlayButton.gameObject.SetActive (false);
 		SetTotalDistance(0);
 	}
 
@@ -100,12 +102,12 @@ public class Level : PlayableLevel
 	
 	public override void Open()
 	{
-		mPlayButton.SetActive (true);
+		mPlayButton.gameObject.SetActive (true);
 	}
 	
 	public override void Close()
 	{
-		mPlayButton.SetActive (false);
+        mPlayButton.gameObject.SetActive(false);
 	}
 
 	public override bool IsUnlocked()
@@ -134,9 +136,6 @@ public class Level : PlayableLevel
         mPictureImage.transform.localPosition = mFocusOffset;
 		mPlayButton.transform.localPosition = mFocusOffset;
 
-		mPlayButton.transform.localPosition += MenuGUICanvas.Instance.PlayButton().PositionOffset();
-		mPlayButton.transform.localScale = Vector3.one * MenuGUICanvas.Instance.PlayButton().ScaleFactor();
-		
 		for (int i = 0; i < mTextMeshes.Length; i++)
         {
 			Color x = mTextMeshes[i].color;

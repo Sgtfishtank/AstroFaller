@@ -139,7 +139,8 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		MenuGUICanvas.Instance.ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
+        MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
+        MenuGUICanvas.Instance.ShowWorldMapButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf));
 	}
 
 	public override void BuyWithBolts()
@@ -280,7 +281,7 @@ public class WorldMapMenu : GameMenu
 		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
 		mPlayLevelPhase = true;
 		MenuGUICanvas.Instance.ShowIconButtons(false);
-		MenuGUICanvas.Instance.ShowPlayLevelButton(false);
+		MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
 }

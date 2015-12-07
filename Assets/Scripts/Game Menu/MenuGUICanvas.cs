@@ -26,19 +26,15 @@ public class MenuGUICanvas : GUICanvasBase
 
 	private OptionsGUICanvas mOptionsGUICanvas;
     private DebugGUI mDebugGUI;
-
-    private GameObject mMenuGUICanvas;
-    private GameObject mMenuButtons;
-    private GameObject mPopupBuyMenu;
-    private GameObject mPopupCraftingMenu;
-    private GameObject mPopupAchievementsMenu;
+    private WorldMapGUI mMenuButtons;
+    private PopupBuyGUI mPopupBuyMenu;
+    private PopupCraftingGUI mPopupCraftingMenu;
+    private PopupAchievementsGUI mPopupAchievementsMenu;
     private ItemsGUI mItemButtons;
     private PerksGUI mPerkButtons;
     private IconsGUI mIconButtons;
-    private GameObject mPlayLevelButton;
 
     private Image mFadeImage;
-
     private bool mShowButtons;
 	private Button[] mButtons;
 
@@ -47,40 +43,30 @@ public class MenuGUICanvas : GUICanvasBase
         mFadeImage = transform.Find("FadeLayer").GetComponent<Image>();
 
         //assign all menu buttons
-        mMenuGUICanvas = transform.Find("MenuButtons").gameObject;
-        mMenuButtons = transform.Find("MenuButtons").gameObject;
-        mPopupBuyMenu = transform.Find("PopupBuyMenu").gameObject;
-        mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
-        mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
+        mMenuButtons = transform.Find("MenuButtons").GetComponent<WorldMapGUI>();
+        mPopupBuyMenu = transform.Find("PopupBuyMenu").GetComponent<PopupBuyGUI>();
+        mPopupCraftingMenu = transform.Find("PopupCraftingMenu").GetComponent<PopupCraftingGUI>();
+        mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").GetComponent<PopupAchievementsGUI>();
 		mItemButtons = transform.Find("Items").GetComponent<ItemsGUI>();
 		mPerkButtons = transform.Find("Perks").GetComponent<PerksGUI>();
         mIconButtons = transform.Find("Icons").GetComponent<IconsGUI>();
-        mPlayLevelButton = mMenuButtons.transform.Find("PlayLevelButton").gameObject;
+        mOptionsGUICanvas = transform.Find("Options GUICanvas").GetComponent<OptionsGUICanvas>();
 
-        //mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
         mButtons = GetComponentsInChildren<Button>(true);
-
 		mDebugGUI = GetComponent<DebugGUI>();
-		mOptionsGUICanvas = GetComponentsInChildren<OptionsGUICanvas>(true)[0];
-		mOptionsGUICanvas.gameObject.SetActive (true);
 	}
 
 	// Use this for initialization
 	void Start ()
     {
-        if (!PlayerData.Instance.mShowControls)
-        {
-            MenuCamera.Instance.mCotrls.SetActive(false);
-        }
-
 		mDebugGUI.enabled = false;
 		ShowButtons (false);
 	}
 
 	// toggle menu buttons
-	public void ShowMenuButtons(bool show)
+	public void ShowWorldMapButtons(bool show)
 	{
-		mMenuGUICanvas.gameObject.SetActive (show);
+		mMenuButtons.gameObject.SetActive (show);
 	}
 	
 	// toggle options buttons
@@ -194,6 +180,21 @@ public class MenuGUICanvas : GUICanvasBase
 		return mItemButtons;
 	}
 
+    public PopupAchievementsGUI AchievementsMenu()
+    {
+        return mPopupAchievementsMenu;
+    }
+
+    public PopupCraftingGUI CraftingMenu()
+    {
+        return mPopupCraftingMenu;
+    }
+
+    public WorldMapGUI WorldMapMenu()
+    {
+        return mMenuButtons;
+    }
+
     public Button[] GetButtons()
     {
         return mButtons;
@@ -202,23 +203,6 @@ public class MenuGUICanvas : GUICanvasBase
     public void SetFadeColor(Color col)
     {
         mFadeImage.color = col;
-    }
-
-    // pressed change world menus
-
-    public void ChangeToPerksMenu()
-    {
-        MainGameMenu.Instance.ChangeToPerksMenu();
-    }
-
-    public void ChangeToItemsMenu()
-    {
-        MainGameMenu.Instance.ChangeToItemsMenu();
-    }
-
-    public void ChangeToChrystalShopMenu()
-    {
-        MainGameMenu.Instance.ChangeToChrystalShopMenu();
     }
 
     // pressed popup buy buttons
@@ -230,23 +214,6 @@ public class MenuGUICanvas : GUICanvasBase
     public void BuyWithCrystals()
     {
         MainGameMenu.Instance.BuyWithCrystals();
-    }
-
-    // PlayLevel
-    public void PlayLevel()
-    {
-        MainGameMenu.Instance.WorldMapMenu().PlayLevel();
-    }
-
-    // get buttons
-    public ButtonPress PlayButton()
-    {
-        return mPlayLevelButton.GetComponent<ButtonPress>();
-    }
-
-    public void ShowPlayLevelButton(bool show)
-    {
-        mPlayLevelButton.gameObject.SetActive(show);
     }
 
     public void ShowIconButtons(bool show)
@@ -277,15 +244,5 @@ public class MenuGUICanvas : GUICanvasBase
     public void ShowPerkButtons(bool show)
     {
         mPerkButtons.gameObject.SetActive(show);
-	}	
-
-	public GUICanvasBase AchievementsMenu ()
-	{
-		return this;
-	}
-	
-	public GUICanvasBase CraftingMenu ()
-	{
-		return this;
 	}
 }

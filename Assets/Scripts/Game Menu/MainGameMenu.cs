@@ -102,7 +102,6 @@ public class MainGameMenu : MonoBehaviour
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
 
-		MenuGUICanvas.Instance.ShowMenuButtons(show);
 		mBackground.gameObject.SetActive (show);
 		gameObject.SetActive (show);
 	}
