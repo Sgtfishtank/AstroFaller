@@ -5,7 +5,8 @@ public class Level : PlayableLevel
 {
 	public string mLevelName;
 	public GameObject mLevelPrefab;
-	public GameObject mPlayPrefab;
+    public GameObject mPlayPrefab;
+    public InGame.Level mLevel;
 	
 	private int mTotalDistance = 0;
 	private int mTotalBolts = 0;
@@ -16,7 +17,7 @@ public class Level : PlayableLevel
 	private MeshRenderer mFrame2;
 	private bool mUnlocked;
 	private	ButtonManager mPlayButton;
-	private	GameObject mLevel;
+	private	GameObject mLevelObj;
 	private TextMesh[] mTextMeshes;
     private MeshRenderer[] mMeshRenders;
 
@@ -24,17 +25,17 @@ public class Level : PlayableLevel
 	{
 		mTotalDistance = -1;
 
-		mLevel = GlobalVariables.Instance.Instanciate (mLevelPrefab, transform, 1);
-		mLevel.transform.name = "level";
+        mLevelObj = GlobalVariables.Instance.Instanciate(mLevelPrefab, transform, 1);
+        mLevelObj.transform.name = "level";
 		
 		GameObject mPlayButton2 = GlobalVariables.Instance.Instanciate (mPlayPrefab, transform, 1);
 		mPlayButton2.transform.name = "PlayLevelButton";
-		
-		mTitleText = mLevel.transform.Find ("level name text").GetComponent<TextMesh> ();
-		mTotalDistanceText = mLevel.transform.Find ("top distance text").GetComponent<TextMesh> ();
-		mPictureImage = mLevel.transform.Find ("level picture").GetComponent<MeshRenderer> ();
-		mFrame = mLevel.transform.Find ("big_frame").GetComponent<MeshRenderer> ();
-		mFrame2 = mLevel.transform.Find ("small_frame 2/small_frame").GetComponent<MeshRenderer> ();
+
+        mTitleText = mLevelObj.transform.Find("level name text").GetComponent<TextMesh>();
+        mTotalDistanceText = mLevelObj.transform.Find("top distance text").GetComponent<TextMesh>();
+        mPictureImage = mLevelObj.transform.Find("level picture").GetComponent<MeshRenderer>();
+        mFrame = mLevelObj.transform.Find("big_frame").GetComponent<MeshRenderer>();
+        mFrame2 = mLevelObj.transform.Find("small_frame 2/small_frame").GetComponent<MeshRenderer>();
 		
 		mTextMeshes = GetComponentsInChildren<TextMesh> ();
 		mMeshRenders = GetComponentsInChildren<MeshRenderer> ();
@@ -45,6 +46,8 @@ public class Level : PlayableLevel
 			mLevelName = gameObject.name;
 		}
 
+        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton");
+
 		mPictureImage.enabled = false;
 	}
 
@@ -52,8 +55,8 @@ public class Level : PlayableLevel
 	void Start () 
 	{
         GUICanvasBase gui = MenuGUICanvas.Instance.WorldMapMenu();
-        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton", "PlayLevelButton", gui);
-		mPlayButton.gameObject.SetActive (false);
+        mPlayButton.LoadButtonPress("PlayLevelButton", gui);
+		mPlayButton.mObj.SetActive (false);
 		SetTotalDistance(0);
 	}
 
@@ -77,15 +80,9 @@ public class Level : PlayableLevel
 		return true;
 	}
 	
-	public override int GetLevelIndex()
+	public override InGame.Level GetLevel()
 	{
-		switch (mLevelName) 
-		{
-		case "Alien Territory":
-			return 2;
-		}
-
-		return -1;
+        return mLevel;
 	}
 
 	public override bool UnlockLevel()
@@ -102,12 +99,12 @@ public class Level : PlayableLevel
 	
 	public override void Open()
 	{
-		mPlayButton.gameObject.SetActive (true);
+        mPlayButton.mObj.SetActive(true);
 	}
 	
 	public override void Close()
 	{
-        mPlayButton.gameObject.SetActive(false);
+        mPlayButton.mObj.SetActive(false);
 	}
 
 	public override bool IsUnlocked()
@@ -134,7 +131,7 @@ public class Level : PlayableLevel
         mFrame.transform.localPosition = mFocusOffset;
         mFrame2.transform.localPosition = mFocusOffset;
         mPictureImage.transform.localPosition = mFocusOffset;
-		mPlayButton.transform.localPosition = mFocusOffset;
+		mPlayButton.SetBaseOffset(mFocusOffset);
 
 		for (int i = 0; i < mTextMeshes.Length; i++)
         {

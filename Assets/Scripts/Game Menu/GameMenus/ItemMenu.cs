@@ -19,18 +19,25 @@ public class ItemMenu : GameMenu
 	{
 		mItems = GetComponentsInChildren<Item> ();
 		mItemButtons = new ButtonManager[6];
+
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start ()
+    {
+        mItemButtons[UNLIMITED_AIR_INDEX] = ButtonManager.CreateButton(gameObject, "Unlimited Air/item_unlimitedair/item_unlimitedair");
+        mItemButtons[ROCKET_THRUST_INDEX] = ButtonManager.CreateButton(gameObject, "Rocket Thrust/item_megaburst/item_megaburst");
+        mItemButtons[SHOCKWAVE_INDEX] = ButtonManager.CreateButton(gameObject, "Shockwave/item_shockwave/item_shockwave");
+        mItemButtons[FORCE_FIELD_INDEX] = ButtonManager.CreateButton(gameObject, "Force Field/item_shield/item_shield");
+        mItemButtons[BOLTS_MAGNETS_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Magnet/item_boltmagnet/item_boltmagnet");
+        mItemButtons[BOLTS_MULTIPLIER_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Multiplier/item_boltmultiplier/item_boltmultiplier");
 		ItemsGUI gui = MenuGUICanvas.Instance.ItemsGUI();
-		mItemButtons[UNLIMITED_AIR_INDEX] = ButtonManager.CreateButton(gameObject, "Unlimited Air/item_unlimitedair/item_unlimitedair", "UnlimitedAir", gui);
-		mItemButtons[ROCKET_THRUST_INDEX] = ButtonManager.CreateButton(gameObject, "Rocket Thrust/item_megaburst/item_megaburst", "RocketThrust", gui);
-		mItemButtons[SHOCKWAVE_INDEX] = ButtonManager.CreateButton(gameObject, "Shockwave/item_shockwave/item_shockwave", "Shockwave", gui);
-		mItemButtons[FORCE_FIELD_INDEX] = ButtonManager.CreateButton(gameObject, "Force Field/item_shield/item_shield","ForceField", gui);
-		mItemButtons[BOLTS_MAGNETS_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Magnet/item_boltmagnet/item_boltmagnet", "BoltsMagnet", gui);
-		mItemButtons[BOLTS_MULTIPLIER_INDEX] = ButtonManager.CreateButton(gameObject, "Bolt Multiplier/item_boltmultiplier/item_boltmultiplier", "BoltsMultiplier", gui);
+        mItemButtons[UNLIMITED_AIR_INDEX].LoadButtonPress("UnlimitedAir", gui);
+        mItemButtons[ROCKET_THRUST_INDEX].LoadButtonPress("RocketThrust", gui);
+        mItemButtons[SHOCKWAVE_INDEX].LoadButtonPress("Shockwave", gui);
+        mItemButtons[FORCE_FIELD_INDEX].LoadButtonPress("ForceField", gui);
+        mItemButtons[BOLTS_MAGNETS_INDEX].LoadButtonPress("BoltsMagnet", gui);
+        mItemButtons[BOLTS_MULTIPLIER_INDEX].LoadButtonPress("BoltsMultiplier", gui);
 	}
 	
 	// Update is called once per frame

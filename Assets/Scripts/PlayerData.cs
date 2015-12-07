@@ -11,7 +11,7 @@ public class PlayerData : MonoBehaviour
 		{
 			if (instance == null)
             {
-				instance = Singleton<PlayerData>.CreateInstance("Prefab/Essential/PlayerData");
+				instance = Singleton<PlayerData>.CreateInstance("Prefab/PlayerData");
 				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;

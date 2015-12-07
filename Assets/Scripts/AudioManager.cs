@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
 		{
 			if (instance == null)
 			{
-				instance = Singleton<AudioManager>.CreateInstance("Prefab/Essential/Audio Manager");
+				instance = Singleton<AudioManager>.CreateInstance("Prefab/Audio Manager");
 				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;

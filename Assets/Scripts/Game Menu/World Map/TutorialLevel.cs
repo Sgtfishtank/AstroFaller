@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class TutorialLevel : PlayableLevel 
 {
 	public string mLevelName;
+    public InGame.Level mLevel;
 	public GameObject mLevelPrefab;
 	public GameObject mPlayPrefab;
 
@@ -32,6 +33,8 @@ public class TutorialLevel : PlayableLevel
 		mTextMeshes = GetComponentsInChildren<TextMesh> ();
 		mMeshRenders = GetComponentsInChildren<MeshRenderer> ();
 
+        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton");
+
 		mPictureImage.enabled = false;
 		
 		// add default
@@ -45,8 +48,9 @@ public class TutorialLevel : PlayableLevel
 	void Start ()
     {
         GUICanvasBase gui = MenuGUICanvas.Instance.WorldMapMenu();
-        mPlayButton = ButtonManager.CreateButton(gameObject, "PlayLevelButton", "PlayLevelButton", gui);
-        mPlayButton.gameObject.SetActive(false);
+        mPlayButton.LoadButtonPress("PlayLevelButton", gui);
+
+        mPlayButton.mObj.SetActive(false);
 	}
 	
 	public override void Init()
@@ -59,15 +63,9 @@ public class TutorialLevel : PlayableLevel
 		mTitleText.text = mLevelName;
 	}
 
-	public override int GetLevelIndex ()
+	public override InGame.Level GetLevel()
 	{
-		switch (mLevelName) 
-		{
-		case "Asteroid Belt":
-			return 1;
-		}
-
-		return -1;
+        return mLevel;
 	}
 
 	public override string LevelName ()
@@ -99,12 +97,12 @@ public class TutorialLevel : PlayableLevel
 	
 	public override void Open()
 	{
-		mPlayButton.gameObject.SetActive (true);
+        mPlayButton.mObj.SetActive(true);
 	}
 	
 	public override void Close()
 	{
-        mPlayButton.gameObject.SetActive(false);
+        mPlayButton.mObj.SetActive(false);
 	}
 
 	public override bool LockLevel()
@@ -124,7 +122,7 @@ public class TutorialLevel : PlayableLevel
 		Vector3 mFocusOffset = new Vector3(0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
         mFrame.transform.localPosition = mFocusOffset;
         mPictureImage.transform.localPosition = mFocusOffset;
-        mPlayButton.transform.localPosition = mFocusOffset;
+        mPlayButton.SetBaseOffset(mFocusOffset);
 		
 		for (int i = 0; i < mTextMeshes.Length; i++)
         {

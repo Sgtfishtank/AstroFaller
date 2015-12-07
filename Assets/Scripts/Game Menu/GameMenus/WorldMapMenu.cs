@@ -12,11 +12,9 @@ public class WorldMapMenu : GameMenu
 	private bool mFocused;
 
 	private bool mPlayLevelPhase;
-	private int mPlayLevelIndex;
 
 	void Awake () 
 	{
-		mPlayLevelIndex = -1;
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
 
@@ -37,8 +35,7 @@ public class WorldMapMenu : GameMenu
 			if (!MenuCamera.Instance.IsMoving())
 			{
 				mPlayLevelPhase = false;
-				MainGameMenu.Instance.Disable();
-                PlayerData.Instance.LevelToLoad = (InGame.Level)mPlayLevelIndex;
+                MainGameMenu.Instance.Disable();
                 Application.LoadLevel("InGameLevel");
 			}
 			else
@@ -278,8 +275,8 @@ public class WorldMapMenu : GameMenu
 
 	void StartPlayLevelPhase ()
 	{
-		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
-		mPlayLevelPhase = true;
+        mPlayLevelPhase = true;
+        PlayerData.Instance.LevelToLoad = mCurrentLevel.GetLevel();
 		MenuGUICanvas.Instance.ShowIconButtons(false);
 		MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();

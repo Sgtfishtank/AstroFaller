@@ -7,5 +7,5 @@ public abstract class PlayableLevel : LevelBase
 	
 	public abstract void Close();
 
-	public abstract int GetLevelIndex();
+    public abstract InGame.Level GetLevel();
 }

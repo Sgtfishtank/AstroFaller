@@ -17,7 +17,7 @@ public class MenuCamera : MonoBehaviour
 					throw new NotImplementedException();
 				}
 
-                instance = Singleton<MenuCamera>.CreateInstance("Prefab/Essential/Menu/Menu Camera");
+                instance = Singleton<MenuCamera>.CreateInstance("Prefab/Game Menu/Menu Camera");
 			}
 			return instance;
 		}
@@ -88,32 +88,51 @@ public class MenuCamera : MonoBehaviour
 		mHelpMenu [0].SetActive (false);
 		mHelpMenu [1].SetActive (false);
 		mHelpMenu [2].SetActive (false);
+
+        ButtonManager.CreateButton(gameObject, "Icons/workshop_icon");
+        ButtonManager.CreateButton(gameObject, "Icons/settings_icon");
+        ButtonManager.CreateButton(gameObject, "Icons/info_icon");
+        ButtonManager.CreateButton(gameObject, "Icons/achievement_icon");
+        ButtonManager.CreateButton(gameObject, "Icons/worldmap_icon");
+
+        ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_1");
+        ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_2");
+        ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_3");
+
+        ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_1");
+        ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_2");
+        ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_3");
+
+        ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_1");
+        ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_2");
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+        ButtonManager[] mags = GetComponents<ButtonManager>();
 		// ugly gui setup
 		GUICanvasBase gui = MenuGUICanvas.Instance.IconsGUI();
-		ButtonManager.CreateButton(gameObject, "Icons/workshop_icon", "CraftingButton", gui);	
-		ButtonManager.CreateButton(gameObject, "Icons/settings_icon", "OptionsButton", gui);	
-		ButtonManager.CreateButton(gameObject, "Icons/info_icon", "HelpButton", gui);	
-		ButtonManager.CreateButton(gameObject, "Icons/achievement_icon", "AchievementsButton", gui);
-		ButtonManager.CreateButton(gameObject, "Icons/worldmap_icon", "WorldMapButton", gui);
+        
+		mags[0].LoadButtonPress("CraftingButton", gui);	
+		mags[1].LoadButtonPress("OptionsButton", gui);	
+		mags[2].LoadButtonPress("HelpButton", gui);	
+		mags[3].LoadButtonPress("AchievementsButton", gui);
+		mags[4].LoadButtonPress("WorldMapButton", gui);
 		
 		gui = MenuGUICanvas.Instance.AchievementsMenu();
-		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_1", "QuestsButton", gui);
-		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_2", "StatsButton", gui);
-		ButtonManager.CreateButton(gameObject, "PopupAchievementsMenu/pop_up_achievementsmenu_new/Button_3", "KimJongUnBoardsButton", gui);
+		mags[5].LoadButtonPress("QuestsButton", gui);
+		mags[6].LoadButtonPress("StatsButton", gui);
+		mags[7].LoadButtonPress("KimJongUnBoardsButton", gui);
 		
 		gui = MenuGUICanvas.Instance.CraftingMenu();
-		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_1", "ItemsButton", gui);
-		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_2", "PerksButton", gui);
-		ButtonManager.CreateButton(gameObject, "PopupCraftingMenu/pop_up_craftingmenu_new/Button_3", "CrystalStoreButton", gui);
+		mags[8].LoadButtonPress("ItemsButton", gui);
+		mags[9].LoadButtonPress("PerksButton", gui);
+		mags[10].LoadButtonPress("CrystalStoreButton", gui);
 		
 		gui = MenuGUICanvas.Instance.OptionsGUICanvas();
-		ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_1", "OptionButtons/SettingsYes", gui);
-		ButtonManager.CreateButton(gameObject, "Options/settings_pop_up/Button_2", "OptionButtons/SettingsNo", gui);
+		mags[11].LoadButtonPress("OptionButtons/SettingsYes", gui);
+		mags[12].LoadButtonPress("OptionButtons/SettingsNo", gui);
 
         mCotrls.SetActive(PlayerData.Instance.mShowControls);
 	}

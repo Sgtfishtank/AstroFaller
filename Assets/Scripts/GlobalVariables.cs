@@ -196,7 +196,7 @@ public class GlobalVariables : MonoBehaviour
 		{
 			if (instance == null)
             {
-				instance = Singleton<GlobalVariables>.CreateInstance("Prefab/Essential/GlobalVaribelsPrefab");
+				instance = Singleton<GlobalVariables>.CreateInstance("Prefab/GlobalVaribelsPrefab");
 				GameObject.DontDestroyOnLoad(instance.gameObject);
 			}
 			return instance;

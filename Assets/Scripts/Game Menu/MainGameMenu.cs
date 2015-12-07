@@ -17,7 +17,7 @@ public class MainGameMenu : MonoBehaviour
 					throw new NotImplementedException();
 				}
 
-                Singleton<MainGameMenu>.CreateInstance("Prefab/Essential/Menu/Game Menu Base");
+                Singleton<MainGameMenu>.CreateInstance("Prefab/Game Menu/Game Menu Base");
 			}
 			return instance;
 		}
@@ -71,8 +71,8 @@ public class MainGameMenu : MonoBehaviour
 			mBackground = new GameObject("Menu Background");
 		}
 		
-		fmodMusic = AudioManager.Instance.GetEvent("Music/DroneMenyMusic/SpaceDrone");
-		fmodSwipe = AudioManager.Instance.GetEvent("Sounds/MenuSectionSwipe/MenuSwipeShort");
+		fmodMusic = AudioManager.Instance.GetMusicEvent("DroneMenyMusic/SpaceDrone");
+		fmodSwipe = AudioManager.Instance.GetSoundsEvent("MenuSectionSwipe/MenuSwipeShort");
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 
@@ -167,9 +167,10 @@ public class MainGameMenu : MonoBehaviour
 
 		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
 		MenuCamera.Instance.ShowBackButton(showBack);
-
+        
+		bool showIcons = !(mShowOptionsMenu || mShowHelpMenu || MenuCamera.Instance.mCotrls.activeSelf);
+        MenuGUICanvas.Instance.ShowIconButtons(showIcons);
 		MenuGUICanvas.Instance.IconsGUI().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
-		MenuGUICanvas.Instance.ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{

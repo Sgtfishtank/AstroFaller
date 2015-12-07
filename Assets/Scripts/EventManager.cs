@@ -10,7 +10,7 @@ public class EventManager : MonoBehaviour
         {
             if (instance == null)
             {
-				instance = Singleton<EventManager>.CreateInstance("Prefab/Essential/EventSystem");
+				instance = Singleton<EventManager>.CreateInstance("Prefab/EventSystem");
 				GameObject.DontDestroyOnLoad(instance.gameObject);
             }
             return instance;

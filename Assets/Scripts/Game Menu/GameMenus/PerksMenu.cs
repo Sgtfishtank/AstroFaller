@@ -9,24 +9,21 @@ public class PerksMenu : GameMenu
 	private int mPerkIndex = 1; // start in the middle
 	private ButtonManager mPrevObj;
 	private ButtonManager mNextObj;
-	private ButtonManager[] mPerkButtons;
 	
 	void Awake()
 	{
 		mPerks = GetComponentsInChildren<Perk> ();
-		mPerkButtons = new ButtonManager[3];
+		
+        mPrevObj = ButtonManager.CreateButton(gameObject, "Prev");
+        mNextObj = ButtonManager.CreateButton(gameObject, "Next");
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
 		PerksGUI gui = MenuGUICanvas.Instance.PerksGUI ();
-		mPrevObj = ButtonManager.CreateButton(gameObject, "Prev", "PrevButton", gui);
-		mNextObj = ButtonManager.CreateButton(gameObject, "Next", "NextButton", gui);
-		
-		mPerkButtons[0] = ButtonManager.CreateButton(gameObject, "Perks Burst/perk_burst/Anim_BurstPerk", "LifePerk/Button 4", gui);
-		mPerkButtons[1] = ButtonManager.CreateButton(gameObject, "Perks Air/perk_air/Anim_AirPerk", "LifePerk/Button 4", gui);
-		mPerkButtons[2] = ButtonManager.CreateButton(gameObject, "Perks Life/perk_life/Anim_LifePerk", "LifePerk/Button 4", gui);
+        mPrevObj.LoadButtonPress("PrevButton", gui);
+        mNextObj.LoadButtonPress("NextButton", gui);
 
 		UpdateViewPerk ();
 	}

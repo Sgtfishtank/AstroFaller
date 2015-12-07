@@ -18,6 +18,17 @@ public class PopupBuyGUI : GUICanvasBase
 	// Update is called once per frame
 	void Update () 
     {
-	
-	}
+
+    }
+
+    // pressed popup buy buttons
+    public void BuyWithBolts()
+    {
+        MainGameMenu.Instance.BuyWithBolts();
+    }
+
+    public void BuyWithCrystals()
+    {
+        MainGameMenu.Instance.BuyWithCrystals();
+    }
 }

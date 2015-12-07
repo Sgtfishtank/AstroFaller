@@ -18,7 +18,7 @@ public class MenuGUICanvas : GUICanvasBase
 					throw new NotImplementedException();
 				}
 
-                instance = Singleton<MenuGUICanvas>.CreateInstance("Prefab/Essential/Menu/MenuGUICanvas");
+                instance = Singleton<MenuGUICanvas>.CreateInstance("Prefab/Game Menu/MenuGUICanvas");
 			}
 			return instance;
 		}
@@ -89,7 +89,7 @@ public class MenuGUICanvas : GUICanvasBase
 
 	void UpdateButtons ()
 	{
-		ShowButtons(mOptionsGUICanvas.GetButtons(), mShowButtons);
+		//ShowButtons(mOptionsGUICanvas.GetButtons(), mShowButtons);
 		ShowButtons(mButtons, mShowButtons);
 	}
 
@@ -203,17 +203,6 @@ public class MenuGUICanvas : GUICanvasBase
     public void SetFadeColor(Color col)
     {
         mFadeImage.color = col;
-    }
-
-    // pressed popup buy buttons
-    public void BuyWithBolts()
-    {
-        MainGameMenu.Instance.BuyWithBolts();
-    }
-
-    public void BuyWithCrystals()
-    {
-        MainGameMenu.Instance.BuyWithCrystals();
     }
 
     public void ShowIconButtons(bool show)

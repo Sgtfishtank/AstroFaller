@@ -6,24 +6,30 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {	
-	public static ButtonManager CreateButton(GameObject refObj, string path, string guiName, GUICanvasBase guiBase)
-	{
-		if (guiBase == null) 
-		{
-			throw new NullReferenceException();
-		}
+	public static ButtonManager CreateButton(GameObject refObj, string path)
+    {
+        if (refObj == null)
+        {
+            throw new NullReferenceException("NO refObj FOUND. path: " + path);
+        }
 
 		ButtonManager x = refObj.AddComponent<ButtonManager> ();
-		x.mGUIName = guiName;
+
+        if (refObj.transform.Find(path) == null)
+        {
+            throw new NullReferenceException("NO mObj FOUND. path: " + path);
+        }
+
 		x.mObj = refObj.transform.Find(path).gameObject;
-		x.mGUIBase = guiBase;
-		return x;
+
+        x.enabled = false;
+        return x;
 	}
 
 	public GameObject mObj;
-	public string mGUIName;
-	public GUICanvasBase mGUIBase;
-
+	
+    private string mGUIName;
+    private GUICanvasBase mGUIBase;
 	private ButtonPress mButtonPress;
 	private Vector3 mBaseScale = Vector3.zero;
 	private Vector3 mBasePosition;
@@ -33,45 +39,52 @@ public class ButtonManager : MonoBehaviour
 	}
 	
 	// Use this for initialization
-	void Start () 
-	{
-		mButtonPress = mGUIBase.FindButton(mGUIName);
+	void Start ()
+    {
+        if (mObj == null)
+        {
+            throw new NullReferenceException("ERROR mObj NOT FOUND.");
+        }
 
-		if (mObj != null) 
+		mBasePosition = mObj.transform.localPosition;
+		mBaseScale = mObj.transform.localScale;
+		if (mBaseScale.magnitude < 0.001f) 
 		{
-			mBasePosition = mObj.transform.localPosition;
-			mBaseScale = mObj.transform.localScale;
-			if (mBaseScale.magnitude < 0.001f) 
-			{
-				throw new NotImplementedException();
-			}
+            throw new NotImplementedException("OBJECT SCALE TO SMALL");
 		}
 		
-		if (mObj == null)
-		{
-			print("ERROR mObj");
-			enabled = false;
-		}
-
-		if (mButtonPress == null)
-		{
-			print("ERROR mButtonPress");
-			enabled = false;
-		}
 	}
+
+    public void LoadButtonPress(string guiName, GUICanvasBase guiBase)
+    {
+        mGUIName = guiName;
+        mGUIBase = guiBase;
+
+        mButtonPress = mGUIBase.FindButton(mGUIName);
+
+        if (mButtonPress == null)
+        {
+            throw new NullReferenceException("NO ButtonPress FOUND. mGUIBase: " + mGUIBase + ", mGUIName: " + mGUIName);
+        }
+
+        enabled = ((mObj != null) && (mButtonPress != null));
+    }
 
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update ()
+    {
 		if (!mObj.activeInHierarchy) 
 		{
-			//mButtonPress.Reset ();
+            return;
 		}
-		else 
-		{
-			mObj.transform.localPosition = mBasePosition;
-			mObj.transform.position	+= mButtonPress.PositionOffset();
-			mObj.transform.localScale = mBaseScale * mButtonPress.ScaleFactor();
-		}
+		
+		mObj.transform.localPosition = mBasePosition;
+		mObj.transform.position	+= mButtonPress.PositionOffset();
+		mObj.transform.localScale = mBaseScale * mButtonPress.ScaleFactor();
 	}
+
+    public void SetBaseOffset(Vector3 mOffset)
+    {
+        mBasePosition = mOffset;
+    }
 }
