@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class DeatMenuGUI : MonoBehaviour 
+public class DeatMenuGUI : GUICanvasBase 
 {
 	private GameObject mDeathMenu;
 	private GameObject mRewardMenu;
@@ -30,13 +30,13 @@ public class DeatMenuGUI : MonoBehaviour
 	{
 	
 	}
-	
+
 	// pressed back to menu
 	public void BackToMenu()
 	{
 		Application.LoadLevel("MainMenuLevel");
 	}
-	
+
 	public void restart()
 	{
 		InGame.Instance.DeathMenu().Close();

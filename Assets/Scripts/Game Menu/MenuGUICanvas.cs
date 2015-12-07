@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine.UI;
 
-public class MenuGUICanvas : MonoBehaviour 
+public class MenuGUICanvas : GUICanvasBase 
 {
 	// snigleton
 	private static MenuGUICanvas instance = null;
@@ -11,13 +11,13 @@ public class MenuGUICanvas : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName != "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
-            {
+			{
+				if (Application.loadedLevelName != "MainMenuLevel")
+				{
+					throw new NotImplementedException();
+				}
+
                 instance = Singleton<MenuGUICanvas>.CreateInstance("Prefab/Essential/Menu/MenuGUICanvas");
 			}
 			return instance;
@@ -29,35 +29,32 @@ public class MenuGUICanvas : MonoBehaviour
 
     private GameObject mMenuGUICanvas;
     private GameObject mMenuButtons;
-    private GameObject mWorldMapButton;
     private GameObject mPopupBuyMenu;
     private GameObject mPopupCraftingMenu;
     private GameObject mPopupAchievementsMenu;
-    private GameObject mItemButtons;
-    private GameObject mPerkButtons;
-    private GameObject mIconButtons;
+    private ItemsGUI mItemButtons;
+    private PerksGUI mPerkButtons;
+    private IconsGUI mIconButtons;
     private GameObject mPlayLevelButton;
 
     private Image mFadeImage;
 
     private bool mShowButtons;
-    private Button[] mButtons;
-    //private ButtonPress[] mButtonPresss;
+	private Button[] mButtons;
 
 	void Awake ()
-    {
+	{
         mFadeImage = transform.Find("FadeLayer").GetComponent<Image>();
 
         //assign all menu buttons
         mMenuGUICanvas = transform.Find("MenuButtons").gameObject;
         mMenuButtons = transform.Find("MenuButtons").gameObject;
-        mWorldMapButton = mMenuButtons.transform.Find("WorldMapButton").gameObject;
-        mPopupBuyMenu = mMenuButtons.transform.Find("PopupBuyMenu").gameObject;
-        mPopupCraftingMenu = mMenuButtons.transform.Find("PopupCraftingMenu").gameObject;
-        mPopupAchievementsMenu = mMenuButtons.transform.Find("PopupAchievementsMenu").gameObject;
-        mItemButtons = mMenuButtons.transform.Find("Items").gameObject;
-        mPerkButtons = mMenuButtons.transform.Find("Perks").gameObject;
-        mIconButtons = mMenuButtons.transform.Find("Icons").gameObject;
+        mPopupBuyMenu = transform.Find("PopupBuyMenu").gameObject;
+        mPopupCraftingMenu = transform.Find("PopupCraftingMenu").gameObject;
+        mPopupAchievementsMenu = transform.Find("PopupAchievementsMenu").gameObject;
+		mItemButtons = transform.Find("Items").GetComponent<ItemsGUI>();
+		mPerkButtons = transform.Find("Perks").GetComponent<PerksGUI>();
+        mIconButtons = transform.Find("Icons").GetComponent<IconsGUI>();
         mPlayLevelButton = mMenuButtons.transform.Find("PlayLevelButton").gameObject;
 
         //mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
@@ -161,10 +158,8 @@ public class MenuGUICanvas : MonoBehaviour
 			if (!mDebugGUI.enabled)
 			{
 				MenuGUICanvas.Instance.ShowButtons(false);
-				//InGame.Instance.Player().mInvulnerable = false;
 			}
 		}
-
 	}
 
 	public void ToggleBloom()
@@ -173,34 +168,6 @@ public class MenuGUICanvas : MonoBehaviour
 		InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled;
 		MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
 		InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
-	}
-
-	// other
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "a":
-			return null;
-		}
-
-		GameObject ret = MenuCamera.Instance.GUIObject(name);
-		if (ret == null)
-		{
-			ret = MainGameMenu.Instance.GUIObject(name);
-		}
-
-		/*if (ret == null)
-		{
-			ret = InGame.Instance.GUIObject(name);
-		}*/
-
-		if (ret == null) 
-		{
-			Debug.LogWarning("Warning! BUTTON OBJECT NOT FOUND: " + name);
-		}
-
-		return ret;
 	}
 
     // toggle menu buttons
@@ -212,6 +179,21 @@ public class MenuGUICanvas : MonoBehaviour
         MainGameMenu.Instance.UpdateMenusAndButtons();
     }
 
+	public IconsGUI IconsGUI ()
+	{
+		return mIconButtons;
+	}
+
+	public PerksGUI PerksGUI ()
+	{
+		return mPerkButtons;
+	}
+
+	public ItemsGUI ItemsGUI ()
+	{
+		return mItemButtons;
+	}
+
     public Button[] GetButtons()
     {
         return mButtons;
@@ -222,58 +204,7 @@ public class MenuGUICanvas : MonoBehaviour
         mFadeImage.color = col;
     }
 
-    // pressed buy perks
-    public void BuyPerk()
-    {
-        MainGameMenu.Instance.PerksMenu().BuyPerk();
-    }
-
-    public void ViewNextPerk()
-    {
-        MainGameMenu.Instance.PerksMenu().ViewNextPerk();
-    }
-
-    public void ViewPreviousPerk()
-    {
-        MainGameMenu.Instance.PerksMenu().ViewPreviousPerk();
-    }
-
-    // pressed buy items
-    public void BuyUlimitedAirItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyUlimitedAirItem();
-    }
-
-    public void BuyShockwaveItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyShockwaveItem();
-    }
-
-    public void BuyMagnetsItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyBoltMagnetItem();
-    }
-
-    public void BuyForceFieldItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyForceFieldItem();
-    }
-
-    public void BuyMultiplierItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyBoltMultiplierItem();
-    }
-
-    public void BuyRocketThrustItem()
-    {
-        MainGameMenu.Instance.ItemsMenu().BuyRocketThrustItem();
-    }
-
     // pressed change world menus
-    public void ChangeToWorldMapMenu()
-    {
-        MainGameMenu.Instance.ChangeToWorldMapMenu();
-    }
 
     public void ChangeToPerksMenu()
     {
@@ -288,27 +219,6 @@ public class MenuGUICanvas : MonoBehaviour
     public void ChangeToChrystalShopMenu()
     {
         MainGameMenu.Instance.ChangeToChrystalShopMenu();
-    }
-
-    // pressed main gui buttons
-    public void ToggleOptions()
-    {
-        MainGameMenu.Instance.ToggleOptions();
-    }
-
-    public void ToggleHelp()
-    {
-        MainGameMenu.Instance.ToggleHelp();
-    }
-
-    public void ToggleCraftingMenu()
-    {
-        MainGameMenu.Instance.ToggleCraftingMenu();
-    }
-
-    public void ToggleAchievementsMenu()
-    {
-        MainGameMenu.Instance.ToggleAchievementsMenu();
     }
 
     // pressed popup buy buttons
@@ -344,11 +254,6 @@ public class MenuGUICanvas : MonoBehaviour
         mIconButtons.gameObject.SetActive(show);
     }
 
-    public void ShowWorldMapButton(bool show)
-    {
-        mWorldMapButton.gameObject.SetActive(show);
-    }
-
     public void ShowPopupBuyButton(bool show)
     {
         mPopupBuyMenu.gameObject.SetActive(show);
@@ -372,5 +277,15 @@ public class MenuGUICanvas : MonoBehaviour
     public void ShowPerkButtons(bool show)
     {
         mPerkButtons.gameObject.SetActive(show);
-    }
+	}	
+
+	public GUICanvasBase AchievementsMenu ()
+	{
+		return this;
+	}
+	
+	public GUICanvasBase CraftingMenu ()
+	{
+		return this;
+	}
 }

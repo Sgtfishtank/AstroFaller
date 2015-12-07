@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using UnityEngine.UI;
 
-public class InGameGUICanvas : MonoBehaviour 
+public class InGameGUICanvas : GUICanvasBase 
 {
 	// snigleton
 	private static InGameGUICanvas instance = null;
@@ -11,48 +11,30 @@ public class InGameGUICanvas : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName == "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
 			{
+				if (Application.loadedLevelName != "InGameLevel")
+				{
+					throw new NotImplementedException();
+				}
+
                 instance = Singleton<InGameGUICanvas>.CreateInstance("Prefab/Essential/InGame/InGameGUICanvas");
 			}
 			return instance;
 		}
 	}
 
-	private GameObject mGUICanvasInGame;
 	private bool mShowButtons;
 	private DebugGUI mDebugGUI;
-
-    //private GameObject mInGameButtons;
-    private GameObject mDeathMenu;
-    public GameObject mRewardMenu;
-    public GameObject mRewardTextMenu;
-
-    private Image mFadeImage;
-
-    private Button[] mButtons;
-    //private ButtonPress[] mButtonPresss;
+	private DeatMenuGUI mDeathMenuGUI;
+	private Image mFadeImage;
+	private Button[] mButtons;
 
 	void Awake () 
 	{
 		mDebugGUI = GetComponent<DebugGUI>();
-        mGUICanvasInGame = gameObject;
-		mGUICanvasInGame.gameObject.SetActive (true);
-
         mFadeImage = transform.Find("FadeLayer").GetComponent<Image>();
-
-        //assign all option buttons
-        mDeathMenu = GameObject.Find("DeathMenu");
-        mDeathMenu.SetActive(false);
-
-        //assign all in game buttons
-        //mInGameButtons = transform.Find ("InGameButtons").gameObject;
-
+		mDeathMenuGUI = transform.Find ("DeathMenu").GetComponent<DeatMenuGUI> ();
         //mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
         mButtons = GetComponentsInChildren<Button>(true);
 	}
@@ -60,6 +42,7 @@ public class InGameGUICanvas : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		gameObject.SetActive (true);
 		mDebugGUI.enabled = false;
 		ShowButtons (false);
 	}
@@ -67,7 +50,7 @@ public class InGameGUICanvas : MonoBehaviour
 	// show ingame buttons
 	public void ShowInGameButtons(bool show)
 	{
-		mGUICanvasInGame.gameObject.SetActive (show);
+		gameObject.SetActive(show);
 	}
 
 	public void ToggleShowButtons ()
@@ -141,39 +124,19 @@ public class InGameGUICanvas : MonoBehaviour
 
 	public void ToggleBloom()
 	{
-		MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom>().enabled = !MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled;
-		InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled;
-		MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
-		InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
-	}
-
-	// other
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "a":
-			return null;
-		}
-
-		GameObject ret = null;
-
-		if (ret == null)
-		{
-			ret = InGame.Instance.GUIObject(name);
-		}
-
-		if (ret == null) 
-		{
-			Debug.LogWarning("Warning! BUTTON OBJECT NOT FOUND: " + name);
-		}
-
-		return ret;
+		//MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom>().enabled = !MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled;
+		//InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.Bloom> ().enabled;
+		//MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !MenuCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
+		//InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled = !InGameCamera.Instance.gameObject.GetComponent<UnityStandardAssets.ImageEffects.BloomOptimized> ().enabled;
 	}
 
     // toggle menu buttons
     public void Deselect()
     {
+		if (InGame.Instance.mDeathMenu.activeSelf) 
+		{
+			InGame.Instance.DeathMenu().Skip();
+		}
     }
 
     public Button[] GetButtons()
@@ -186,96 +149,8 @@ public class InGameGUICanvas : MonoBehaviour
         mFadeImage.color = col;
     }
 
-    // pressed back to menu
-    public void BackToMenu()
-    {
-        Application.LoadLevel("MainMenuLevel");
-    }
-
-    // death
-    public void setEnableDeathMenu(bool a)
-    {
-        mDeathMenu.SetActive(a);
-        mRewardMenu.SetActive(a);
-        mRewardTextMenu.SetActive(a);
-    }
-
-    public void restart()
-    {
-        clear();
-        InGame.Instance.mDeathMenu.SetActive(false);
-        InGame.Instance.DeathMenu().Close();
-        setEnableDeathMenu(false);
-        InGame.Instance.StartGame();
-    }
-
-    public void perfectDistanceReward(int pos)
-    {
-        int box = InGame.Instance.Player().CollectedPerfectDistances();
-
-        int value = 0;
-
-        Text[] a = mRewardTextMenu.GetComponentsInChildren<Text>();
-
-        if (box < 5)
-        {
-            value = UnityEngine.Random.Range(20, 51);
-            switch (pos)
-            {
-                case 1:
-                    a[0].text = value.ToString();
-                    a[0].rectTransform.anchoredPosition = findObject("Box 1").anchoredPosition + new Vector2(5.8f - 128, -23);
-                    break;
-                case 2:
-                    a[1].text = value.ToString();
-                    a[1].rectTransform.anchoredPosition = findObject("Box 2").anchoredPosition + new Vector2(3, -23);
-                    break;
-                case 3:
-                    a[2].text = value.ToString();
-                    a[2].rectTransform.anchoredPosition = findObject("Box 3").anchoredPosition + new Vector2(2, -23);
-                    break;
-                case 4:
-                    a[3].text = value.ToString();
-                    a[3].rectTransform.anchoredPosition = findObject("Box 4").anchoredPosition + new Vector2(3, -23);
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < box; i++)
-            {
-                value += UnityEngine.Random.Range(20, 51);
-            }
-            a[0].text = value.ToString();
-            a[0].rectTransform.anchoredPosition = findObject("Box 1").anchoredPosition + new Vector2(5.8f - 75f, -23);
-            mRewardMenu.GetComponent<DeathmenuButtons>().disableSpecific(5);
-        }
-        mRewardMenu.GetComponent<DeathmenuButtons>().disableSpecific(pos);
-        InGame.Instance.mDeathMenu.GetComponent<DeathMenu>().removeBox(pos);
-        PlayerData.Instance.depositBolts(value);
-    }
-
-    private RectTransform findObject(string name)
-    {
-        RectTransform[] b = mRewardMenu.GetComponentsInChildren<RectTransform>();
-        for (int i = 0; i < b.Length; i++)
-        {
-            if (b[i].name == name)
-            {
-                return b[i];
-            }
-        }
-        return null;
-    }
-
-    private void clear()
-    {
-        Text[] a = mRewardTextMenu.GetComponentsInChildren<Text>();
-        for (int i = 0; i < a.Length; i++)
-        {
-            a[i].text = null;
-        }
-    }
+	public DeatMenuGUI DeathMenuGUI()
+	{
+		return mDeathMenuGUI;
+	}
 }

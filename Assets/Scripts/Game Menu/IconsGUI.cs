@@ -2,19 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class IconsGUI : MonoBehaviour 
+public class IconsGUI : GUICanvasBase 
 {
-	private ButtonPress mCraftingButton;
-	private ButtonPress mOptionsButton;
-	private ButtonPress mHelpButton;
-	private ButtonPress mAchievementsButton;
+	private GameObject mWorldMapButton;
 
 	void Awake()
 	{
-		mCraftingButton = transform.Find ("CraftingButton").GetComponent<ButtonPress>();
-		mOptionsButton = transform.Find ("OptionsButton").GetComponent<ButtonPress>();
-		mHelpButton = transform.Find ("HelpButton").GetComponent<ButtonPress>();
-		mAchievementsButton = transform.Find ("AchievementsButton").GetComponent<ButtonPress>();
+		mWorldMapButton = transform.Find("WorldMapButton").gameObject;
 	}
 
 	// Use this for initialization
@@ -29,26 +23,11 @@ public class IconsGUI : MonoBehaviour
 	
 	}
 	
-	public ButtonPress WorkshopButton()
+	public void ChangeToWorldMapMenu()
 	{
-		return mCraftingButton;
+		MainGameMenu.Instance.ChangeToWorldMapMenu();
 	}
-	
-	public ButtonPress SettingsButton()
-	{
-		return mOptionsButton;
-	}	
-	
-	public ButtonPress OptionsButton()
-	{
-		return mHelpButton;
-	}	
-	
-	public ButtonPress AchivementButton()
-	{
-		return mAchievementsButton;
-	}
-	
+
 	// pressed icons gui buttons
 	public void ToggleOptions()
 	{
@@ -68,5 +47,10 @@ public class IconsGUI : MonoBehaviour
 	public void ToggleAchievementsMenu()
 	{
 		MainGameMenu.Instance.ToggleAchievementsMenu();
+	}
+	
+	public void ShowWorldMapButton(bool show)
+	{
+		mWorldMapButton.gameObject.SetActive(show);
 	}
 }

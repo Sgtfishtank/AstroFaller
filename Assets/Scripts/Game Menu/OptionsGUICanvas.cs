@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class OptionsGUICanvas : MonoBehaviour 
+public class OptionsGUICanvas : GUICanvasBase 
 {
 	private GameObject mOptionButtons;
 	private GameObject mMasterButtons;
@@ -11,7 +11,6 @@ public class OptionsGUICanvas : MonoBehaviour
 
 	private bool mShowButtons;
 	private Button[] mButtons;
-	//private ButtonPress[] mButtonPresss;
 	
 	void Awake () 
 	{
@@ -21,8 +20,6 @@ public class OptionsGUICanvas : MonoBehaviour
 		mSoundButtons = mOptionButtons.transform.Find("Sounds").gameObject;
 		mMusicButtons = mOptionButtons.transform.Find("Music").gameObject;
 		mOptionButtons.SetActive (true);
-
-		//mButtonPresss = GetComponentsInChildren<ButtonPress>(true);
 		mButtons = GetComponentsInChildren<Button>(true);
 	}
 	

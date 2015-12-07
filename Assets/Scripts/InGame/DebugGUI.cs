@@ -10,6 +10,16 @@ public class DebugGUI : MonoBehaviour
     private float mFT;
     private float mFps;
 
+    private float[] mFpsBuffer;
+    private int mFpsBufferIndex;
+    private float mAvarageFps;
+
+    void Awake()
+    {
+        mFpsBuffer = new float[30];
+        mFpsBufferIndex = 0;
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -99,9 +109,25 @@ public class DebugGUI : MonoBehaviour
             mFps = mF / (Time.time - mFT);
             mFT = Time.time;
             mF -= mFpsUpdateFrames;
+
+            mFps = (int)(1f / Time.unscaledDeltaTime);
         }
+
+        mFpsBuffer[mFpsBufferIndex] = (1f / Time.unscaledDeltaTime);
+        mFpsBufferIndex = (mFpsBufferIndex + 1) % mFpsBuffer.Length;
+        mAvarageFps = CalculateAverageFPS();
     }
-    
+
+    int CalculateAverageFPS()
+    {
+        float sum = 0;
+        for (int i = 0; i < mFpsBuffer.Length; i++)
+        {
+            sum += mFpsBuffer[i];
+        }
+        return (int)(sum / mFpsBuffer.Length);
+    }
+
     private Rect lastBounds;
     private string lastString = "";
 
@@ -117,7 +143,7 @@ public class DebugGUI : MonoBehaviour
         bounds.height = 10 + size;
         bounds.height += size;
 
-        if (mF == 0)
+        if (true)
         {
             string allText = "";
 
@@ -188,6 +214,9 @@ public class DebugGUI : MonoBehaviour
             }
 
             allText += "FPS: " + (int)mFps + "\n";
+            bounds.height += size;
+
+            allText += "FPS2: " + (int)mAvarageFps + "\n";
             bounds.height += size;
 
             lastBounds = bounds;
