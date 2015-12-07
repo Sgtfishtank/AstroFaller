@@ -18,7 +18,7 @@ public class InGameGUICanvas : GUICanvasBase
 					throw new NotImplementedException();
 				}
 
-                instance = Singleton<InGameGUICanvas>.CreateInstance("Prefab/Essential/InGame/InGameGUICanvas");
+                instance = Singleton<InGameGUICanvas>.CreateInstance("Prefab/InGame/InGameGUICanvas");
 			}
 			return instance;
 		}

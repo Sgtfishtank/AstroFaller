@@ -5,7 +5,6 @@ public class AstroidRemove : MonoBehaviour
 {
 	private WarningArrow mWarning;
 	private Player mPlayer;
-	private SpawnerBase mAstroidSpawn;
 	private Rigidbody mRb;
 	private FMOD.Studio.EventInstance mClash;
 
@@ -13,7 +12,7 @@ public class AstroidRemove : MonoBehaviour
 	{
 		mRb = GetComponent<Rigidbody> ();
 
-		mClash = FMOD_StudioSystem.instance.GetEvent ("event:/Sounds/AsteroidColision/AsteroidColision");
+		mClash = AudioManager.Instance.GetSoundsEvent("AsteroidColision/AsteroidColision");
 
 	}
 
@@ -21,7 +20,6 @@ public class AstroidRemove : MonoBehaviour
 	void Start ()
 	{
 		mPlayer = WorldGen.Instance.Player();
-		mAstroidSpawn = WorldGen.Instance.BaseSpawner ();
 	}
 	
 	void OnDisable()
@@ -49,8 +47,7 @@ public class AstroidRemove : MonoBehaviour
 		if ((coll.gameObject != gameObject) && (coll.gameObject != mPlayer.gameObject))
 		{
 			AudioManager.Instance.PlaySoundOnce (mClash);
-			mAstroidSpawn.SpawnCollisionEffects(coll.contacts[0].point);
+			InGame.Instance.SpawnAstCollisionEffects(coll.contacts[0].point);
 		}
 	}
-
 }

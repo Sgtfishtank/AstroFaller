@@ -4,7 +4,6 @@ using System.Collections;
 public class Missile : MonoBehaviour 
 {
 	public float mStartTime;
-	private SpawnerBase mMissileSpawn;
 	private Rigidbody mRb;
 	
 	private Vector3 mStartPos;
@@ -19,7 +18,6 @@ public class Missile : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		mMissileSpawn = WorldGen.Instance.BaseSpawner ();
 	}
 	
 	void OnDisable()
@@ -64,8 +62,7 @@ public class Missile : MonoBehaviour
 	{
 		if (coll.gameObject != gameObject)
 		{
-			mMissileSpawn.SpawnCollisionEffects(coll.contacts[0].point);
-			//mAstroidSpawn.SpawnMissileCollisionEffects(transform.position);
+			InGame.Instance.SpawnMissileCollisionEffects(coll.contacts[0].point);
 			gameObject.SetActive(false);
 		}
 	}

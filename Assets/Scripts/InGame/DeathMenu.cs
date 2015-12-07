@@ -26,14 +26,13 @@ public class DeathMenu : MonoBehaviour
 	private int mDistance;
 	private int mBoxes;
 	private int mBolts2;
-	//private ButtonManager mRestatButton;
-	//private ButtonManager mMenuButton;
+	private ButtonManager mRestatButton;
+	private ButtonManager mMenuButton;
 
 	void Awake()
 	{
-		DeatMenuGUI gui = InGameGUICanvas.Instance.DeathMenuGUI ();
-		ButtonManager.CreateButton(gameObject, "button_1_base", "Restart", gui);
-		ButtonManager.CreateButton(gameObject, "button_2_base", "MainMenu", gui);
+        mRestatButton = ButtonManager.CreateButton(gameObject, "button_1_base");
+        mMenuButton = ButtonManager.CreateButton(gameObject, "button_2_base");
 
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
 		
@@ -49,14 +48,17 @@ public class DeathMenu : MonoBehaviour
 				mTotalBoltsText = mTexts[i];
 		}
 
-		fmodDeathMusic = AudioManager.Instance.GetEvent("Music/Scrapscoremusic/ScrapScoreMusic");
-		mDisDown = AudioManager.Instance.GetEvent("Sounds/RewardTickerBolts/TickerBolts");
-		mCoinUp = AudioManager.Instance.GetEvent("Sounds/RewardTickerDistance/TickerDistance");
+        fmodDeathMusic = AudioManager.Instance.GetMusicEvent("Scrapscoremusic/ScrapScoreMusic");
+        mDisDown = AudioManager.Instance.GetSoundsEvent("RewardTickerBolts/TickerBolts");
+        mCoinUp = AudioManager.Instance.GetSoundsEvent("RewardTickerDistance/TickerDistance");
 	}
 
 	// Use this for initialization
 	void Start()
-	{
+    {
+        DeatMenuGUI gui = InGameGUICanvas.Instance.DeathMenuGUI();
+        mRestatButton.LoadButtonPress("Restart", gui);
+        mMenuButton.LoadButtonPress("MainMenu", gui);
 	}
 
 	void OnEnable ()

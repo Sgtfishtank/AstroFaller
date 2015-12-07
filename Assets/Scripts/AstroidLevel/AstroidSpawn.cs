@@ -8,10 +8,6 @@ public class AstroidSpawn : SpawnerBase
 	public GameObject[] mAstroidTypes;
 	private GameObject[] mAstroids;
 
-	private ParticleManager mAstCollParticle1Manager;
-	private ParticleManager mAstCollParticle2Manager;
-	private ParticleManager mBulletCollParticleManager;
-
 	public GameObject mPlayerAsteroidPrefab;
 	private GameObject mPlayerAsteroid;
 	private float mPlayerAsteroidT;
@@ -19,13 +15,8 @@ public class AstroidSpawn : SpawnerBase
 	private Player mPlayer;
 	private float mLastSpawn = 0;
 
-
 	void Awake ()
 	{
-		// creat collision efets
-		mAstCollParticle1Manager = GetComponents<ParticleManager>()[0];
-		mAstCollParticle2Manager = GetComponents<ParticleManager>()[1];
-		mBulletCollParticleManager = GetComponents<ParticleManager>()[2];
 		// creat player dasdoiud
 		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
 		mPlayerAsteroid.SetActive (false);
@@ -33,12 +24,6 @@ public class AstroidSpawn : SpawnerBase
 
 	void Start ()
 	{
-		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
-		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
-		mAstCollParticle1Manager.Load(maxParticles, parent);
-		mAstCollParticle2Manager.Load(maxParticles, parent);
-		mBulletCollParticleManager.Load(maxParticles, parent);
-
 		mPlayer = WorldGen.Instance.Player();
 	}
 
@@ -103,7 +88,7 @@ public class AstroidSpawn : SpawnerBase
 	{
 		for (int i = 0; i < mAstroids.Length; i++) 
 		{
-			if (mAstroids[i].activeSelf && OutOfBound(mAstroids[i])) 
+			if (mAstroids[i].activeSelf && InGame.Instance.OutOfSegmentBounds(mAstroids[i])) 
 			{
 				mAstroids[i].SetActive(false);
 			}
@@ -184,17 +169,6 @@ public class AstroidSpawn : SpawnerBase
 		return false;
 	}
 
-	public override void SpawnCollisionEffects(Vector3 position)
-	{
-		mAstCollParticle1Manager.Spawn(position);
-		mAstCollParticle2Manager.Spawn(position);
-	}
-
-	public void SpawnBulletCollisionEffects (Vector3 position)//TODO
-	{
-		mBulletCollParticleManager.Spawn(position);
-	}
-
 	GameObject PickFreeAsteroid()
 	{
 		for (int i = 0; i < mAstroids.Length; i++) 
@@ -215,10 +189,6 @@ public class AstroidSpawn : SpawnerBase
 			mAstroids[i].transform.position -= new Vector3(0, shift, 0);
 		}
 		mPlayerAsteroid.transform.position -= new Vector3(0, shift, 0);
-
-		mAstCollParticle1Manager.ShiftBack(shift);
-		mAstCollParticle2Manager.ShiftBack(shift);
-		mBulletCollParticleManager.ShiftBack(shift);
 	}
 
 	public override void Reset ()

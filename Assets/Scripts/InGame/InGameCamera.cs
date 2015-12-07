@@ -18,7 +18,7 @@ public class InGameCamera : MonoBehaviour
 					throw new NotImplementedException();
 				}
 
-				instance = Singleton<InGameCamera>.CreateInstance("Prefab/Essential/InGame/InGame Camera");
+				instance = Singleton<InGameCamera>.CreateInstance("Prefab/InGame/InGame Camera");
 			}
 			return instance;
 		}
@@ -58,6 +58,11 @@ public class InGameCamera : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+        mDistnce = -1;
+        mBolts = -1;
+        mBoxes = -1;
+        mLife = -1;
+
         UpdateBoltsText();
         UpdateDistnceText();
         UpdateBoxesText();
