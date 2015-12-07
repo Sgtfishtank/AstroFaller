@@ -26,10 +26,6 @@ public class AstroidSpawn : SpawnerBase
 		mAstCollParticle1Manager = GetComponents<ParticleManager>()[0];
 		mAstCollParticle2Manager = GetComponents<ParticleManager>()[1];
 		mBulletCollParticleManager = GetComponents<ParticleManager>()[2];
-		mAstCollParticle1Manager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
-		mAstCollParticle2Manager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
-		mBulletCollParticleManager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
-
 		// creat player dasdoiud
 		mPlayerAsteroid = Instantiate(mPlayerAsteroidPrefab) as GameObject;
 		mPlayerAsteroid.SetActive (false);
@@ -37,6 +33,12 @@ public class AstroidSpawn : SpawnerBase
 
 	void Start ()
 	{
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mAstCollParticle1Manager.Load(maxParticles, parent);
+		mAstCollParticle2Manager.Load(maxParticles, parent);
+		mBulletCollParticleManager.Load(maxParticles, parent);
+
 		mPlayer = WorldGen.Instance.Player();
 	}
 

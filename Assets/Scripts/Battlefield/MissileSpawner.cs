@@ -17,12 +17,14 @@ public class MissileSpawner : SpawnerBase
 	void Awake ()
 	{
 		// creat collision efets
-	mMissileCollParticleManager = GetComponent<ParticleManager>();
-	mMissileCollParticleManager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
+		mMissileCollParticleManager = GetComponent<ParticleManager>();
 	}
 	
 	void Start ()
 	{
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mMissileCollParticleManager.Load(maxParticles, parent);
 		mPlayer = WorldGen.Instance.Player();
 	}
 	

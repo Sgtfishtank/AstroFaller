@@ -21,13 +21,15 @@ public class Turret : MonoBehaviour
 		mShootEffect = transform.Find("turret_explosion_effect").gameObject;
 		mShotsManager = GetComponent<ParticleManager> ();
 		mBase = transform.Find("Turret_anim/Base").gameObject;
-		mShotsManager.Load(GlobalVariables.Instance.TURRET_MAX_BULLETS);
 		mBasePos = mBase.transform.localPosition;
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mShotsManager.Load(maxParticles, parent);
 		mAS = InGame.Instance.BaseSpawner ();
 	}
 

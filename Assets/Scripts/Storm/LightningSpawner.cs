@@ -18,11 +18,13 @@ public class LightningSpawner : SpawnerBase
 	{
 		// creat collision efets
 		mLightningCollParticleManager = GetComponent<ParticleManager>();
-		mLightningCollParticleManager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
 	}
 	
 	void Start ()
 	{
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mLightningCollParticleManager.Load(maxParticles, parent);
 		mPlayer = WorldGen.Instance.Player();
 	}
 	
