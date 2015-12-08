@@ -13,14 +13,14 @@ public class ActivateStuff : MonoBehaviour {
 	{
 		for (int i = 1; i < go.Length; i++)
 		{
-			go[i].gameObject.SetActive(false);
+		//	go[i].gameObject.SetActive(false);
 		}
 	}
 	void OnEnable()
 	{
 		for (int i = 1; i < go.Length; i++)
 		{
-			go[i].gameObject.SetActive(true);
+		//	go[i].gameObject.SetActive(true);
 		}
 	}
 

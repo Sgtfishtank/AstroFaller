@@ -72,8 +72,6 @@ public class Player : MonoBehaviour
 		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
 		mMovementControls = new MovementControls(this);
 		mDash = transform.Find("Burst_Trail").gameObject;
-		mIsDead = false;
-		mPlaying = false;
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
 
@@ -83,64 +81,57 @@ public class Player : MonoBehaviour
         mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate");
         mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate");
 		mInflateSound.setVolume(100);
-		mDeflateSound.setVolume(100);
+        mDeflateSound.setVolume(100);
+
+        transform.position = Vector3.zero;
 	}
 
 	// Use this for initialization
 	void Start()
     {
-        mPickupTextManager.reset();
-		gameObject.SetActive(true);
+        int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+        Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+        mPickupTextManager.Load(maxParticles, parent);
+        mBoltParticleManager.Load(maxParticles, parent);
 
-		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
-		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
-		mPickupTextManager.Load(maxParticles, parent);
-		mBoltParticleManager.Load(maxParticles, parent);
+        mAS = WorldGen.Instance.BaseSpawner();
+        mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+        mAS = WorldGen.Instance.BaseSpawner();
 
-		mAS = WorldGen.Instance.BaseSpawner ();
-		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+        Reset();
 	}
 
-	public void IntroLoad ()
+    public void Reset()
     {
-        mPickupTextManager.reset();
-		gameObject.SetActive(true);
+        mDash.SetActive(false);
+        mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
+        mRb.useGravity = true;
+        mRb.isKinematic = false;
+        mCurrentAsterodSpawnCollider = null;
+        mAntenLensFlare.color = Color.green;
 
-		mAS = WorldGen.Instance.BaseSpawner ();
-		mDash.SetActive(false);
-		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
-		mRb.useGravity = true;
-		mRb.isKinematic = false;
-		transform.position = Vector3.zero;
-		mIsDead = false;
-	}
+        mPickupTextManager.reset();
+        mBoltParticleManager.reset();
+    }
 
 	public void StartGame()
     {
-        mPickupTextManager.reset();
-		gameObject.SetActive(true);
+        Reset();
 
-		mPickupTextManager.reset();
-		mBoltParticleManager.reset();
+        mIsDead = false;
+        gameObject.SetActive(true);
 
-		mCurrentAsterodSpawnCollider = null;
-		mAirAmount = PlayerData.Instance.MaxAirTime();
-		mRb.isKinematic = false;
-		mIsDead = false;
+        mPlaying = true;
+        mAirAmount = PlayerData.Instance.MaxAirTime();
 		mBurstsLeft = PlayerData.Instance.MaxBursts();
-
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
 		mPerfectDistanceCollected = 0;
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
-		mPlaying = true;
-		mAntenLensFlare.color = Color.green;
 
 		transform.position = new Vector3(0, transform.position.y, 0);
 		
-		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
-
 		UpdatePerfectDistance (false);
 		mAS.StopSpawning();
 	}
@@ -528,9 +519,5 @@ public class Player : MonoBehaviour
 			
 			sys[i].SetParticles(particles, size);
 		}
-	}
-
-	void respawn()
-	{
 	}
 }

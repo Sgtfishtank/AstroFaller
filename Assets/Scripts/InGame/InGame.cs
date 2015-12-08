@@ -260,11 +260,20 @@ public class InGame : MonoBehaviour
             InGameCamera.Instance.GetComponent<FollowPlayer>().UpdatePosition();
         }
 
-        mAstCollParticle1Manager.ShiftBack(shift);
-        mAstCollParticle2Manager.ShiftBack(shift);
-        mBulletCollParticleManager.ShiftBack(shift);
-        mMissileCollParticleManager.ShiftBack(shift);
-        mLightningCollParticleManager.ShiftBack(shift);
+        switch (mCurrentLevel)
+        {
+            case Level.ASTROID_BELT:
+                mAstCollParticle1Manager.ShiftBack(shift);
+                mAstCollParticle2Manager.ShiftBack(shift);
+                break;
+            case Level.ALIEN_BATTLEFIELD:
+                mBulletCollParticleManager.ShiftBack(shift);
+                mMissileCollParticleManager.ShiftBack(shift);
+                break;
+            case Level.COSMIC_STORM:
+                mLightningCollParticleManager.ShiftBack(shift);
+                break;
+        }
     }
 
     public void SpawnAstCollisionEffects(Vector3 position)
@@ -370,7 +379,6 @@ public class InGame : MonoBehaviour
         mSpawnerBase.LoadObjects();
 
         mBgGen.StartSpawnSegments(0);
-        mPlayer.IntroLoad();
 
         mIntroPhase = true;
         mIntroPhaseT = 0;
