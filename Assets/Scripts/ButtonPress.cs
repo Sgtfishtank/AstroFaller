@@ -109,4 +109,9 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			break;
 		}
 	}
+
+    public float PressValue()
+    {
+        return mMoveT;
+    }
 }

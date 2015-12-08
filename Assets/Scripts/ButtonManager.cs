@@ -32,7 +32,8 @@ public class ButtonManager : MonoBehaviour
     private GUICanvasBase mGUIBase;
 	private ButtonPress mButtonPress;
 	private Vector3 mBaseScale = Vector3.zero;
-	private Vector3 mBasePosition;
+    private Vector3 mBasePosition;
+    private float mFocusLevel = -1;
 	
 	void Awake()
 	{
@@ -77,7 +78,24 @@ public class ButtonManager : MonoBehaviour
             return;
 		}
 
-		mObj.transform.localPosition = mBasePosition;
+        float f = mButtonPress.PressValue();
+        if (mFocusLevel == f)
+        {
+            return;
+        }
+
+        if (Mathf.Abs(mFocusLevel - f) < 0.02f)
+        {
+            return;
+        }
+
+        mFocusLevel = f;
+        UpdateObj();
+	}
+
+    private void UpdateObj()
+    {
+        mObj.transform.localPosition = mBasePosition;
         if (PlayerData.Instance.CurrentScene() == PlayerData.Scene.IN_GAME)
         {
             mObj.transform.position -= (InGameCamera.Instance.transform.rotation * mButtonPress.PositionOffset());
@@ -86,11 +104,12 @@ public class ButtonManager : MonoBehaviour
         {
             mObj.transform.position -= (MenuCamera.Instance.transform.rotation * mButtonPress.PositionOffset());
         }
-		mObj.transform.localScale = mBaseScale * mButtonPress.ScaleFactor();
-	}
+        mObj.transform.localScale = mBaseScale * mButtonPress.ScaleFactor();
+    }
 
     public void SetBaseOffset(Vector3 mOffset)
     {
         mBasePosition = mOffset;
+        mFocusLevel = -1;
     }
 }

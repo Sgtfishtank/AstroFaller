@@ -17,6 +17,7 @@ public class TutorialLevel : PlayableLevel
 	private	GameObject mTutorial;
 	private TextMesh[] mTextMeshes;
     private MeshRenderer[] mMeshRenders;
+    private float mFocusLevel = -1;
 
 	void Awake () 
 	{
@@ -118,7 +119,18 @@ public class TutorialLevel : PlayableLevel
 	}
 	
 	public override void setFocusLevel (float focusLevel)
-	{
+    {
+        if (mFocusLevel == focusLevel)
+        {
+            return;
+        }
+
+        if (Mathf.Abs(mFocusLevel - focusLevel) < 0.02f)
+        {
+            return;
+        }
+        mFocusLevel = focusLevel;
+
 		Vector3 mFocusOffset = new Vector3(0, 0, GlobalVariables.Instance.LEVELS_FOCUS_ZOOM * focusLevel);
         mFrame.transform.localPosition = mFocusOffset;
         mPictureImage.transform.localPosition = mFocusOffset;
