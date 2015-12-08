@@ -25,7 +25,6 @@ public class DeathMenu : MonoBehaviour
 	private bool runSound; 
 	private int mDistance;
 	private int mBoxes;
-	private int mBolts2;
 	private ButtonManager[] mRestatButton = new ButtonManager[3];
     private ButtonManager[] mMenuButton = new ButtonManager[3];
 
@@ -88,7 +87,7 @@ public class DeathMenu : MonoBehaviour
 	{
 		mDistance = distance;
 		mBoxes = boxes;
-		mBolts2 = bolts;
+		mBolts = bolts;
 		setBoxes();
 		AudioManager.Instance.PlayMusic(fmodDeathMusic);
 		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(true);
@@ -135,14 +134,14 @@ public class DeathMenu : MonoBehaviour
 			runSound = false;
 		}
 
-		float multi = (int)(Mathf.Lerp(1, calculateMultiplier(), deltaT) * 100f);
+        float multi = (int)(Mathf.Lerp(1, PlayerData.Instance.CalculateMultiplier(mDistance), deltaT) * 100f);
 		int dis = (int)Mathf.Lerp(mDistance, 0, deltaT);
-		int totalBolts = (int)Mathf.Lerp(mBolts2, calculateMultiplier() * mBolts2, deltaT);
+		int totalBolts = (int)Mathf.Lerp(mBolts, PlayerData.Instance.CalculateMultiplier(mDistance) * mBolts, deltaT);
 
 		UpdateDistanceText(dis);
 		UpdateMultiplierText(multi);
 		UpdateTotalBoltsText(totalBolts);
-		UpdateBoltsText(mBolts2);
+		UpdateBoltsText(mBolts);
 	}
 
 	void UpdateTotalBoltsText(int totalBolts)
@@ -183,11 +182,6 @@ public class DeathMenu : MonoBehaviour
 			mBolts = bolts;
 			mBoltsText.text = mBolts.ToString();
 		}
-	}
-
-	float calculateMultiplier()
-	{
-		return 1 + (mDistance / 5000f);
 	}
 
 	public void setBoxes()

@@ -253,4 +253,9 @@ public class PlayerData : MonoBehaviour
     {
         return mCurrentScene;
     }
+
+    public float CalculateMultiplier(int distance)
+    {
+        return (1 + (distance / 5000f));
+    }
 }
