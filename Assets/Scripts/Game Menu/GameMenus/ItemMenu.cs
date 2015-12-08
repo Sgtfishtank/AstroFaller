@@ -61,13 +61,13 @@ public class ItemMenu : GameMenu
 	}
 	
 	public override void Unfocus()
-	{
+    {
+        if (mFocused)
+        {
+            CloseBuyItemMenu();
+        }
+
 		mFocused = false;
-		
-		if (mCurrentItem != null)
-		{
-			CloseBuyItemMenu ();
-		}
 	}
 	
 	public override bool IsFocused ()
@@ -76,8 +76,8 @@ public class ItemMenu : GameMenu
 	}
 	
 	public override void UpdateMenusAndButtons ()
-	{
-		MenuGUICanvas.Instance.ShowItemButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+    {
+        MenuGUICanvas.Instance.ShowItemButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public override void BuyWithBolts()

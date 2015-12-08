@@ -26,13 +26,17 @@ public class DeathMenu : MonoBehaviour
 	private int mDistance;
 	private int mBoxes;
 	private int mBolts2;
-	private ButtonManager mRestatButton;
-	private ButtonManager mMenuButton;
+	private ButtonManager[] mRestatButton = new ButtonManager[3];
+    private ButtonManager[] mMenuButton = new ButtonManager[3];
 
 	void Awake()
 	{
-        mRestatButton = ButtonManager.CreateButton(gameObject, "button_1_base");
-        mMenuButton = ButtonManager.CreateButton(gameObject, "button_2_base");
+        mRestatButton[0] = ButtonManager.CreateButton(gameObject, "button_1_base");
+        mMenuButton[0] = ButtonManager.CreateButton(gameObject, "button_2_base");
+        mRestatButton[1] = ButtonManager.CreateButton(gameObject, "button_1_core");
+        mMenuButton[1] = ButtonManager.CreateButton(gameObject, "button_2_core");
+        mRestatButton[2] = ButtonManager.CreateButton(gameObject, "Text/restart");
+        mMenuButton[2] = ButtonManager.CreateButton(gameObject, "Text/main menu");
 
 		mTexts = gameObject.GetComponentsInChildren<TextMesh> ();
 		
@@ -57,8 +61,12 @@ public class DeathMenu : MonoBehaviour
 	void Start()
     {
         DeatMenuGUI gui = InGameGUICanvas.Instance.DeathMenuGUI();
-        mRestatButton.LoadButtonPress("Restart", gui);
-        mMenuButton.LoadButtonPress("MainMenu", gui);
+        mRestatButton[0].LoadButtonPress("Restart", gui);
+        mMenuButton[0].LoadButtonPress("MainMenu", gui);
+        mRestatButton[1].LoadButtonPress("Restart", gui);
+        mMenuButton[1].LoadButtonPress("MainMenu", gui);
+        mRestatButton[2].LoadButtonPress("Restart", gui);
+        mMenuButton[2].LoadButtonPress("MainMenu", gui);
 	}
 
 	void OnEnable ()

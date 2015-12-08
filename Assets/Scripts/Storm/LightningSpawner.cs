@@ -28,11 +28,11 @@ public class LightningSpawner : SpawnerBase
 			UnloadObjects();
 		}
 		
-		
-		
 		if (mLightningPrefab == null) 
 		{
-			Debug.LogError("No Lightning to spawn");
+            Debug.LogError("No Lightning to spawn");
+            mLightnings = new GameObject[0];
+            enabled = false;
 			return;
 		}
 		
@@ -93,7 +93,7 @@ public class LightningSpawner : SpawnerBase
 	}
 	
 	public override void SpawnObject ()
-	{
+    {
 		float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
 		
 		Rigidbody playerRb = mPlayer.GetComponent<Rigidbody>();
@@ -150,8 +150,7 @@ public class LightningSpawner : SpawnerBase
 		for (int i = 0; i < mLightnings.Length; i++) 
 		{
 			mLightnings[i].transform.position -= new Vector3(0, shift, 0);
-		}	
-		
+		}
 	}
 
 	public override void Reset ()

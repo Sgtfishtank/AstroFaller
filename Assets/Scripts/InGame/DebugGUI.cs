@@ -31,8 +31,8 @@ public class DebugGUI : MonoBehaviour
     {
         bool touching2 = (Input.touchCount >= 2) && (Input.touches[1].phase == TouchPhase.Began);
         bool touching3 = (Input.touchCount >= 3) && (Input.touches[2].phase == TouchPhase.Began) && (!touching2);
-
-        if (Application.loadedLevelName != "MainMenuLevel")
+        
+        if (PlayerData.Instance.CurrentScene() == PlayerData.Scene.IN_GAME)
         {
             Player pl = InGame.Instance.Player();
 
@@ -146,8 +146,8 @@ public class DebugGUI : MonoBehaviour
         if (true)
         {
             string allText = "";
-
-            if (Application.loadedLevelName != "MainMenuLevel")
+            
+            if (PlayerData.Instance.CurrentScene() == PlayerData.Scene.IN_GAME)
             {
                 allText += "Level: " + InGame.Instance.CurrentLevel() + "\n";
                 bounds.height += size;
@@ -179,8 +179,8 @@ public class DebugGUI : MonoBehaviour
 
             allText += "Live: " + PlayerData.Instance.mLifePerkUnlockedLevel + "\n";
             bounds.height += size;
-
-            if (Application.loadedLevelName != "MainMenuLevel")
+            
+            if (PlayerData.Instance.CurrentScene() == PlayerData.Scene.IN_GAME)
             {
                 allText += "Player Air: " + InGame.Instance.Player().AirAmount() + "\n";
                 bounds.height += size;

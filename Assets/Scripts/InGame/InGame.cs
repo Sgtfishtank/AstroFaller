@@ -11,7 +11,7 @@ public class InGame : MonoBehaviour
         {
             if (instance == null)
             {
-                if (Application.loadedLevelName != "InGameLevel")
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.IN_GAME)
                 {
                     throw new NotImplementedException();
                 }
@@ -110,6 +110,12 @@ public class InGame : MonoBehaviour
         mLightningCollParticleManager = GetComponents<ParticleManager>()[4];
     }
 
+    // Use this for initialization
+    void Start()
+    {
+        System.GC.Collect();
+    }
+
     void ActivateCorrectSpawner(Level level)
     {
         if (mSpawnerBase != null)
@@ -141,21 +147,6 @@ public class InGame : MonoBehaviour
     public DeathMenu DeathMenu()
     {
         return mDeathMenu.GetComponent<DeathMenu>();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
-        Transform parent = transform.Find("ParticlesGoesHere").transform;
-
-        mLightningCollParticleManager.Load(maxParticles, parent);
-        mAstCollParticle1Manager.Load(maxParticles, parent);
-        mAstCollParticle2Manager.Load(maxParticles, parent);
-        mBulletCollParticleManager.Load(maxParticles, parent);
-        mMissileCollParticleManager.Load(maxParticles, parent);
-
-        System.GC.Collect();
     }
 
     // Update is called once per frame
@@ -242,7 +233,6 @@ public class InGame : MonoBehaviour
 
         float yValue = posY;
         mPerfectDistanceMid.transform.position = new Vector3(0, yValue, 0);
-
     }
 
     public void PlayedDeath()
@@ -343,19 +333,43 @@ public class InGame : MonoBehaviour
         mStartTime = -1;
     }
 
-    public void Enable(InGame.Level level)
+    public void Enable(Level level)
     {
+        int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+        Transform parent = transform.Find("ParticlesGoesHere").transform;
+
         mCurrentLevel = level;
 
         ShowComponents(true);
 
-        mBgGen.LoadSegments("Parralax"/*+(int)mCurrentLevel*/, 120, 5);
-        mWorldGen.LoadSegments("Level" + (int)mCurrentLevel, 50, -1);
+        switch (mCurrentLevel)
+        {
+            case Level.ERROR:
+                throw new NotImplementedException("Error level loaded!");
+            case Level.ASTROID_BELT:
+                mAstCollParticle1Manager.Load(maxParticles, parent);
+                mAstCollParticle2Manager.Load(maxParticles, parent);
+                mWorldGen.LoadSegments("Level1", 50, -1);
+                mBgGen.LoadSegments("Parralax", 120, 5);
+                break;
+            case Level.ALIEN_BATTLEFIELD:
+                mBulletCollParticleManager.Load(maxParticles, parent);
+                mMissileCollParticleManager.Load(maxParticles, parent);
+                mWorldGen.LoadSegments("Level2", 50, -1);
+                mBgGen.LoadSegments("Parralax", 120, 5);
+                break;
+            case Level.COSMIC_STORM:
+                mLightningCollParticleManager.Load(maxParticles, parent);
+                mWorldGen.LoadSegments("LevelCosmicStorm", 50, -1);
+                mBgGen.LoadSegments("Parralax", 120, 5);
+                break;
+            default:
+                throw new NotImplementedException("Error no loaded!");
+        }
         ActivateCorrectSpawner(mCurrentLevel);
         mSpawnerBase.LoadObjects();
 
         mBgGen.StartSpawnSegments(0);
-
         mPlayer.IntroLoad();
 
         mIntroPhase = true;

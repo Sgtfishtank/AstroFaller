@@ -36,7 +36,7 @@ public class WorldMapMenu : GameMenu
 			{
 				mPlayLevelPhase = false;
                 MainGameMenu.Instance.Disable();
-                Application.LoadLevel("InGameLevel");
+                PlayerData.LoadScene(PlayerData.Scene.IN_GAME);
 			}
 			else
 			{
@@ -118,15 +118,23 @@ public class WorldMapMenu : GameMenu
 	}
 
 	public override void Focus()
-	{
+    {
+        if (!mFocused)
+        {
+            CloseLevels();
+        }
+
 		mFocused = true;
-		CloseLevels ();
 	}
 	
 	public override void Unfocus()
 	{
+        if (mFocused)
+        {
+            CloseLevels();
+        }
+
 		mFocused = false;
-		CloseLevels ();
 	}
 	
 	public override bool IsFocused ()
@@ -136,8 +144,8 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-        MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
-        MenuGUICanvas.Instance.ShowWorldMapButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf));
+        MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(mFocused && (!mPlayLevelPhase));
+        MenuGUICanvas.Instance.ShowWorldMapButtons(mFocused && (!mPlayLevelPhase));
 	}
 
 	public override void BuyWithBolts()
@@ -227,13 +235,13 @@ public class WorldMapMenu : GameMenu
 		LevelBase level = mLevels [mCurrentLevelFocusIndex];
 
 		if ((!level.IsPlayable()) || (!level.IsUnlocked()))
-		{
+        {
 			print("Not playable");
 			return;
 		}
 
 		if (!IsLevelOpen())
-		{
+        {
 			OpenLevel((PlayableLevel)level);
 		}
 		else

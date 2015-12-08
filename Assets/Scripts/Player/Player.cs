@@ -88,7 +88,8 @@ public class Player : MonoBehaviour
 
 	// Use this for initialization
 	void Start()
-	{
+    {
+        mPickupTextManager.reset();
 		gameObject.SetActive(true);
 
 		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
@@ -101,7 +102,8 @@ public class Player : MonoBehaviour
 	}
 
 	public void IntroLoad ()
-	{
+    {
+        mPickupTextManager.reset();
 		gameObject.SetActive(true);
 
 		mAS = WorldGen.Instance.BaseSpawner ();
@@ -114,7 +116,8 @@ public class Player : MonoBehaviour
 	}
 
 	public void StartGame()
-	{
+    {
+        mPickupTextManager.reset();
 		gameObject.SetActive(true);
 
 		mPickupTextManager.reset();
@@ -140,11 +143,6 @@ public class Player : MonoBehaviour
 
 		UpdatePerfectDistance (false);
 		mAS.StopSpawning();
-	}
-
-	void OnDisable()
-	{
-		mPickupTextManager.reset();
 	}
 
 	public void Dash()
@@ -473,7 +471,8 @@ public class Player : MonoBehaviour
 	public void PlayerDead()
 	{
 		if(!mInvulnerable && !mIsDead)
-		{
+        {
+            mPickupTextManager.reset();
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);

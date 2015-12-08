@@ -52,7 +52,6 @@ public class ButtonManager : MonoBehaviour
 		{
             throw new NotImplementedException("OBJECT SCALE TO SMALL");
 		}
-		
 	}
 
     public void LoadButtonPress(string guiName, GUICanvasBase guiBase)
@@ -77,9 +76,16 @@ public class ButtonManager : MonoBehaviour
 		{
             return;
 		}
-		
+
 		mObj.transform.localPosition = mBasePosition;
-		mObj.transform.position	+= mButtonPress.PositionOffset();
+        if (PlayerData.Instance.CurrentScene() == PlayerData.Scene.IN_GAME)
+        {
+            mObj.transform.position -= (InGameCamera.Instance.transform.rotation * mButtonPress.PositionOffset());
+        }
+        else
+        {
+            mObj.transform.position -= (MenuCamera.Instance.transform.rotation * mButtonPress.PositionOffset());
+        }
 		mObj.transform.localScale = mBaseScale * mButtonPress.ScaleFactor();
 	}
 

@@ -12,11 +12,11 @@ public class MenuGUICanvas : GUICanvasBase
 		get
         {
 			if (instance == null)
-			{
-				if (Application.loadedLevelName != "MainMenuLevel")
-				{
-					throw new NotImplementedException();
-				}
+            {
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.MAIN_MENU)
+                {
+                    throw new NotImplementedException();
+                }
 
                 instance = Singleton<MenuGUICanvas>.CreateInstance("Prefab/Game Menu/MenuGUICanvas");
 			}
@@ -160,8 +160,8 @@ public class MenuGUICanvas : GUICanvasBase
     public void Deselect()
     {
         MainGameMenu.Instance.ResetAllMenusAndButtons();
-        MenuCamera.Instance.mCotrls.SetActive(false);
         PlayerData.Instance.mShowControls = false;
+        MenuCamera.Instance.ShowControls(false);
         MainGameMenu.Instance.UpdateMenusAndButtons();
     }
 
@@ -234,4 +234,9 @@ public class MenuGUICanvas : GUICanvasBase
     {
         mPerkButtons.gameObject.SetActive(show);
 	}
+
+    public void ShowHelpButtons(bool show)
+    {
+        // do nothing
+    }
 }

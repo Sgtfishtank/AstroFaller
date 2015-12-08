@@ -13,10 +13,10 @@ public class InGameCamera : MonoBehaviour
         {
 			if (instance == null)
 			{
-				if (Application.loadedLevelName != "InGameLevel")
-				{
-					throw new NotImplementedException();
-				}
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.IN_GAME)
+                {
+                    throw new NotImplementedException();
+                }
 
 				instance = Singleton<InGameCamera>.CreateInstance("Prefab/InGame/InGame Camera");
 			}

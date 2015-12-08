@@ -33,8 +33,8 @@ public class DeatMenuGUI : GUICanvasBase
 
 	// pressed back to menu
 	public void BackToMenu()
-	{
-		Application.LoadLevel("MainMenuLevel");
+    {
+        PlayerData.LoadScene(PlayerData.Scene.MAIN_MENU);
 	}
 
 	public void restart()

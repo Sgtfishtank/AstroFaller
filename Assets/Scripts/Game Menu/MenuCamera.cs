@@ -11,11 +11,11 @@ public class MenuCamera : MonoBehaviour
 		get
         {
 			if (instance == null)
-			{
-				if (Application.loadedLevelName != "MainMenuLevel")
-				{
-					throw new NotImplementedException();
-				}
+            {
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.MAIN_MENU)
+                {
+                    throw new NotImplementedException();
+                }
 
                 instance = Singleton<MenuCamera>.CreateInstance("Prefab/Game Menu/Menu Camera");
 			}
@@ -58,8 +58,7 @@ public class MenuCamera : MonoBehaviour
 	private TextMesh mBoltsText;
 	private Camera mCamera;
 	private int mBolts = -1;
-	
-	public GameObject mCotrls;
+    private GameObject mCotrls;
 	
 	//private ButtonManager mWorkshopIcon; 
 	//private ButtonManager msettingsIcon; 
@@ -318,4 +317,14 @@ public class MenuCamera : MonoBehaviour
 	{
 		mPopupAchievementsMenu.SetActive (show);
 	}
+
+    public void ShowControls(bool show)
+    {
+        mCotrls.SetActive(show);
+    }
+
+    public bool ShowingControls()
+    {
+        return mCotrls.activeSelf;
+    }
 }

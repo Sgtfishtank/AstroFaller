@@ -11,11 +11,11 @@ public class MainGameMenu : MonoBehaviour
 		get
         {
 			if (instance == null)
-			{
-				if (Application.loadedLevelName != "MainMenuLevel")
-				{
-					throw new NotImplementedException();
-				}
+            {
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.MAIN_MENU)
+                {
+                    throw new NotImplementedException();
+                }
 
                 Singleton<MainGameMenu>.CreateInstance("Prefab/Game Menu/Game Menu Base");
 			}
@@ -83,7 +83,6 @@ public class MainGameMenu : MonoBehaviour
 	void Start () 
 	{
         System.GC.Collect();
-        Enable(0);
 	}
 
 	// Update is called once per frame
@@ -134,27 +133,24 @@ public class MainGameMenu : MonoBehaviour
 		mNextGameMenu = null;
         mCurrentGameMenu = mGameMenus[(int)menuState];
 		mCurrentGameMenu.gameObject.SetActive (true);
-		mCurrentGameMenu.Focus();
 
 		UpdateMenusAndButtons ();
 	}
 
 	public void UpdateMenusAndButtons()
 	{
-		if (!mMenuChangePhase) 
-		{
-			bool focusCurrent = !(mShowOptionsMenu || mShowHelpMenu || mShowPopupAchievementsMenu || mShowPopupCraftingMenu);
-			if (focusCurrent && (!mCurrentGameMenu.IsFocused())) 
-			{
-				mCurrentGameMenu.Focus();
-			} 
-			else if ((!focusCurrent) && (mCurrentGameMenu.IsFocused()))
-			{
-				mCurrentGameMenu.Unfocus();
-			}
-		}
+        bool viewBlocked = (MenuCamera.Instance.ShowingControls());
+        bool menuOpened = (mShowOptionsMenu || mShowHelpMenu || mShowPopupAchievementsMenu || mShowPopupCraftingMenu);
 
-		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+        for (int i = 0; i < mGameMenus.Length; i++)
+        {
+            bool focus = ((mGameMenus[i] == mCurrentGameMenu) && !(viewBlocked) && (!menuOpened) && (!mMenuChangePhase));
+
+            mGameMenus[i].SetFocus(focus);
+        }
+
+        MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+        MenuGUICanvas.Instance.ShowHelpButtons(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
 		MenuGUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
@@ -165,12 +161,12 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
 		MenuGUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
-		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
-		MenuCamera.Instance.ShowBackButton(showBack);
-        
-		bool showIcons = !(mShowOptionsMenu || mShowHelpMenu || MenuCamera.Instance.mCotrls.activeSelf);
+		bool showBack = ((WorldMapMenu() != mCurrentGameMenu) && (!mMenuChangePhase));
+        MenuCamera.Instance.ShowBackButton(showBack);
+        MenuGUICanvas.Instance.IconsGUI().ShowWorldMapButton(showBack && (!viewBlocked));
+
+        bool showIcons = ((!(mShowOptionsMenu || mShowHelpMenu)) && (!viewBlocked));
         MenuGUICanvas.Instance.ShowIconButtons(showIcons);
-		MenuGUICanvas.Instance.IconsGUI().ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -345,8 +341,6 @@ public class MainGameMenu : MonoBehaviour
 
 		mMenuChangePhase = true;
         mNextGameMenu = mGameMenus[(int)state];
-
-		mCurrentGameMenu.Unfocus();
 		mNextGameMenu.gameObject.SetActive (true);
 
 		MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
@@ -360,8 +354,7 @@ public class MainGameMenu : MonoBehaviour
 		mMenuChangePhase = false;
 	
 		mCurrentGameMenu.gameObject.SetActive (false);
-		mNextGameMenu.Focus();
-		
+
 		mCurrentGameMenu = mNextGameMenu;
 		mNextGameMenu = null;
 

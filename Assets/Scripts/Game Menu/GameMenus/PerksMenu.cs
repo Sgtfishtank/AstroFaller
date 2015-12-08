@@ -49,13 +49,13 @@ public class PerksMenu : GameMenu
 	}
 	
 	public override void Unfocus()
-	{
-		mFocused = false;
+    {
+        if (mFocused)
+        {
+            CloseBuyPerkMenu();
+        }
 
-		if (mCurrentPerk != null)
-		{
-			CloseBuyPerkMenu ();
-		}
+		mFocused = false;
 	}
 	
 	public override bool IsFocused ()
@@ -64,8 +64,8 @@ public class PerksMenu : GameMenu
 	}
 	
 	public override void UpdateMenusAndButtons ()
-	{		
-		MenuGUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+	{
+        MenuGUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public void ViewNextPerk()
@@ -154,7 +154,7 @@ public class PerksMenu : GameMenu
 	public void BuyPerk()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
-		
+
 		OpenBuyPerkMenu(mPerkIndex);
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();

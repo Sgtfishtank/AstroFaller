@@ -12,11 +12,11 @@ public class InGameGUICanvas : GUICanvasBase
 		get
         {
 			if (instance == null)
-			{
-				if (Application.loadedLevelName != "InGameLevel")
-				{
-					throw new NotImplementedException();
-				}
+            {
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.IN_GAME)
+                {
+                    throw new NotImplementedException();
+                }
 
                 instance = Singleton<InGameGUICanvas>.CreateInstance("Prefab/InGame/InGameGUICanvas");
 			}

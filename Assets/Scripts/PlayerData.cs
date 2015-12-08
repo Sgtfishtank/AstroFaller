@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerData : MonoBehaviour 
 {
@@ -18,6 +19,13 @@ public class PlayerData : MonoBehaviour
 		}
 	}
 
+    public enum Scene
+    {
+        ERROR = -1,
+        MAIN_MENU = 0,
+        IN_GAME = 1,
+    }
+
 	public int mBolts;
 	public int mCrystals;
 	private int mTotalBolts;
@@ -29,10 +37,12 @@ public class PlayerData : MonoBehaviour
 	public int mBurstPerkUnlockedLevel;
     public InGame.Level LevelToLoad = InGame.Level.ERROR;
     public MainGameMenu.State StateToLoad = MainGameMenu.State.ERROR;
+    private Scene mCurrentScene = Scene.MAIN_MENU;
     public bool mShowControls = true;
 
     void Awake()
-	{
+    {
+        mCurrentScene = (PlayerData.Scene)Application.loadedLevel;
     }
 
 	// Use this for initialization
@@ -44,6 +54,25 @@ public class PlayerData : MonoBehaviour
 	void Update () 
 	{
 	}
+
+    public static void LoadScene(Scene scene)
+    {
+        switch (scene)
+	    {
+        case Scene.MAIN_MENU:
+            PlayerData.Instance.mCurrentScene = scene;
+            Application.LoadLevel("MainMenuLevel");
+            break;
+        case Scene.IN_GAME:
+            PlayerData.Instance.mCurrentScene = scene;
+            Application.LoadLevel("InGameLevel");
+            break;
+        case Scene.ERROR:
+            throw new NotImplementedException("Error load error scene");
+        default:
+            throw new NotImplementedException("Error load no scene");
+	    }
+    }
 
 	// air
 	public bool UnlimitedAirOneLife()
@@ -219,4 +248,9 @@ public class PlayerData : MonoBehaviour
 		mTotalDistance += amount;
 		return true;
 	}
+
+    public Scene CurrentScene()
+    {
+        return mCurrentScene;
+    }
 }
