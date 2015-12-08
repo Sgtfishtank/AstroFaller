@@ -39,19 +39,22 @@ public class BreakablePrefab : MonoBehaviour {
 		mCollider.enabled = true;
 		//mBreak = false;
 	}
+
 	void Awake()
 	{
 		time = Time.time + mDealay;
 		first=true;
 	}
+
 	void OnEnable()
 	{
 		time = Time.time + mDealay;
 	}
+
 	void OnDisable()
 	{
 		time= -1;
-		first =true;
+        first = true;
 	}
 	
 	// Update is called once per frame
@@ -67,18 +70,17 @@ public class BreakablePrefab : MonoBehaviour {
 			gameObject.GetComponent<Rigidbody>().velocity=mSpeed;
 			first = false;
 		}
-
-	
 	}
+
 	void OnCollisionEnter(Collision col)
 	{
 		if((col.transform.tag == mCollWith) && (!mBreak))
-		{
+        {
 			if ((mCollWith == "Player") && (!InGame.Instance.Player().isBursting())) 
 			{
 				return;
 			}
-			
+
 			float angle = Random.value * 360;
 			for (int i = 1; i < mPartColliders.Length; i++) 
 			{

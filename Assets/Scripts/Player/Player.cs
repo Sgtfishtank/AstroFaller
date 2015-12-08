@@ -309,10 +309,16 @@ public class Player : MonoBehaviour
 			mBoltsCollected += GlobalVariables.Instance.BOLT_CLUSTER_VALUE;
 		}
 		else if(col.tag == "SpawnAstroid")
-		{
-			mCurrentAsterodSpawnCollider = col;
-			
-			mAS.StartSpawning ();
+        {
+            if (col.GetComponent<ActivateStuff>() != null)
+            {
+                col.GetComponent<ActivateStuff>().enabled = true;
+            }
+            else
+            {
+                mAS.StartSpawning();
+                mCurrentAsterodSpawnCollider = col;
+            }
 		}
 		else if(col.tag == "Enemy")
 		{
@@ -479,17 +485,12 @@ public class Player : MonoBehaviour
 			a.z = InGame.Instance.mDeathMenu.transform.position.z;
 			InGame.Instance.mDeathMenu.transform.position = a;
 
-			DepositData();
+            PlayerData.Instance.depositBolts((int)(PlayerData.Instance.CalculateMultiplier(Distance()) * mBoltsCollected));
+            PlayerData.Instance.depositCrystals(colectedCrystals());
+            PlayerData.Instance.depositDistance(Distance());
 
 			gameObject.SetActive(false);
 		}
-	}
-
-	public void DepositData()
-	{
-		PlayerData.Instance.depositBolts(colectedBolts());
-		PlayerData.Instance.depositCrystals(colectedCrystals());
-		PlayerData.Instance.depositDistance(Distance());
 	}
 
 	public void ShiftBack (float shift)
