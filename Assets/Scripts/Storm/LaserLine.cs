@@ -48,11 +48,16 @@ public class LaserLine : MonoBehaviour {
         colliderHolder = temp1.Where(x => x.name == "Colliders").Select(x => x.gameObject).ToArray()[0];
         colliders = new BoxCollider[electricityBallEffect.Length];
         List<GameObject> temp = electricity.GetComponent<DigitalRuby.ThunderAndLightning.LightningBoltPathScript>().LightningPath.List;
-        for (int i = 0; i < temp.Count; i++)
+        for (int i = 0; i < temp.Count-1; i++)
         {
             colliders[i] = colliderHolder.AddComponent<BoxCollider>();
+            
+
         }
-       // colliderHolder.AddComponent<BoxCollider>
+        for (int i = 0; i < colliders.Length-1; i++)
+        {
+            calculateCollider(temp[i], temp[i + 1], colliders[i]);
+        }
     }
 	
 	// Update is called once per frame
@@ -110,4 +115,14 @@ public class LaserLine : MonoBehaviour {
 
         }
 	}
+    void calculateCollider(GameObject ball1, GameObject ball2, BoxCollider box)
+    {
+        float xdiff = Mathf.Abs(ball1.transform.position.x - ball2.transform.position.x);
+        float ydiff = Mathf.Abs(ball1.transform.position.y - ball2.transform.position.y);
+        float len = Mathf.Sqrt(Mathf.Pow(xdiff, 2) + Mathf.Pow(ydiff, 2));
+        box.size = new Vector3(1, len, 1);
+        print(xdiff / ydiff);
+        print(Mathf.Tan(xdiff / ydiff));
+        colliderHolder.transform.rotation = Quaternion.Euler(0, 0, xdiff / ydiff);
+    }
 }
