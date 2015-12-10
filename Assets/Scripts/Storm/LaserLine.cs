@@ -9,7 +9,6 @@ public class LaserLine : MonoBehaviour {
     public Material[] emisionmats;
     public GameObject electricity;
     public GameObject[] electricityBallEffect;
-    public GameObject colliderHolder;
     public BoxCollider[] colliders;
     public float delayTime;
     public float randomDelay;
@@ -45,18 +44,18 @@ public class LaserLine : MonoBehaviour {
         {
             electricityBallEffect[i].SetActive(false);
         }
-        colliderHolder = temp1.Where(x => x.name == "Colliders").Select(x => x.gameObject).ToArray()[0];
-        colliders = new BoxCollider[electricityBallEffect.Length];
+        colliders = new BoxCollider[electricityBallEffect.Length-1];
         List<GameObject> temp = electricity.GetComponent<DigitalRuby.ThunderAndLightning.LightningBoltPathScript>().LightningPath.List;
         for (int i = 0; i < temp.Count-1; i++)
         {
-            colliders[i] = colliderHolder.AddComponent<BoxCollider>();
-            
-
+            colliders[i] = new GameObject("Collider").AddComponent<BoxCollider>();
+            colliders[i].transform.parent = transform;
         }
-        for (int i = 0; i < colliders.Length-1; i++)
+        for (int i = 0; i < colliders.Length; i++)
         {
             calculateCollider(temp[i], temp[i + 1], colliders[i]);
+            colliders[i].transform.position = (temp[i].transform.position + temp[i + 1].transform.position) / 2;
+            colliders[i].gameObject.SetActive(false);
         }
     }
 	
@@ -81,6 +80,10 @@ public class LaserLine : MonoBehaviour {
                 {
                     electricityBallEffect[i].SetActive(false);
                 }
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    colliders[i].gameObject.SetActive(false);
+                }
                 lastBurstTime = delayTime + Random.Range(0, randomDelay) + Time.time;
                 localTime = 0;
                 count = 0;
@@ -89,6 +92,10 @@ public class LaserLine : MonoBehaviour {
             {
                 idelActive = burstTime + Random.Range(0, randomBurstTime)+Time.time;
                 electricity.SetActive(true);
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    colliders[i].gameObject.SetActive(true);
+                }
                 for (int i = 0; i < electricityBallEffect.Length; i++)
                 {
                     electricityBallEffect[i].SetActive(true);
@@ -120,9 +127,10 @@ public class LaserLine : MonoBehaviour {
         float xdiff = Mathf.Abs(ball1.transform.position.x - ball2.transform.position.x);
         float ydiff = Mathf.Abs(ball1.transform.position.y - ball2.transform.position.y);
         float len = Mathf.Sqrt(Mathf.Pow(xdiff, 2) + Mathf.Pow(ydiff, 2));
-        box.size = new Vector3(1, len, 1);
-        print(xdiff / ydiff);
-        print(Mathf.Tan(xdiff / ydiff));
-        colliderHolder.transform.rotation = Quaternion.Euler(0, 0, xdiff / ydiff);
+        box.size = new Vector3(len, 0.75f, 1);
+        if(ball1.transform.position.y > ball2.transform.position.y)
+            box.gameObject.transform.rotation = Quaternion.Euler(0, 0, Vector3.Angle(Vector3.right, ball1.transform.position - ball2.transform.position));
+        else
+            box.gameObject.transform.rotation = Quaternion.Euler(0, 0, -Vector3.Angle(Vector3.right, ball1.transform.position - ball2.transform.position));
     }
 }
