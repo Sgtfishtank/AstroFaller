@@ -349,18 +349,25 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
+		if (coll.transform.tag == "Enemy")
 		{
-			mLastDmgCollider = coll.collider;
-			//mLastDmgTime = Time.time + 3.0f;
-			//mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
+            if (mLastDmgCollider != coll.collider)
+            {
+                mLastDmgCollider = coll.collider;
+                //mLastDmgTime = Time.time + 3.0f;
+                //mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
-			UpdatePerfectDistance(false);
+                UpdatePerfectDistance(false);
 
-			int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
-			liveslost = Mathf.Max(1, 1);
-			PlayerDamage(liveslost);
+                int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
+                liveslost = Mathf.Max(1, 1);
+                PlayerDamage(liveslost); 
+            }
 		}
+        else if (coll.transform.tag == "Death")
+        {
+            PlayerDead();
+        }
 	}
 
 	public Rigidbody Rigidbody()
