@@ -82,7 +82,7 @@ public class Mine : MonoBehaviour
 				InGame.Instance.Player().PlayerDamage(1);
 			}
 			//coll.gameObject.GetComponent<Rigidbody>().AddExplosionForce(10f,transform.position,3f,0f,ForceMode.Impulse);
-			InGame.Instance.Player().Rigidbody().AddExplosionForce(explotation, transform.position, blowRadius, 0f, ForceMode.Impulse);
+			InGame.Instance.Player().Rigidbody().AddExplosionForce(explotation, transform.position, blowRadius, 0f, ForceMode.VelocityChange);
 			mDetect.gameObject.SetActive (false);
 			mExplode.gameObject.SetActive (true);
 			mBlowTime = -1;
