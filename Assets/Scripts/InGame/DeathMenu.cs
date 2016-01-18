@@ -52,8 +52,8 @@ public class DeathMenu : MonoBehaviour
 		}
 
         fmodDeathMusic = AudioManager.Instance.GetMusicEvent("Scrapscoremusic/ScrapScoreMusic");
-        mDisDown = AudioManager.Instance.GetSoundsEvent("RewardTickerBolts/TickerBolts");
-        mCoinUp = AudioManager.Instance.GetSoundsEvent("RewardTickerDistance/TickerDistance");
+        mDisDown = AudioManager.Instance.GetSoundsEvent("RewardTickerBolts/RewardTickerBoTH");
+        //mCoinUp = AudioManager.Instance.GetSoundsEvent("RewardTickerDistance/TickerDistance");
 	}
 
 	// Use this for initialization
