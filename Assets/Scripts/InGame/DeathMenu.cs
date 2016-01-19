@@ -19,9 +19,9 @@ public class DeathMenu : MonoBehaviour
 	private int mDis;
 	private int mTotalBolts;
 	private int mBolts;
-	private FMOD.Studio.EventInstance mDisDown;
-	private FMOD.Studio.EventInstance mCoinUp;
-	private FMOD.Studio.EventInstance fmodDeathMusic;
+	private AudioInstanceData mDisDown;
+	private AudioInstanceData mCoinUp;
+	private AudioInstanceData fmodDeathMusic;
 	private bool runSound; 
 	private int mDistance;
 	private int mBoxes;

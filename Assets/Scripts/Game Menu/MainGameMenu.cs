@@ -50,8 +50,8 @@ public class MainGameMenu : MonoBehaviour
 	private bool mShowOptionsMenu = false;
 	private AudioManager mSettingAudioManagerBackup;
 
-	private FMOD.Studio.EventInstance fmodMusic;
-	private FMOD.Studio.EventInstance fmodSwipe;
+	private AudioInstanceData fmodMusic;
+	private AudioInstanceData fmodSwipe;
 
 	void Awake() 
 	{

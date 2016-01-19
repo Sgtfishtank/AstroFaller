@@ -46,8 +46,8 @@ public class InGame : MonoBehaviour
 
     public float mUsualShiftkingRailgun = 0;
 
-    private FMOD.Studio.EventInstance fmodMusic;
-    private FMOD.Studio.EventInstance fmodPerfect;
+	private AudioInstanceData fmodMusic;
+	private AudioInstanceData fmodPerfect;
 
     private ParticleManager mAstCollParticle1Manager;
     private ParticleManager mAstCollParticle2Manager;

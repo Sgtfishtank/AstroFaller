@@ -53,11 +53,11 @@ public class Player : MonoBehaviour
 	private float blendSpeed = 400f;
 	private float blendOne = 0;
 
-	private FMOD.Studio.EventInstance mDownSwipeSound;
-	private FMOD.Studio.EventInstance mHurtHitSound;
-	private FMOD.Studio.EventInstance mCoinPickUpSound;
-	private FMOD.Studio.EventInstance mInflateSound;
-	private FMOD.Studio.EventInstance mDeflateSound;
+	private AudioInstanceData mDownSwipeSound;
+	private AudioInstanceData mHurtHitSound;
+	private AudioInstanceData mCoinPickUpSound;
+	private AudioInstanceData mInflateSound;
+	private AudioInstanceData mDeflateSound;
 	private LensFlare mAntenLensFlare;
 
 	// Use this for initialization
@@ -80,8 +80,8 @@ public class Player : MonoBehaviour
         mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("Screws/ScrewsPling2");
         mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate");
         mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate");
-		mInflateSound.setVolume(100);
-        mDeflateSound.setVolume(100);
+		mInflateSound.mVolume = 100;
+		mDeflateSound.mVolume = 100;
 
         transform.position = Vector3.zero;
 	}

@@ -20,7 +20,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private bool mPressed;
 	private Vector3 mOffset = Vector3.zero;
 	private float mScale = 1;
-	private FMOD.Studio.EventInstance mPressSound;
+	private AudioInstanceData mPressSound;
 
 	void Awake()
 	{

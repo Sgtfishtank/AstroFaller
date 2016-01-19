@@ -11,9 +11,10 @@ public class AudioManager : MonoBehaviour
 	public bool mMuteSounds = false;
 	public bool mMuteMusic = false;
 	public bool mDebug = false;
+	public SoundPool mSoundPool;
 
-	public List<FMOD.Studio.EventInstance> mPlayingSoundEvents;
-	public List<FMOD.Studio.EventInstance> mPlayingMusicEvents;
+	public List<AudioInstanceData> mPlayingSoundEvents;
+	public List<AudioInstanceData> mPlayingMusicEvents;
 
 	private static AudioManager instance = null;
 	public static AudioManager Instance
@@ -31,8 +32,9 @@ public class AudioManager : MonoBehaviour
 
 	void Awake() 
 	{
-		mPlayingSoundEvents = new List<FMOD.Studio.EventInstance> ();
-		mPlayingMusicEvents = new List<FMOD.Studio.EventInstance> ();
+		mPlayingSoundEvents = new List<AudioInstanceData> ();
+		mPlayingMusicEvents = new List<AudioInstanceData> ();
+		mSoundPool = GetComponent<SoundPool>();
 	}
 
 	// Use this for initialization
@@ -45,21 +47,22 @@ public class AudioManager : MonoBehaviour
 	{
 	}
 
-    public FMOD.Studio.EventInstance GetEvent(string path)
+    public AudioInstanceData GetEvent(string path)
 	{
-		return FMOD_StudioSystem.instance.GetEvent("event:/" + path);
+		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/" + path));
     }
 
-    public FMOD.Studio.EventInstance GetMusicEvent(string path)
+    public AudioInstanceData GetMusicEvent(string path)
     {
-        return FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path);
-    }
-
-    public FMOD.Studio.EventInstance GetSoundsEvent(string path)
+		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path));
+	}
+	
+	public AudioInstanceData GetSoundsEvent(string path)
     {
-        return FMOD_StudioSystem.instance.GetEvent("event:/Sounds/" + path);
-    }
-
+		return new AudioInstanceData(mSoundPool.load("Sound/" + path), -1);
+		//return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/" + path));
+	}
+	
 	public void CopyState(AudioManager mOtherAudioManager)
 	{
 		// set state to other state
@@ -167,11 +170,11 @@ public class AudioManager : MonoBehaviour
 		{
 			if (mMuteMaster || mMuteSounds) 
 			{
-				mPlayingSoundEvents[i].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+				mPlayingSoundEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 			}
 			else
 			{
-				mPlayingSoundEvents[i].start();
+				mPlayingSoundEvents[i].mEvent.start();
 			}
 		}
 	}
@@ -182,11 +185,11 @@ public class AudioManager : MonoBehaviour
 		{
 			if (mMuteMaster || mMuteMusic) 
 			{
-				mPlayingMusicEvents[i].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+				mPlayingMusicEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 			}
 			else
 			{
-				mPlayingMusicEvents[i].start();
+				mPlayingMusicEvents[i].mEvent.start();
 			}
 		}
 	}
@@ -195,7 +198,7 @@ public class AudioManager : MonoBehaviour
 	{
 		for (int i = 0; i < mPlayingSoundEvents.Count; i++) 
 		{
-			mPlayingSoundEvents[i].setVolume(mSoundsLevel * mMasterLevel);
+			mPlayingSoundEvents[i].mEvent.setVolume(mSoundsLevel * mMasterLevel);
 		}
 	}
 	
@@ -203,34 +206,34 @@ public class AudioManager : MonoBehaviour
 	{
 		for (int i = 0; i < mPlayingMusicEvents.Count; i++) 
 		{
-			mPlayingMusicEvents[i].setVolume(mMusicLevel * mMasterLevel);
+			mPlayingMusicEvents[i].mEvent.setVolume(mMusicLevel * mMasterLevel);
 		}
 	}
 	
-	void StartMusic(FMOD.Studio.EventInstance fmodEvent)
+	void StartMusic(AudioInstanceData fmodEvent)
 	{
 		if (mMuteMaster || mMuteMusic)
 		{
 			return;
 		}
 		
-		fmodEvent.setVolume(mMasterLevel * mSoundsLevel);
-		fmodEvent.start ();
+		fmodEvent.mEvent.setVolume(mMasterLevel * mSoundsLevel);
+		fmodEvent.mEvent.start ();
 	}
 	
-	void StartSound(FMOD.Studio.EventInstance fmodEvent)
+	void StartSound(AudioInstanceData fmodEvent)
 	{
 		if (mMuteMaster || mMuteSounds)
 		{
 			return;
 		}
 		
-		fmodEvent.setVolume(mMasterLevel * mSoundsLevel);
-		fmodEvent.start();
+		fmodEvent.mEvent.setVolume(mMasterLevel * mSoundsLevel);
+		fmodEvent.mEvent.start();
 	}
 
 	// music
-	public void PlayMusicOnce(FMOD.Studio.EventInstance fmodEvent)
+	public void PlayMusicOnce(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -245,7 +248,7 @@ public class AudioManager : MonoBehaviour
 		StartMusic(GetEventCopy(fmodEvent));
 	}
 
-	public void PlayMusic(FMOD.Studio.EventInstance fmodEvent)
+	public void PlayMusic(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -285,16 +288,16 @@ public class AudioManager : MonoBehaviour
 		print(strOutput);
 	}
 
-	public string GetFmodPath(FMOD.Studio.EventInstance fmodEvent)
+	public string GetFmodPath(AudioInstanceData fmodEvent)
 	{
 		FMOD.Studio.EventDescription ed;
 		string path;
-		fmodEvent.getDescription(out ed);
+		fmodEvent.mEvent.getDescription(out ed);
 		ed.getPath(out path);
 		return path;
 	}
 
-	public void StopMusic(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
+	public void StopMusic(AudioInstanceData fmodEvent, FMOD.Studio.STOP_MODE stopMode)
 	{
 		if (fmodEvent == null)
 		{
@@ -307,11 +310,11 @@ public class AudioManager : MonoBehaviour
 			printMusic();
 		}
 
-		fmodEvent.stop (stopMode);
+		fmodEvent.mEvent.stop (stopMode);
 	}
 
 	// sound
-	public void PlaySoundOnce(FMOD.Studio.EventInstance fmodEvent)
+	public void PlaySoundOnce(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -319,25 +322,30 @@ public class AudioManager : MonoBehaviour
 			return;
 		}
 
-		StartSound(GetEventCopy(fmodEvent));
+		print (fmodEvent.mID);
+		print (fmodEvent.mVolume);
+		mSoundPool.playOnce(fmodEvent.mID, fmodEvent.mVolume, fmodEvent.mVolume, 0, 0, 1);
+		//fmodEvent.mStreamID = new SoundPool ().play (fmodEvent.mID, fmodEvent.mVolume, fmodEvent.mVolume, 0, 0, 1);
+
+		//StartSound(GetEventCopy(fmodEvent));
 		if (mDebug) 
 		{
 			print("playing sound once " + GetFmodPath(fmodEvent));
 		}
 	}
 
-	public FMOD.Studio.EventInstance GetEventCopy(FMOD.Studio.EventInstance fmodEvent)
+	public AudioInstanceData GetEventCopy(AudioInstanceData fmodEvent)
 	{
 		FMOD.Studio.EventDescription ev;
-		fmodEvent.getDescription (out ev);
+		fmodEvent.mEvent.getDescription (out ev);
 
 		string path;
 		ev.getPath (out path);
 
-		return  FMOD_StudioSystem.instance.GetEvent(path);
+		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent(path));
 	}
 
-	public void PlaySound(FMOD.Studio.EventInstance fmodEvent)
+	public void PlaySound(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -357,7 +365,7 @@ public class AudioManager : MonoBehaviour
 		StartSound(fmodEvent);
 	}
 
-	public void StopSound(FMOD.Studio.EventInstance fmodEvent, FMOD.Studio.STOP_MODE stopMode)
+	public void StopSound(AudioInstanceData fmodEvent, FMOD.Studio.STOP_MODE stopMode)
 	{
 		if (fmodEvent == null)
 		{
@@ -369,6 +377,6 @@ public class AudioManager : MonoBehaviour
 		{
 			printSound();
 		}
-		fmodEvent.stop(stopMode);
+		fmodEvent.mEvent.stop(stopMode);
 	}
 }

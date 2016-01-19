@@ -6,7 +6,7 @@ public class AstroidRemove : MonoBehaviour
 	private WarningArrow mWarning;
 	private Player mPlayer;
 	private Rigidbody mRb;
-	private FMOD.Studio.EventInstance mClash;
+	private AudioInstanceData mClash;
 
 	void Awake()
 	{

@@ -24,6 +24,7 @@ public class ParticleManager : MonoBehaviour
 
 		if (mPickupTextPrefab == null) 
 		{
+			mParticles = null;
 			return;
 		}
 
@@ -75,6 +76,12 @@ public class ParticleManager : MonoBehaviour
 
 	public GameObject Spawn(Vector3 position)
 	{
+		if (mParticles == null) 
+		{
+			Debug.LogError("Tried to spawn unloaded partcle manager. Load it first!");
+			return null;
+		}
+
 		int index = PickParticle ();
 		if (index != -1) 
 		{
