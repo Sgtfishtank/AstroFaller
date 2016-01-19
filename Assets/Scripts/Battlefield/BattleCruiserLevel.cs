@@ -29,9 +29,13 @@ public class BattleCruiserLevel : MonoBehaviour
 		{
 			mParts[i].transform.position += new Vector3(mSpeed, 0, 0) * Time.deltaTime;
 
-			if (mParts[i].transform.position.x >= mWrapValue) 
+			if (mParts[i].transform.position.x >= (mWrapValue + (mWrapValue / 2))) 
 			{
 				mParts[i].transform.position -= new Vector3(mWrapValue * mParts.Length, 0, 0);
+			} 
+			else if (mParts[i].transform.position.x <= (-mWrapValue - (mWrapValue / 2)))
+			{
+				mParts[i].transform.position += new Vector3(mWrapValue * mParts.Length, 0, 0);
 			}
 		}
 	}
