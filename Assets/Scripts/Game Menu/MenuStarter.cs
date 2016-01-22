@@ -11,17 +11,15 @@ public class MenuStarter : MonoBehaviour
 
 	void Awake()
     {
-        GameObject currInstance;
-
-        currInstance = AudioManager.Instance.gameObject;
-        currInstance = GlobalVariables.Instance.gameObject;
-        currInstance = PlayerData.Instance.gameObject;
-        currInstance = EventManager.Instance.gameObject;
-
-        // triger static instance init
-        currInstance = MenuGUICanvas.Instance.gameObject;
-        currInstance = MenuCamera.Instance.gameObject;
-        currInstance = MainGameMenu.Instance.gameObject;
+		// triger static instance init
+		AudioManager.Instance.enabled = true;
+		GlobalVariables.Instance.enabled = true;
+		PlayerData.Instance.enabled = true;
+		EventManager.Instance.enabled = true;
+		
+		MenuGUICanvas.Instance.enabled = true;
+		MenuCamera.Instance.enabled = true;
+		MainGameMenu.Instance.enabled = true;
 	}
 
 	// Use this for initialization

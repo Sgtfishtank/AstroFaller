@@ -10,7 +10,8 @@ public class PopupBuyMenu : MonoBehaviour
 	private TextMesh mDescriptionText;
 	private TextMesh mCurrentText;
 	private TextMesh mNextText;
-	private GameObject mObjToBuy;
+    private GameObject mObjToBuy;
+    private ButtonManager[] mBuyButton = new ButtonManager[2];
 	//private TextMesh mCostBoltsText;
 	//private TextMesh mCostCrystalsText;
 
@@ -30,12 +31,19 @@ public class PopupBuyMenu : MonoBehaviour
 		//mCostBoltsText = a.transform.Find ("buy text 1").GetComponent<TextMesh> ();
 		//mCostCrystalsText = a.transform.Find ("buy text 2").GetComponent<TextMesh> ();
 
+        mBuyButton[0] = ButtonManager.CreateButton(gameObject, "Popup_item_or_perk/polySurface11");
+        mBuyButton[1] = ButtonManager.CreateButton(gameObject, "Popup_item_or_perk/Texts/Upgrade_text");
+
 		mOpen = false;
 	}
 
 	// Use this for initialization
 	void Start()
 	{
+		GUICanvasBase gui = MenuGUICanvas.Instance;
+        mBuyButton[0].LoadButtonPress("PopupBuyMenu/BoltsButton", gui);
+        mBuyButton[1].LoadButtonPress("PopupBuyMenu/BoltsButton", gui);
+
 		gameObject.SetActive(false);
 		MenuGUICanvas.Instance.ShowPopupBuyButton (false);
 	}
@@ -46,7 +54,7 @@ public class PopupBuyMenu : MonoBehaviour
 	}
 
 	public void Open(GameObject prefab)
-	{
+    {
 		if (mOpen) 
 		{
 			Close();
@@ -74,7 +82,7 @@ public class PopupBuyMenu : MonoBehaviour
 	}
 
 	public void Close()
-	{
+    {
 		if (!mOpen) 
 		{
 			return;
@@ -97,7 +105,6 @@ public class PopupBuyMenu : MonoBehaviour
 
 	public void updateData (string title, string description, string current, string next, int costBolts, int nextCrystals)
 	{
-
 		mTitleText.text = title;
 		description = description.Replace("\\n", "\n"); 
 		mDescriptionText.text = description + "\n" + costBolts + " Bolts";

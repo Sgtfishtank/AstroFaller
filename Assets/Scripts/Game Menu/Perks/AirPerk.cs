@@ -13,7 +13,8 @@ public class AirPerk : Perk
 	private	GameObject m1p;
 	private	GameObject m2p;
 	private	GameObject[] m3p = new GameObject[3];
-	public GameObject[] mObjParts;
+    private GameObject[] mObjParts;
+    private ButtonManager mPerkButton;
 
 	void Awake ()
 	{
@@ -43,7 +44,9 @@ public class AirPerk : Perk
 		if (mPerkName.Length < 1)
 		{
 			mPerkName = gameObject.name;
-		}
+        }
+
+        mPerkButton = ButtonManager.CreateButton(gameObject, "perk_air/Anim_AirPerk");
 	}
 
 	public override bool CanUnlockPart ()
@@ -57,8 +60,10 @@ public class AirPerk : Perk
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start ()
+    {
+        GUICanvasBase gui = MenuGUICanvas.Instance.PerksGUI();
+        mPerkButton.LoadButtonPress("LifePerk/Button 4", gui);
 	}
 
 	// Update is called once per frame

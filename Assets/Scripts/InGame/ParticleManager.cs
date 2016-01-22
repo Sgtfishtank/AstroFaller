@@ -14,11 +14,6 @@ public class ParticleManager : MonoBehaviour
 	{
 	}
 
-	public void Load(int size)
-	{
-		Load(size, InGame.Instance.transform.Find("ParticlesGoesHere").transform);
-	}
-
 	public void Load(int size, Transform parent)
 	{
 		mParticles = new GameObject[size];
@@ -29,6 +24,7 @@ public class ParticleManager : MonoBehaviour
 
 		if (mPickupTextPrefab == null) 
 		{
+			mParticles = null;
 			return;
 		}
 
@@ -80,6 +76,12 @@ public class ParticleManager : MonoBehaviour
 
 	public GameObject Spawn(Vector3 position)
 	{
+		if (mParticles == null) 
+		{
+			Debug.LogError("Tried to spawn unloaded partcle manager. Load it first!");
+			return null;
+		}
+
 		int index = PickParticle ();
 		if (index != -1) 
 		{

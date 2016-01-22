@@ -53,11 +53,11 @@ public class Player : MonoBehaviour
 	private float blendSpeed = 400f;
 	private float blendOne = 0;
 
-	private FMOD.Studio.EventInstance mDownSwipeSound;
-	private FMOD.Studio.EventInstance mHurtHitSound;
-	private FMOD.Studio.EventInstance mCoinPickUpSound;
-	private FMOD.Studio.EventInstance mInflateSound;
-	private FMOD.Studio.EventInstance mDeflateSound;
+	private AudioInstanceData mDownSwipeSound;
+	private AudioInstanceData mHurtHitSound;
+	private AudioInstanceData mCoinPickUpSound;
+	private AudioInstanceData mInflateSound;
+	private AudioInstanceData mDeflateSound;
 	private LensFlare mAntenLensFlare;
 
 	// Use this for initialization
@@ -70,71 +70,70 @@ public class Player : MonoBehaviour
 		mRb = GetComponent<Rigidbody>();
 		mAntenLensFlare = GetComponentInChildren<LensFlare>();
 		mAni = transform.Find ("Chubby_Hover").GetComponent<Animator> ();
-		mDownSwipeSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Downswipe/DownSwipe");
-		mHurtHitSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/TakeDamage/TakeDamage1");
-		mCoinPickUpSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Screws/ScrewsPling2");
-		mInflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Inflate/Inflate");
-		mDeflateSound = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/Deflate/Deflate");
 		mMovementControls = new MovementControls(this);
 		mDash = transform.Find("Burst_Trail").gameObject;
-		mInflateSound.setVolume(100);
-		mDeflateSound.setVolume(100);
-		mIsDead = false;
-		mPlaying = false;
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
 
-		mPickupTextManager.Load(GlobalVariables.Instance.MAX_TEXT_PARTICLES);
-		mBoltParticleManager.Load(GlobalVariables.Instance.MAX_BOLT_PARTICLES);
+        mDownSwipeSound = AudioManager.Instance.GetSoundsEvent("Downswipe/DownSwipe");
+        mHurtHitSound = AudioManager.Instance.GetSoundsEvent("TakeDamage/TakeDamage1");
+        mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("Screws/ScrewsPling2");
+        mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate");
+        mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate");
+		mInflateSound.mVolume = 100;
+		mDeflateSound.mVolume = 100;
+
+        transform.position = Vector3.zero;
 	}
 
 	// Use this for initialization
 	void Start()
-	{
-		mAS = WorldGen.Instance.BaseSpawner ();
-		mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+    {
+        int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+        Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+        mPickupTextManager.Load(maxParticles, parent);
+        mBoltParticleManager.Load(maxParticles, parent);
+
+        mAS = WorldGen.Instance.BaseSpawner();
+        mfp = InGameCamera.Instance.GetComponent<FollowPlayer>();
+        mAS = WorldGen.Instance.BaseSpawner();
+
+        Reset();
 	}
 
-	public void IntroLoad ()
-	{
-		mDash.SetActive(false);
-		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
-		mRb.useGravity = true;
-		mRb.isKinematic = false;
-		transform.position = Vector3.zero;
-		mIsDead = false;
-	}
+    public void Reset()
+    {
+        mDash.SetActive(false);
+        mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
+        mRb.useGravity = true;
+        mRb.isKinematic = false;
+        mCurrentAsterodSpawnCollider = null;
+        mAntenLensFlare.color = Color.green;
+
+        mPickupTextManager.reset();
+        mBoltParticleManager.reset();
+    }
 
 	public void StartGame()
-	{
-		mPickupTextManager.reset();
-		mBoltParticleManager.reset();
+    {
+        Reset();
 
-		mCurrentAsterodSpawnCollider = null;
-		mAirAmount = PlayerData.Instance.MaxAirTime();
-		mRb.isKinematic = false;
-		mIsDead = false;
+        mIsDead = false;
+        gameObject.SetActive(true);
+
+        mPlaying = true;
+        mAirAmount = PlayerData.Instance.MaxAirTime();
 		mBurstsLeft = PlayerData.Instance.MaxBursts();
-
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
 		mPerfectDistanceCollected = 0;
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
-		mPlaying = true;
-		mAntenLensFlare.color = Color.green;
 
 		transform.position = new Vector3(0, transform.position.y, 0);
 		
-		mRb.angularVelocity = UnityEngine.Random.insideUnitSphere * mRb.maxAngularVelocity;
-
 		UpdatePerfectDistance (false);
 		mAS.StopSpawning();
-	}
-
-	void OnDisable()
-	{
-		mPickupTextManager.reset();
 	}
 
 	public void Dash()
@@ -203,7 +202,6 @@ public class Player : MonoBehaviour
 		// do nothing if dead
 		if ((mIsDead) || (!mPlaying))
 		{
-			mStartYValue = CenterPosition().y;
 			transform.position = new Vector3(0, transform.position.y, 0);
 			return;
 		}
@@ -263,6 +261,11 @@ public class Player : MonoBehaviour
 		return (mMaxCurrentFallSpeed > mMaxFallSpeed || mDashTime > Time.time);
 	}
 
+	public bool IsPlaying()
+	{
+		return mPlaying;
+	}
+
 	void LateUpdate()
 	{
 		if (doShift)
@@ -306,10 +309,16 @@ public class Player : MonoBehaviour
 			mBoltsCollected += GlobalVariables.Instance.BOLT_CLUSTER_VALUE;
 		}
 		else if(col.tag == "SpawnAstroid")
-		{
-			mCurrentAsterodSpawnCollider = col;
-			
-			mAS.StartSpawning ();
+        {
+            if (col.GetComponent<ActivateStuff>() != null)
+            {
+                col.GetComponent<ActivateStuff>().enabled = true;
+            }
+            else
+            {
+                mAS.StartSpawning();
+                mCurrentAsterodSpawnCollider = col;
+            }
 		}
 		else if(col.tag == "Enemy")
 		{
@@ -340,18 +349,25 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		if ((coll.transform.tag == "Enemy") && (mLastDmgCollider != coll.collider))
+		if (coll.transform.tag == "Enemy")
 		{
-			mLastDmgCollider = coll.collider;
-			//mLastDmgTime = Time.time + 3.0f;
-			//mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
+            if (mLastDmgCollider != coll.collider)
+            {
+                mLastDmgCollider = coll.collider;
+                //mLastDmgTime = Time.time + 3.0f;
+                //mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
 
-			UpdatePerfectDistance(false);
+                UpdatePerfectDistance(false);
 
-			int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
-			liveslost = Mathf.Max(1, 1);
-			PlayerDamage(liveslost);
+                int liveslost = (int)(coll.relativeVelocity.magnitude * 0.5f);
+                liveslost = Mathf.Max(1, 1);
+                PlayerDamage(liveslost); 
+            }
 		}
+        else if (coll.transform.tag == "Death")
+        {
+            PlayerDead();
+        }
 	}
 
 	public Rigidbody Rigidbody()
@@ -410,11 +426,6 @@ public class Player : MonoBehaviour
 
 	public int Distance()
 	{
-		if (!mPlaying)
-		{
-			return 0;
-		}
-
 		int dist = (int)(CenterPosition().y - mStartYValue - WorldGen.Instance.FallShift());
 		return -dist;
 	}
@@ -464,13 +475,14 @@ public class Player : MonoBehaviour
 	public void PlayerDead()
 	{
 		if(!mInvulnerable && !mIsDead)
-		{
+        {
+            mPickupTextManager.reset();
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
+			InGame.Instance.PlayedDeath();
 			InGame.Instance.mDeathMenu.SetActive(true);
-			InGame.Instance.DeathMenu().Open();
-			InGameGUICanvas.Instance.setEnableDeathMenu(true);
+			InGame.Instance.DeathMenu().Open(Distance(), mBoltsCollected, mPerfectDistanceCollected);
 			
 			mAS.StopSpawning();
 
@@ -480,15 +492,12 @@ public class Player : MonoBehaviour
 			a.z = InGame.Instance.mDeathMenu.transform.position.z;
 			InGame.Instance.mDeathMenu.transform.position = a;
 
-			DepositData();
-		}
-	}
+            PlayerData.Instance.depositBolts((int)(PlayerData.Instance.CalculateMultiplier(Distance()) * mBoltsCollected));
+            PlayerData.Instance.depositCrystals(colectedCrystals());
+            PlayerData.Instance.depositDistance(Distance());
 
-	public void DepositData()
-	{
-		PlayerData.Instance.depositBolts(colectedBolts());
-		PlayerData.Instance.depositCrystals(colectedCrystals());
-		PlayerData.Instance.depositDistance(Distance());
+			gameObject.SetActive(false);
+		}
 	}
 
 	public void ShiftBack (float shift)
@@ -518,9 +527,5 @@ public class Player : MonoBehaviour
 			
 			sys[i].SetParticles(particles, size);
 		}
-	}
-
-	void respawn()
-	{
 	}
 }

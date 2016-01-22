@@ -13,8 +13,9 @@ public class BurstPerk : Perk
 	private	GameObject m1p;
 	private	GameObject m2p;
 	private	GameObject m3p;
-	public GameObject[] mObjParts;
-	
+    private GameObject[] mObjParts;
+    private ButtonManager mPerkButton;
+
 	void Awake ()
 	{
 		mObj = GlobalVariables.Instance.Instanciate (mPrefab, transform, 1);
@@ -40,7 +41,8 @@ public class BurstPerk : Perk
 		if (mPerkName.Length < 1)
 		{
 			mPerkName = gameObject.name;
-		}
+        }
+        mPerkButton = ButtonManager.CreateButton(gameObject, "perk_burst/Anim_BurstPerk");
 	}
 	
 	public override GameObject PreviewObject ()
@@ -49,8 +51,10 @@ public class BurstPerk : Perk
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start ()
+    {
+        GUICanvasBase gui = MenuGUICanvas.Instance.PerksGUI();
+        mPerkButton.LoadButtonPress("LifePerk/Button 4", gui);
 	}
 
 	// Update is called once per frame

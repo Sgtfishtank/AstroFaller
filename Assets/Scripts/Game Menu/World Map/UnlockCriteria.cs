@@ -7,14 +7,14 @@ public class UnlockCriteria : MonoBehaviour
 
 	private LevelBase mLevel;
 
+	void Awake()
+	{
+		mLevel = GetComponent<LevelBase> ();
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
-	}
-
-	public void Init()
-	{
-		mLevel = GetComponent<LevelBase> ();
 	}
 
 	// Update is called once per frame

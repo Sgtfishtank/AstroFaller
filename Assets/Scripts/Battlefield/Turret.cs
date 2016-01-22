@@ -10,7 +10,6 @@ public class Turret : MonoBehaviour
 	private GameObject mBase;
 	private float mRotation;
 	private float mShootT;
-	private SpawnerBase mAS;
 	private Player mPlayer;
 	private Vector3 mBasePos;
 	private bool mPayerDetected = false;
@@ -21,14 +20,15 @@ public class Turret : MonoBehaviour
 		mShootEffect = transform.Find("turret_explosion_effect").gameObject;
 		mShotsManager = GetComponent<ParticleManager> ();
 		mBase = transform.Find("Turret_anim/Base").gameObject;
-		mShotsManager.Load(GlobalVariables.Instance.TURRET_MAX_BULLETS);
 		mBasePos = mBase.transform.localPosition;
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-		mAS = InGame.Instance.BaseSpawner ();
+		int maxParticles = GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES;
+		Transform parent = InGame.Instance.transform.Find("ParticlesGoesHere").transform;
+		mShotsManager.Load(maxParticles, parent);
 	}
 
 	void OnEnable()
@@ -46,7 +46,7 @@ public class Turret : MonoBehaviour
 	{
 		for (int i = 0; i < mShotsManager.getParticles().Length; i++) 
 		{
-			if ((mShotsManager.getParticles()[i].activeSelf) && (mAS.OutOfBound(mShotsManager.getParticles()[i])))
+			if ((mShotsManager.getParticles()[i].activeSelf) && (InGame.Instance.OutOfSegmentBounds(mShotsManager.getParticles()[i])))
 			{
 				mShotsManager.DespawnParticle(i);
 			}

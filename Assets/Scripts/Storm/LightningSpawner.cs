@@ -8,17 +8,12 @@ public class LightningSpawner : SpawnerBase
 	public GameObject mLightningPrefab;
 	private GameObject[] mLightnings;
 	
-	private ParticleManager mLightningCollParticleManager;
-	
 	private Player mPlayer;
 	private float mLastSpawn = 0;
 	
 	
 	void Awake ()
 	{
-		// creat collision efets
-		mLightningCollParticleManager = GetComponent<ParticleManager>();
-		mLightningCollParticleManager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
 	}
 	
 	void Start ()
@@ -33,11 +28,11 @@ public class LightningSpawner : SpawnerBase
 			UnloadObjects();
 		}
 		
-		
-		
 		if (mLightningPrefab == null) 
 		{
-			Debug.LogError("No Lightning to spawn");
+            Debug.LogError("No Lightning to spawn");
+            mLightnings = new GameObject[0];
+            enabled = false;
 			return;
 		}
 		
@@ -85,7 +80,7 @@ public class LightningSpawner : SpawnerBase
 	{
 		for (int i = 0; i < mLightnings.Length; i++) 
 		{
-			if (mLightnings[i].activeSelf && OutOfBound(mLightnings[i])) 
+			if (mLightnings[i].activeSelf && InGame.Instance.OutOfSegmentBounds(mLightnings[i])) 
 			{
 				mLightnings[i].SetActive(false);
 			}
@@ -98,7 +93,7 @@ public class LightningSpawner : SpawnerBase
 	}
 	
 	public override void SpawnObject ()
-	{
+    {
 		float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
 		
 		Rigidbody playerRb = mPlayer.GetComponent<Rigidbody>();
@@ -155,11 +150,9 @@ public class LightningSpawner : SpawnerBase
 		for (int i = 0; i < mLightnings.Length; i++) 
 		{
 			mLightnings[i].transform.position -= new Vector3(0, shift, 0);
-		}	
-		mLightningCollParticleManager.ShiftBack(shift);
-		
+		}
 	}
-	
+
 	public override void Reset ()
 	{
 		for (int i = 0; i < mLightnings.Length; i++) 
@@ -167,9 +160,5 @@ public class LightningSpawner : SpawnerBase
 			mLightnings[i].SetActive(false);
 		}
 	}
-	
-	public override void SpawnCollisionEffects (Vector3 position)
-	{
-		mLightningCollParticleManager.Spawn(position);
-	}
+
 }

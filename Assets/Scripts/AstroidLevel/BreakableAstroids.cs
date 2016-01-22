@@ -14,8 +14,8 @@ public class BreakableAstroids : MonoBehaviour
 	{
 		mRigidBody = GetComponent<Rigidbody>();
 		mCollider = GetComponent<Collider>();
-		mPartColliders = GetComponentsInChildren<Collider>();
-		mPartRigidBodys = GetComponentsInChildren<Rigidbody>();
+        mPartColliders = GetComponentsInChildren<Collider>(true);
+		mPartRigidBodys = GetComponentsInChildren<Rigidbody>(true);
 		
 		for(int i = 0; i < mPartRigidBodys.Length; i++)
 		{

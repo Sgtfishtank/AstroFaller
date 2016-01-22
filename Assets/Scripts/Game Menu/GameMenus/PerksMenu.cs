@@ -3,28 +3,28 @@ using System.Collections;
 
 public class PerksMenu : GameMenu 
 {
-	//private int AIR_PERK_INDEX = 1;
-	//private int LIFE_PERK_INDEX = 2;
-	//private int BURST_PERK_INDEX = 0;
-
 	private Perk[] mPerks;
 	private Perk mCurrentPerk;
 	private bool mFocused;
-	private int mPerkIndex;
-	private GameObject mPrevObj;
-	private GameObject mNextObj;
-
+	private int mPerkIndex = 1; // start in the middle
+	private ButtonManager mPrevObj;
+	private ButtonManager mNextObj;
+	
 	void Awake()
 	{
-		mPrevObj = transform.Find("Prev").gameObject;
-		mNextObj = transform.Find("Next").gameObject;
 		mPerks = GetComponentsInChildren<Perk> ();
-		mPerkIndex = 1; // start in the middle
+		
+        mPrevObj = ButtonManager.CreateButton(gameObject, "Prev");
+        mNextObj = ButtonManager.CreateButton(gameObject, "Next");
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		PerksGUI gui = MenuGUICanvas.Instance.PerksGUI ();
+        mPrevObj.LoadButtonPress("PrevButton", gui);
+        mNextObj.LoadButtonPress("NextButton", gui);
+
 		UpdateViewPerk ();
 	}
 	
@@ -46,18 +46,16 @@ public class PerksMenu : GameMenu
 	public override void Focus()
 	{
 		mFocused = true;
-		enabled = true;
 	}
 	
 	public override void Unfocus()
-	{
-		mFocused = false;
-		enabled = false;
+    {
+        if (mFocused)
+        {
+            CloseBuyPerkMenu();
+        }
 
-		if (mCurrentPerk != null)
-		{
-			CloseBuyPerkMenu ();
-		}
+		mFocused = false;
 	}
 	
 	public override bool IsFocused ()
@@ -66,8 +64,8 @@ public class PerksMenu : GameMenu
 	}
 	
 	public override void UpdateMenusAndButtons ()
-	{		
-		MenuGUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
+	{
+        MenuGUICanvas.Instance.ShowPerkButtons(mFocused && (!MenuCamera.Instance.PopupBuyMenu().IsOpen()));
 	}
 	
 	public void ViewNextPerk()
@@ -92,8 +90,8 @@ public class PerksMenu : GameMenu
 		}
 
 		mPerks[mPerkIndex].gameObject.SetActive(true);
-		mPrevObj.SetActive (mPerkIndex > 0);
-		mNextObj.SetActive (mPerkIndex < (mPerks.Length - 1));
+		mPrevObj.mObj.SetActive (mPerkIndex > 0);
+		mNextObj.mObj.SetActive (mPerkIndex < (mPerks.Length - 1));
 	}
 
 	public override void BuyWithBolts()
@@ -156,7 +154,7 @@ public class PerksMenu : GameMenu
 	public void BuyPerk()
 	{
 		MainGameMenu.Instance.ResetAllMenusAndButtons();
-		
+
 		OpenBuyPerkMenu(mPerkIndex);
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();

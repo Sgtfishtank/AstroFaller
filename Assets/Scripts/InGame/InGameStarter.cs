@@ -8,17 +8,15 @@ public class InGameStarter : MonoBehaviour
 
 	void Awake()
 	{
-        GameObject currInstance;
-        currInstance = AudioManager.Instance.gameObject;
-        currInstance = GlobalVariables.Instance.gameObject;
-        currInstance = PlayerData.Instance.gameObject;
-        currInstance = EventManager.Instance.gameObject;
+		// triger static instance init
+		AudioManager.Instance.enabled = true;
+		GlobalVariables.Instance.enabled = true;
+		PlayerData.Instance.enabled = true;
+        EventManager.Instance.enabled = true;
 
-        // triger static instance init
-        currInstance = InGameGUICanvas.Instance.gameObject;
-        currInstance = InGameCamera.Instance.gameObject;
-		currInstance = InGame.Instance.gameObject;
-
+		InGameGUICanvas.Instance.enabled = true;
+		InGameCamera.Instance.enabled = true;
+		InGame.Instance.enabled = true;
 	}
 
 	// Use this for initialization

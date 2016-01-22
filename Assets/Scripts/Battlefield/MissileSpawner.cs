@@ -3,22 +3,14 @@ using System.Collections;
 
 public class MissileSpawner : SpawnerBase
 {
-
 	// Use this for initialization
 	public GameObject mMissilePrefab;
 	private GameObject[] mMissiles;
-	
-	private ParticleManager mMissileCollParticleManager;
-	
 	private Player mPlayer;
 	private float mLastSpawn = 0;
 	
-	
 	void Awake ()
 	{
-		// creat collision efets
-	mMissileCollParticleManager = GetComponent<ParticleManager>();
-	mMissileCollParticleManager.Load(GlobalVariables.Instance.SPAWN_COLLISON_MAX_PARTICLES);
 	}
 	
 	void Start ()
@@ -85,7 +77,7 @@ public class MissileSpawner : SpawnerBase
 	{
 		for (int i = 0; i < mMissiles.Length; i++) 
 		{
-			if (mMissiles[i].activeSelf && OutOfBound(mMissiles[i])) 
+			if (mMissiles[i].activeSelf && InGame.Instance.OutOfSegmentBounds(mMissiles[i])) 
 			{
 				mMissiles[i].SetActive(false);
 			}
@@ -156,8 +148,6 @@ public class MissileSpawner : SpawnerBase
 		{
 			mMissiles[i].transform.position -= new Vector3(0, shift, 0);
 		}	
-		mMissileCollParticleManager.ShiftBack(shift);
-
 	}
 	
 	public override void Reset ()
@@ -168,8 +158,4 @@ public class MissileSpawner : SpawnerBase
 		}
 	}
 
-	public override void SpawnCollisionEffects (Vector3 position)
-	{
-		mMissileCollParticleManager.Spawn(position);
-	}
 }

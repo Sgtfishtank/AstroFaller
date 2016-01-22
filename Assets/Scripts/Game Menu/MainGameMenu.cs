@@ -10,14 +10,14 @@ public class MainGameMenu : MonoBehaviour
 	{
 		get
         {
-            if (Application.loadedLevelName != "MainMenuLevel")
-            {
-                throw new NotImplementedException();
-            }
-            
 			if (instance == null)
             {
-                instance = Singleton<MainGameMenu>.CreateInstance("Prefab/Essential/Menu/Game Menu Base");
+                if (PlayerData.Instance.CurrentScene() != PlayerData.Scene.MAIN_MENU)
+                {
+                    throw new NotImplementedException();
+                }
+
+                Singleton<MainGameMenu>.CreateInstance("Prefab/Game Menu/Game Menu Base");
 			}
 			return instance;
 		}
@@ -50,11 +50,16 @@ public class MainGameMenu : MonoBehaviour
 	private bool mShowOptionsMenu = false;
 	private AudioManager mSettingAudioManagerBackup;
 
-	private FMOD.Studio.EventInstance fmodMusic;
-	private FMOD.Studio.EventInstance fmodSwipe;
+	private AudioInstanceData fmodMusic;
+	private AudioInstanceData fmodSwipe;
 
 	void Awake() 
 	{
+		if (instance == null)
+		{
+			instance = this;
+		}
+
 		mSettingAudioManagerBackup = GetComponent<AudioManager> ();
 
 		if (mBackgroundPrefab != null) 
@@ -65,11 +70,11 @@ public class MainGameMenu : MonoBehaviour
 		{
 			mBackground = new GameObject("Menu Background");
 		}
+		
+		fmodMusic = AudioManager.Instance.GetMusicEvent("DroneMenyMusic/SpaceDrone");
+		fmodSwipe = AudioManager.Instance.GetSoundsEvent("MenuSectionSwipe/MenuSwipeShort");
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
-
-		fmodMusic = FMOD_StudioSystem.instance.GetEvent("event:/Music/DroneMenyMusic/SpaceDrone");
-		fmodSwipe = FMOD_StudioSystem.instance.GetEvent("event:/Sounds/MenuSectionSwipe/MenuSwipeShort");
 
 		mCurrentGameMenu = mGameMenus [0];
 	}
@@ -78,7 +83,6 @@ public class MainGameMenu : MonoBehaviour
 	void Start () 
 	{
         System.GC.Collect();
-        Enable(0);
 	}
 
 	// Update is called once per frame
@@ -97,7 +101,6 @@ public class MainGameMenu : MonoBehaviour
 	{
 		MenuCamera.Instance.gameObject.SetActive (show);
 
-		MenuGUICanvas.Instance.ShowMenuButtons(show);
 		mBackground.gameObject.SetActive (show);
 		gameObject.SetActive (show);
 	}
@@ -130,27 +133,24 @@ public class MainGameMenu : MonoBehaviour
 		mNextGameMenu = null;
         mCurrentGameMenu = mGameMenus[(int)menuState];
 		mCurrentGameMenu.gameObject.SetActive (true);
-		mCurrentGameMenu.Focus();
 
 		UpdateMenusAndButtons ();
 	}
 
 	public void UpdateMenusAndButtons()
 	{
-		if (!mMenuChangePhase) 
-		{
-			bool focusCurrent = !(mShowOptionsMenu || mShowHelpMenu || mShowPopupAchievementsMenu || mShowPopupCraftingMenu);
-			if (focusCurrent && (!mCurrentGameMenu.IsFocused())) 
-			{
-				mCurrentGameMenu.Focus();
-			} 
-			else if ((!focusCurrent) && (mCurrentGameMenu.IsFocused()))
-			{
-				mCurrentGameMenu.Unfocus();
-			}
-		}
+        bool viewBlocked = (MenuCamera.Instance.ShowingControls());
+        bool menuOpened = (mShowOptionsMenu || mShowHelpMenu || mShowPopupAchievementsMenu || mShowPopupCraftingMenu);
 
-		MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+        for (int i = 0; i < mGameMenus.Length; i++)
+        {
+            bool focus = ((mGameMenus[i] == mCurrentGameMenu) && !(viewBlocked) && (!menuOpened) && (!mMenuChangePhase));
+
+            mGameMenus[i].SetFocus(focus);
+        }
+
+        MenuCamera.Instance.ShowHelpMenu(mShowHelpMenu);
+        MenuGUICanvas.Instance.ShowHelpButtons(mShowHelpMenu);
 		
 		MenuCamera.Instance.ShowOptionsMenu(mShowOptionsMenu);
 		MenuGUICanvas.Instance.ShowOptionButtons(mShowOptionsMenu);
@@ -161,11 +161,12 @@ public class MainGameMenu : MonoBehaviour
 		MenuCamera.Instance.ShowPopupAchievementsMenu(mShowPopupAchievementsMenu);
 		MenuGUICanvas.Instance.ShowPopupAchievementsButton(mShowPopupAchievementsMenu);
 
-		bool showBack = ((mCurrentGameMenu != null) && (mGameMenus[(int)State.WORLD_MAP] != mCurrentGameMenu) && (!mMenuChangePhase));
-		MenuCamera.Instance.ShowBackButton(showBack);
+		bool showBack = ((WorldMapMenu() != mCurrentGameMenu) && (!mMenuChangePhase));
+        MenuCamera.Instance.ShowBackButton(showBack);
+        MenuGUICanvas.Instance.IconsGUI().ShowWorldMapButton(showBack && (!viewBlocked));
 
-		MenuGUICanvas.Instance.ShowWorldMapButton(showBack && (!MenuCamera.Instance.mCotrls.activeSelf));
-		MenuGUICanvas.Instance.ShowIconButtons(!MenuCamera.Instance.mCotrls.activeSelf);
+        bool showIcons = ((!(mShowOptionsMenu || mShowHelpMenu)) && (!viewBlocked));
+        MenuGUICanvas.Instance.ShowIconButtons(showIcons);
 
 		for (int i = 0; i < mGameMenus.Length; i++) 
 		{
@@ -317,6 +318,8 @@ public class MainGameMenu : MonoBehaviour
 
 	void StartChangeGameMenu (State state)
 	{
+		ResetAllMenusAndButtons ();
+
         if (mCurrentGameMenu == mGameMenus[(int)state])
 		{
 			if (mMenuChangePhase)
@@ -326,20 +329,18 @@ public class MainGameMenu : MonoBehaviour
 				mNextGameMenu = mCurrentGameMenu;
 				mCurrentGameMenu = a;
 				MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
-				return;
 			}
 			else
 			{
-				return; // don't move if already there
+				// don't move if already there
 			}
-		}
 
-		ResetAllMenusAndButtons ();
+			UpdateMenusAndButtons();
+			return; 
+		}
 
 		mMenuChangePhase = true;
         mNextGameMenu = mGameMenus[(int)state];
-
-		mCurrentGameMenu.Unfocus();
 		mNextGameMenu.gameObject.SetActive (true);
 
 		MenuCamera.Instance.StartMenuMove (mNextGameMenu.gameObject);
@@ -353,40 +354,12 @@ public class MainGameMenu : MonoBehaviour
 		mMenuChangePhase = false;
 	
 		mCurrentGameMenu.gameObject.SetActive (false);
-		mNextGameMenu.Focus();
-		
+
 		mCurrentGameMenu = mNextGameMenu;
 		mNextGameMenu = null;
 
 		AudioManager.Instance.StopSound(fmodSwipe, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 		
 		UpdateMenusAndButtons();
-	}
-
-	public GameObject GUIObject (string name)
-	{
-		switch (name) 
-		{
-		case "Button 7":
-			//return PerksMenu().transform.Find("Perks Burst/perk_burst/Anim_BurstPerk").gameObject;
-		case "Button 1":
-			//return PerksMenu().transform.Find("Perks Air/perk_air/Anim_AirPerk").gameObject;
-		case "Button 4":
-			//return PerksMenu().transform.Find("Perks Life/perk_life/Anim_LifePerk").gameObject;
-		case "RocketThrust":
-			return ItemsMenu().transform.Find("Rocket Thrust/item_megaburst/item_megaburst").gameObject;
-		case "UnlimitedAir":
-			return ItemsMenu().transform.Find("Unlimited Air/item_unlimitedair/item_unlimitedair").gameObject;
-		case "Shockwave":
-			return ItemsMenu().transform.Find("Shockwave/item_shockwave/item_shockwave").gameObject;
-		case "ForceField":
-			return ItemsMenu().transform.Find("Force Field/item_shield/item_shield").gameObject;
-		case "BoltsMagnet":
-			return ItemsMenu().transform.Find("Bolt Magnet/item_boltmagnet/item_boltmagnet").gameObject;
-		case "BoltsMultiplier":
-			return ItemsMenu().transform.Find("Bolt Multiplier/item_boltmultiplier/item_boltmultiplier").gameObject;
-		default:
-			return null;
-		}
 	}
 }

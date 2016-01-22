@@ -12,24 +12,11 @@ public class WorldMapMenu : GameMenu
 	private bool mFocused;
 
 	private bool mPlayLevelPhase;
-	private int mPlayLevelIndex;
 
 	void Awake () 
 	{
-		mPlayLevelIndex = -1;
 		mLevelsScroller = transform.Find("Levels").gameObject;
 		mLevels = mLevelsScroller.GetComponentsInChildren<LevelBase> ();
-		
-		for (int i = 0; i < mLevels.Length; i++) 
-		{
-			mLevels[i].Init();
-			
-			UnlockCriteria[] criterias = mLevels[i].GetComponents<UnlockCriteria>();
-			for (int j = 0; j < criterias.Length; j++) 
-			{
-				criterias[j].Init();
-			}
-		}
 
 		setScrollerLevel(GlobalVariables.Instance.WORLD_MAP_SCROLL_OFFSET);
 	}
@@ -48,9 +35,8 @@ public class WorldMapMenu : GameMenu
 			if (!MenuCamera.Instance.IsMoving())
 			{
 				mPlayLevelPhase = false;
-				MainGameMenu.Instance.Disable();
-                PlayerData.Instance.LevelToLoad = (InGame.Level)mPlayLevelIndex;
-                Application.LoadLevel("InGameLevel");
+                MainGameMenu.Instance.Disable();
+                PlayerData.LoadScene(PlayerData.Scene.IN_GAME);
 			}
 			else
 			{
@@ -132,17 +118,23 @@ public class WorldMapMenu : GameMenu
 	}
 
 	public override void Focus()
-	{
+    {
+        if (!mFocused)
+        {
+            CloseLevels();
+        }
+
 		mFocused = true;
-		enabled = true;
-		CloseLevels ();
 	}
 	
 	public override void Unfocus()
 	{
+        if (mFocused)
+        {
+            CloseLevels();
+        }
+
 		mFocused = false;
-		enabled = false;
-		CloseLevels ();
 	}
 	
 	public override bool IsFocused ()
@@ -152,7 +144,8 @@ public class WorldMapMenu : GameMenu
 	
 	public override void UpdateMenusAndButtons ()
 	{
-		MenuGUICanvas.Instance.ShowPlayLevelButton(mFocused && (!MenuCamera.Instance.mCotrls.activeSelf) && (!mPlayLevelPhase));
+        MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(mFocused && (!mPlayLevelPhase));
+        MenuGUICanvas.Instance.ShowWorldMapButtons(mFocused && (!mPlayLevelPhase));
 	}
 
 	public override void BuyWithBolts()
@@ -242,13 +235,13 @@ public class WorldMapMenu : GameMenu
 		LevelBase level = mLevels [mCurrentLevelFocusIndex];
 
 		if ((!level.IsPlayable()) || (!level.IsUnlocked()))
-		{
+        {
 			print("Not playable");
 			return;
 		}
 
 		if (!IsLevelOpen())
-		{
+        {
 			OpenLevel((PlayableLevel)level);
 		}
 		else
@@ -290,10 +283,10 @@ public class WorldMapMenu : GameMenu
 
 	void StartPlayLevelPhase ()
 	{
-		mPlayLevelIndex = mCurrentLevel.GetLevelIndex();
-		mPlayLevelPhase = true;
+        mPlayLevelPhase = true;
+        PlayerData.Instance.LevelToLoad = mCurrentLevel.GetLevel();
 		MenuGUICanvas.Instance.ShowIconButtons(false);
-		MenuGUICanvas.Instance.ShowPlayLevelButton(false);
+		MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
 }
