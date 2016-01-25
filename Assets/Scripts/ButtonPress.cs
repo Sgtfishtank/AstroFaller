@@ -38,7 +38,6 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	public void OnPointerClick(PointerEventData eventData) 
 	{
-        print("click");
 		AudioManager.Instance.PlaySoundOnce (mPressSound);
 	}
 

@@ -75,11 +75,11 @@ public class Player : MonoBehaviour
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
 
-        mDownSwipeSound = AudioManager.Instance.GetSoundsEvent("DownSwipe/DownSwipe1", true);
-        mHurtHitSound = AudioManager.Instance.GetSoundsEvent("TakeDamage/TakeDamage1", true);
-        mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("ScewsPling/ScrewsPling1", true);
-        mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate1", true);
-        mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate1", true);
+        mDownSwipeSound = AudioManager.Instance.GetSoundsEvent("DownSwipe/DownSwipe", true, 4);
+        mHurtHitSound = AudioManager.Instance.GetSoundsEvent("TakeDamage/TakeDamage", true, 3);
+        mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("ScewsPling/ScrewsPling", true, 4);
+        mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate", true, 4);
+        mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate", true, 4);
 		mInflateSound.mVolume = 100;
 		mDeflateSound.mVolume = 100;
 
@@ -289,6 +289,8 @@ public class Player : MonoBehaviour
 			mBoltParticleManager.Spawn(col.transform.position);
 
 			int boltCollect = GlobalVariables.Instance.BOLT_VALUE;
+            if (isBursting())
+                boltCollect *= PlayerData.Instance.BurstMultiplier();
 
 			GameObject textP = mPickupTextManager.Spawn(col.transform.position);
 			if (textP != null) 
@@ -296,9 +298,6 @@ public class Player : MonoBehaviour
 				textP.GetComponentsInChildren<TextMesh>(true)[0].text = "+" + boltCollect;
 				textP.GetComponent<ParticelCleanUp>().Activate(GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
 			}
-
-			if(isBursting())
-				boltCollect *= PlayerData.Instance.BurstMultiplier();
 
 			mBoltsCollected += boltCollect;
 			col.gameObject.SetActive(false);

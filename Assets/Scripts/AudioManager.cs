@@ -19,7 +19,9 @@ public class AudioManager : MonoBehaviour
 	public SoundPool mSoundPool;
 
 	public List<AudioInstanceData> mPlayingSoundEvents;
-	public List<AudioInstanceData> mPlayingMusicEvents;
+    public List<AudioInstanceData> mPlayingMusicEvents;
+    public Dictionary<string, int[]> mLoadedAudioFixFiles;
+    public Dictionary<string, AudioClip[]> mLoadedAudioFiles;
 
 	private static AudioManager instance = null;
 	public static AudioManager Instance
@@ -37,6 +39,8 @@ public class AudioManager : MonoBehaviour
 
 	void Awake() 
 	{
+        mLoadedAudioFixFiles = new Dictionary<string, int[]>();
+        mLoadedAudioFiles = new Dictionary<string, AudioClip[]>();
 		mPlayingSoundEvents = new List<AudioInstanceData> ();
 		mPlayingMusicEvents = new List<AudioInstanceData> ();
 		mSoundPool = GetComponent<SoundPool>();
@@ -54,45 +58,141 @@ public class AudioManager : MonoBehaviour
 
     public AudioInstanceData GetMusicEvent(string path, bool latencyFix)
     {
-        return GetEvent("Music/" + path, latencyFix);
-		//return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path));
-	}
-	
-	public AudioInstanceData GetSoundsEvent(string path, bool latencyFix)
+        return GetEvent("Music/" + path, latencyFix, 0);
+    }
+
+    public AudioInstanceData GetSoundsEvent(string path, bool latencyFix)
     {
-        return GetEvent("Sound/" + path, latencyFix);
-		//return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/" + path));
+        return GetEvent("Sound/" + path, latencyFix, 0);
+    }
+
+    public AudioInstanceData GetMusicEvent(string path, bool latencyFix, int variants)
+    {
+        return GetEvent("Music/" + path, latencyFix, variants);
 	}
-	
-    public AudioInstanceData GetEvent(string path, bool latencyFix)
+
+    public AudioInstanceData GetSoundsEvent(string path, bool latencyFix, int variants)
+    {
+        return GetEvent("Sound/" + path, latencyFix, variants);
+	}
+
+    public AudioInstanceData GetEvent(string path, bool latencyFix, int variants)
 	{
         if (latencyFix)
         {
-            return new AudioInstanceData(mSoundPool.load(path));
+            // check cached first
+            if (mLoadedAudioFixFiles.ContainsKey(path))
+            {
+                return new AudioInstanceData(mLoadedAudioFixFiles[path]);
+            }
+
+#if UNITY_EDITOR
+            int acsCount = Resources.LoadAll<AudioClip>(path.Substring(0, path.LastIndexOf('/') + 1)).Length;
+            if ((acsCount != variants) && ((acsCount != 1) || (variants != 0)))
+            {
+                Debug.LogError("Error: illegal variants count: " + path + " varanbtr: " + variants + " vs " + acsCount);
+                return null;
+            }
+#endif
+
+            AudioInstanceData aid = null;
+            if (variants == 0)
+            {
+                int ID = mSoundPool.load(path);
+                if (ID == -1)
+                {
+                    return null;
+                }
+
+                aid = new AudioInstanceData(ID);
+	        }
+            else
+            {
+                int[] IDs = new int[variants];
+                for (int i = 0; i < variants; i++)
+                {
+                    IDs[i] = mSoundPool.load(path + (i + 1));
+                    if (IDs[i] == -1)
+                    {
+                        return null;
+                    }
+                }
+                aid = new AudioInstanceData(IDs);
+            }
+
+            mLoadedAudioFixFiles[path] = aid.mIDs;
+            return aid;
         }
         else
         {
             AudioSource audioSource = gameObject.AddComponent<AudioSource>();
 
-            audioSource.clip = Resources.Load<AudioClip>(path);
+            // check cached first
+            if (mLoadedAudioFiles.ContainsKey(path))
+            {
+                return new AudioInstanceData(mLoadedAudioFiles[path], audioSource);
+            }
 
 #if UNITY_EDITOR
-            if (("Assets/Resources/" + path + ".ogg") != AssetDatabase.GetAssetPath(audioSource.clip))
+            int acsCount = Resources.LoadAll<AudioClip>(path).Length;
+            if ((acsCount != variants) && ((acsCount != 1) || (variants != 0)))
             {
-                print("a: " + "Assets/Resources/" + path);
-                print("b: " + AssetDatabase.GetAssetPath(audioSource.clip));
-                Debug.LogError("Error: path not case-sensitive correct:" + path);
+                Debug.LogError("Error: illegal variants count:" + path + " varanbtr:" + variants + "vs " + acsCount);
+                return null;
             }
 #endif
 
-            if (audioSource.clip == null)
+            AudioInstanceData aid = null;
+            if (variants == 0)
             {
-                print("error: audio not exist: " + path);
-                return null;
+                AudioClip ac = loadAudioClip(path);
+                if (ac == null)
+                {
+                    return null;
+                }
+
+                aid = new AudioInstanceData(ac, audioSource);
+            }
+            else
+            {
+                AudioClip[] acs = new AudioClip[variants];
+                for (int i = 0; i < variants; i++)
+                {
+                    acs[i] = loadAudioClip(path + (i + 1));
+                    if (acs[i] == null)
+                    {
+                        return null;
+                    }
+                }
+            
+                aid = new AudioInstanceData(acs, audioSource);
             }
 
-            return new AudioInstanceData(audioSource);
+            mLoadedAudioFiles[path] = aid.mAudioClips;
+            return aid;
         }
+    }
+
+    private AudioClip loadAudioClip(string path)
+    {
+        AudioClip ac = Resources.Load<AudioClip>(path);
+
+#if UNITY_EDITOR
+        if (("Assets/Resources/" + path + ".ogg") != AssetDatabase.GetAssetPath(ac))
+        {
+            print("a: " + "Assets/Resources/" + path);
+            print("b: " + AssetDatabase.GetAssetPath(ac));
+            Debug.LogError("Error: path not case-sensitive correct:" + path);
+            return null;
+        }
+#endif
+
+        if (ac == null)
+        {
+            print("error: audio not exist: " + path);
+        }
+
+        return ac;
     }
 
 	public void CopyState(AudioManager mOtherAudioManager)
@@ -397,25 +497,23 @@ public class AudioManager : MonoBehaviour
     {
         if (fmodEvent.mAudioSource != null)
         {
+            AudioClip ac = fmodEvent.mAudioClips[Random.Range(0, fmodEvent.mAudioClips.Length)];
             if (oneShot)
             {
-                fmodEvent.mAudioSource.PlayOneShot(fmodEvent.mAudioSource.clip, volume);
+                fmodEvent.mAudioSource.PlayOneShot(ac, volume);
             }
             else
             {
+                fmodEvent.mAudioSource.clip = ac;
                 fmodEvent.mAudioSource.volume = volume;
                 fmodEvent.mAudioSource.Play();
             }
         }
         else
         {
-            if (fmodEvent.mID == -1)
-            {
-                return;
-            }
-
             float volume2 = fmodEvent.mVolume * volume *  100;
-            int streamID = mSoundPool.play(fmodEvent.mID, volume2, volume2, 0, fmodEvent.mLoop, 1.0f);
+            int playID = fmodEvent.mIDs[Random.Range(0, fmodEvent.mIDs.Length)];
+            int streamID = mSoundPool.play(playID, volume2, volume2, 0, fmodEvent.mLoop, 1.0f);
             if (!oneShot)
             {
                 fmodEvent.mStreamID = streamID;

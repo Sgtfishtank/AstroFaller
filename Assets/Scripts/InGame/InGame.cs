@@ -98,7 +98,7 @@ public class InGame : MonoBehaviour
         mDeathMenu.SetActive(false);
 
         fmodMusic = AudioManager.Instance.GetMusicEvent("AsteroidLevelMusic/AsteroidMusicPrototype", false);
-        fmodPerfect = AudioManager.Instance.GetSoundsEvent("PerfectDistance/PerfectDistance1", true);
+        fmodPerfect = AudioManager.Instance.GetSoundsEvent("PerfectDistance/PerfectDistance", true, 3);
 
         mPerfectDistanceMid = GameObject.Instantiate(mPerfectDistanceMidPrefab);
 
