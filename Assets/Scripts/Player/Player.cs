@@ -75,11 +75,11 @@ public class Player : MonoBehaviour
 
 		skinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>().Where(x => x.name != "Backpack").ToArray();
 
-        mDownSwipeSound = AudioManager.Instance.GetSoundsEvent("Downswipe/DownSwipe");
-        mHurtHitSound = AudioManager.Instance.GetSoundsEvent("TakeDamage/TakeDamage1");
-        mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("Screws/ScrewsPling2");
-        mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate");
-        mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate");
+        mDownSwipeSound = AudioManager.Instance.GetSoundsEvent("DownSwipe/DownSwipe1", true);
+        mHurtHitSound = AudioManager.Instance.GetSoundsEvent("TakeDamage/TakeDamage1", true);
+        mCoinPickUpSound = AudioManager.Instance.GetSoundsEvent("ScewsPling/ScrewsPling1", true);
+        mInflateSound = AudioManager.Instance.GetSoundsEvent("Inflate/Inflate1", true);
+        mDeflateSound = AudioManager.Instance.GetSoundsEvent("Deflate/Deflate1", true);
 		mInflateSound.mVolume = 100;
 		mDeflateSound.mVolume = 100;
 

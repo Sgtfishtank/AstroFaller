@@ -20,10 +20,12 @@ public abstract class GameMenu : MonoBehaviour
         if (focus)
         {
             Focus();
+            enabled = true;
         }
         else
         {
             Unfocus();
+            enabled = false;
         }
     }
 }

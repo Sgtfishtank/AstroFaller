@@ -12,7 +12,7 @@ public class AstroidRemove : MonoBehaviour
 	{
 		mRb = GetComponent<Rigidbody> ();
 
-		mClash = AudioManager.Instance.GetSoundsEvent("AsteroidColision/AsteroidColision");
+        mClash = AudioManager.Instance.GetSoundsEvent("AsteroidCollision/AsteroidCollision1", true);
 
 	}
 

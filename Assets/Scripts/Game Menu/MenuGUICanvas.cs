@@ -52,6 +52,15 @@ public class MenuGUICanvas : GUICanvasBase
         mIconButtons = transform.Find("Icons").GetComponent<IconsGUI>();
         mOptionsGUICanvas = transform.Find("Options GUICanvas").GetComponent<OptionsGUICanvas>();
 
+        mMenuButtons.gameObject.SetActive(true);
+        mPopupBuyMenu.gameObject.SetActive(true);
+        mPopupCraftingMenu.gameObject.SetActive(true);
+        mPopupAchievementsMenu.gameObject.SetActive(true);
+        mItemButtons.gameObject.SetActive(true);
+        mPerkButtons.gameObject.SetActive(true);
+        mIconButtons.gameObject.SetActive(true);
+        mOptionsGUICanvas.gameObject.SetActive(true);
+
         mButtons = GetComponentsInChildren<Button>(true);
 		mDebugGUI = GetComponent<DebugGUI>();
 	}

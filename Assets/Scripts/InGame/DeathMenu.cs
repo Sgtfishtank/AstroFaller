@@ -51,8 +51,8 @@ public class DeathMenu : MonoBehaviour
 				mTotalBoltsText = mTexts[i];
 		}
 
-        fmodDeathMusic = AudioManager.Instance.GetMusicEvent("Scrapscoremusic/ScrapScoreMusic");
-        mDisDown = AudioManager.Instance.GetSoundsEvent("RewardTickerBolts/RewardTickerBoTH");
+        fmodDeathMusic = AudioManager.Instance.GetMusicEvent("ScrapScoreMusic/ScrapScoreMusic", false);
+        mDisDown = AudioManager.Instance.GetSoundsEvent("ScrapScoreTicker/RewardTickerBoTH", false);
         //mCoinUp = AudioManager.Instance.GetSoundsEvent("RewardTickerDistance/TickerDistance");
 	}
 
@@ -95,9 +95,9 @@ public class DeathMenu : MonoBehaviour
 	
 	public void Close()
 	{
-		AudioManager.Instance.StopMusic(fmodDeathMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-		AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-		AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		AudioManager.Instance.StopMusic(fmodDeathMusic);
+		AudioManager.Instance.StopSound(mCoinUp);
+		AudioManager.Instance.StopSound(mDisDown);
 		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(false);
 	}
 
@@ -129,8 +129,8 @@ public class DeathMenu : MonoBehaviour
 		}
 		else if (runSound && (deltaT >= 1))
 		{
-			AudioManager.Instance.StopSound(mCoinUp, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-			AudioManager.Instance.StopSound(mDisDown, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+			AudioManager.Instance.StopSound(mCoinUp);
+			AudioManager.Instance.StopSound(mDisDown);
 			runSound = false;
 		}
 

@@ -70,9 +70,9 @@ public class MainGameMenu : MonoBehaviour
 		{
 			mBackground = new GameObject("Menu Background");
 		}
-		
-		fmodMusic = AudioManager.Instance.GetMusicEvent("DroneMenyMusic/SpaceDrone");
-		fmodSwipe = AudioManager.Instance.GetSoundsEvent("MenuSectionSwipe/MenuSwipeShort");
+
+        fmodMusic = AudioManager.Instance.GetMusicEvent("MenuMusic/DroneMeny", false);
+        fmodSwipe = AudioManager.Instance.GetSoundsEvent("MenuSectionSwipe/MenuSwipeShort", true);
 
 		mGameMenus = GetComponentsInChildren<GameMenu> ();
 
@@ -109,7 +109,7 @@ public class MainGameMenu : MonoBehaviour
 	{
 		ShowComponents(false);
 
-		AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		AudioManager.Instance.StopMusic(fmodMusic);
 	}
 	
 	public void Enable(State menuState) 
@@ -227,8 +227,9 @@ public class MainGameMenu : MonoBehaviour
 
 	public void ResetAllMenusAndButtons ()
 	{
-		if (MenuCamera.Instance.PopupBuyMenu().IsOpen()) 
-		{
+		if (MenuCamera.Instance.PopupBuyMenu().IsOpen())
+        {
+            // close popup meny
 			MenuCamera.Instance.PopupBuyMenu().Close ();
 		}
 
@@ -358,7 +359,7 @@ public class MainGameMenu : MonoBehaviour
 		mCurrentGameMenu = mNextGameMenu;
 		mNextGameMenu = null;
 
-		AudioManager.Instance.StopSound(fmodSwipe, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+		AudioManager.Instance.StopSound(fmodSwipe);
 		
 		UpdateMenusAndButtons();
 	}

@@ -34,6 +34,9 @@ public class DeatMenuGUI : GUICanvasBase
 	// pressed back to menu
 	public void BackToMenu()
     {
+        InGame.Instance.DeathMenu().Close();
+        InGame.Instance.mDeathMenu.SetActive(false);
+
         PlayerData.LoadScene(PlayerData.Scene.MAIN_MENU);
 	}
 

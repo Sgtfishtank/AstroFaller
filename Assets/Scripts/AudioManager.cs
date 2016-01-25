@@ -1,4 +1,9 @@
 ﻿using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -47,22 +52,49 @@ public class AudioManager : MonoBehaviour
 	{
 	}
 
-    public AudioInstanceData GetEvent(string path)
-	{
-		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/" + path));
-    }
-
-    public AudioInstanceData GetMusicEvent(string path)
+    public AudioInstanceData GetMusicEvent(string path, bool latencyFix)
     {
-		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path));
+        return GetEvent("Music/" + path, latencyFix);
+		//return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Music/" + path));
 	}
 	
-	public AudioInstanceData GetSoundsEvent(string path)
+	public AudioInstanceData GetSoundsEvent(string path, bool latencyFix)
     {
-		return new AudioInstanceData(mSoundPool.load("Sound/" + path), -1);
+        return GetEvent("Sound/" + path, latencyFix);
 		//return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent("event:/Sounds/" + path));
 	}
 	
+    public AudioInstanceData GetEvent(string path, bool latencyFix)
+	{
+        if (latencyFix)
+        {
+            return new AudioInstanceData(mSoundPool.load(path));
+        }
+        else
+        {
+            AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+
+            audioSource.clip = Resources.Load<AudioClip>(path);
+
+#if UNITY_EDITOR
+            if (("Assets/Resources/" + path + ".ogg") != AssetDatabase.GetAssetPath(audioSource.clip))
+            {
+                print("a: " + "Assets/Resources/" + path);
+                print("b: " + AssetDatabase.GetAssetPath(audioSource.clip));
+                Debug.LogError("Error: path not case-sensitive correct:" + path);
+            }
+#endif
+
+            if (audioSource.clip == null)
+            {
+                print("error: audio not exist: " + path);
+                return null;
+            }
+
+            return new AudioInstanceData(audioSource);
+        }
+    }
+
 	public void CopyState(AudioManager mOtherAudioManager)
 	{
 		// set state to other state
@@ -170,26 +202,30 @@ public class AudioManager : MonoBehaviour
 		{
 			if (mMuteMaster || mMuteSounds) 
 			{
-				mPlayingSoundEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                StopAudio(mPlayingSoundEvents[i]);
+                //mPlayingSoundEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 			}
 			else
-			{
-				mPlayingSoundEvents[i].mEvent.start();
+            {
+                StartAudio(mPlayingSoundEvents[i], false, mSoundsLevel * mMasterLevel);
+                //mPlayingSoundEvents[i].mEvent.start();
 			}
 		}
 	}
-	
+
 	void UpdateMuteMusic()
 	{
 		for (int i = 0; i < mPlayingMusicEvents.Count; i++) 
 		{
 			if (mMuteMaster || mMuteMusic) 
 			{
-				mPlayingMusicEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                StopAudio(mPlayingMusicEvents[i]);
+                //mPlayingMusicEvents[i].mEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 			}
 			else
-			{
-				mPlayingMusicEvents[i].mEvent.start();
+            {
+                StartAudio(mPlayingMusicEvents[i], false, mMusicLevel * mMasterLevel);
+                //mPlayingMusicEvents[i].mEvent.start();
 			}
 		}
 	}
@@ -198,82 +234,66 @@ public class AudioManager : MonoBehaviour
 	{
 		for (int i = 0; i < mPlayingSoundEvents.Count; i++) 
 		{
-			mPlayingSoundEvents[i].mEvent.setVolume(mSoundsLevel * mMasterLevel);
+            SetAudioVolume(mPlayingSoundEvents[i], mSoundsLevel * mMasterLevel);
+			//mPlayingSoundEvents[i].setVolume(mSoundsLevel * mMasterLevel);
 		}
 	}
-	
+
 	void UpdateMusicLevel()
 	{
-		for (int i = 0; i < mPlayingMusicEvents.Count; i++) 
-		{
-			mPlayingMusicEvents[i].mEvent.setVolume(mMusicLevel * mMasterLevel);
+		for (int i = 0; i < mPlayingMusicEvents.Count; i++)
+        {
+            SetAudioVolume(mPlayingMusicEvents[i], mMusicLevel * mMasterLevel);
+			//mPlayingMusicEvents[i].mEvent.setVolume(mMusicLevel * mMasterLevel);
 		}
 	}
 	
-	void StartMusic(AudioInstanceData fmodEvent)
-	{
-		if (mMuteMaster || mMuteMusic)
-		{
-			return;
-		}
-		
-		fmodEvent.mEvent.setVolume(mMasterLevel * mSoundsLevel);
-		fmodEvent.mEvent.start ();
-	}
-	
-	void StartSound(AudioInstanceData fmodEvent)
-	{
-		if (mMuteMaster || mMuteSounds)
-		{
-			return;
-		}
-		
-		fmodEvent.mEvent.setVolume(mMasterLevel * mSoundsLevel);
-		fmodEvent.mEvent.start();
-	}
-
 	// music
 	public void PlayMusicOnce(AudioInstanceData fmodEvent)
-	{
-		if (fmodEvent == null)
-		{
-			Debug.LogError("ERROR! Audio missing.");
-			return;
-		}
-
-		if (mDebug) 
-		{
-			print ("playing music once " + GetFmodPath (fmodEvent));
-		}
-		StartMusic(GetEventCopy(fmodEvent));
+    {
+        PlayMusic(fmodEvent, true);
 	}
 
 	public void PlayMusic(AudioInstanceData fmodEvent)
 	{
-		if (fmodEvent == null)
-		{
-			Debug.LogError("ERROR! Audio missing.");
-			return;
-		}
-
-		if (!mPlayingMusicEvents.Contains(fmodEvent))
-		{
-			mPlayingMusicEvents.Add(fmodEvent);
-			if (mDebug) 
-			{
-				printMusic();
-			}
-		}
-
-		StartMusic(fmodEvent);
+        PlayMusic(fmodEvent, false);
 	}
+
+    public void PlayMusic(AudioInstanceData fmodEvent, bool playOnce)
+    {
+        if (fmodEvent == null)
+        {
+            Debug.LogError("ERROR! Audio missing.");
+            return;
+        }
+
+        if (!playOnce)
+        {
+            if (!mPlayingMusicEvents.Contains(fmodEvent))
+            {
+                mPlayingMusicEvents.Add(fmodEvent);
+            }
+
+            if (mDebug)
+            {
+                printMusic();
+            }
+        }
+
+        if (mMuteMaster || mMuteMusic)
+        {
+            return;
+        }
+
+        StartAudio(fmodEvent, false, mMusicLevel * mMasterLevel);
+    }
 
 	void printSound()
 	{
 		string strOutput = "Playing sounds " + mPlayingSoundEvents.Count + " ";
 		for (int i = 0; i < mPlayingSoundEvents.Count; i++) 
 		{
-			strOutput += GetFmodPath(mPlayingSoundEvents[i]) + " ";
+			//strOutput += GetFmodPath(mPlayingSoundEvents[i]) + " ";
 		}
 		print(strOutput);
 	}
@@ -283,21 +303,12 @@ public class AudioManager : MonoBehaviour
 		string strOutput = "Playing music " + mPlayingMusicEvents.Count + " ";
 		for (int i = 0; i < mPlayingMusicEvents.Count; i++) 
 		{
-			strOutput += GetFmodPath(mPlayingMusicEvents[i]) + " ";
+			//strOutput += GetFmodPath(mPlayingMusicEvents[i]) + " ";
 		}
 		print(strOutput);
 	}
 
-	public string GetFmodPath(AudioInstanceData fmodEvent)
-	{
-		FMOD.Studio.EventDescription ed;
-		string path;
-		fmodEvent.mEvent.getDescription(out ed);
-		ed.getPath(out path);
-		return path;
-	}
-
-	public void StopMusic(AudioInstanceData fmodEvent, FMOD.Studio.STOP_MODE stopMode)
+	public void StopMusic(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -310,62 +321,50 @@ public class AudioManager : MonoBehaviour
 			printMusic();
 		}
 
-		fmodEvent.mEvent.stop (stopMode);
+        StopAudio(fmodEvent);
 	}
 
-	// sound
-	public void PlaySoundOnce(AudioInstanceData fmodEvent)
-	{
-		if (fmodEvent == null)
-		{
-			Debug.LogError("ERROR! Audio missing.");
-			return;
-		}
-
-		print (fmodEvent.mID);
-		print (fmodEvent.mVolume);
-		mSoundPool.playOnce(fmodEvent.mID, fmodEvent.mVolume, fmodEvent.mVolume, 0, 0, 1);
-		//fmodEvent.mStreamID = new SoundPool ().play (fmodEvent.mID, fmodEvent.mVolume, fmodEvent.mVolume, 0, 0, 1);
-
-		//StartSound(GetEventCopy(fmodEvent));
-		if (mDebug) 
-		{
-			print("playing sound once " + GetFmodPath(fmodEvent));
-		}
-	}
-
-	public AudioInstanceData GetEventCopy(AudioInstanceData fmodEvent)
-	{
-		FMOD.Studio.EventDescription ev;
-		fmodEvent.mEvent.getDescription (out ev);
-
-		string path;
-		ev.getPath (out path);
-
-		return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent(path));
-	}
-
+    // sound
 	public void PlaySound(AudioInstanceData fmodEvent)
-	{
-		if (fmodEvent == null)
-		{
-			Debug.LogError("ERROR! Audio missing.");
-			return;
-		}
-
-		if (!mPlayingSoundEvents.Contains(fmodEvent))
-		{
-			mPlayingSoundEvents.Add(fmodEvent);
-			if (mDebug) 
-			{
-				printSound();
-			}
-		}
-
-		StartSound(fmodEvent);
+    {
+        PlaySound(fmodEvent, false);
 	}
 
-	public void StopSound(AudioInstanceData fmodEvent, FMOD.Studio.STOP_MODE stopMode)
+    public void PlaySoundOnce(AudioInstanceData fmodEvent)
+    {
+        PlaySound(fmodEvent, true);
+    }
+
+    public void PlaySound(AudioInstanceData fmodEvent, bool playOnce)
+    {
+        if (fmodEvent == null)
+        {
+            Debug.LogError("ERROR! Audio missing.");
+            return;
+        }
+
+        if (!playOnce)
+        {
+		    if (!mPlayingSoundEvents.Contains(fmodEvent))
+		    {
+			    mPlayingSoundEvents.Add(fmodEvent);
+            }
+
+            if (mDebug)
+            {
+                printSound();
+            }
+        }
+
+        if (mMuteMaster || mMuteSounds)
+        {
+            return;
+        }
+
+        StartAudio(fmodEvent, true, mSoundsLevel * mMasterLevel);
+    }
+
+	public void StopSound(AudioInstanceData fmodEvent)
 	{
 		if (fmodEvent == null)
 		{
@@ -376,7 +375,88 @@ public class AudioManager : MonoBehaviour
 		if (mPlayingSoundEvents.Remove (fmodEvent) && mDebug) 
 		{
 			printSound();
-		}
-		fmodEvent.mEvent.stop(stopMode);
+        }
+
+        StopAudio(fmodEvent);
 	}
+
+    void StopAudio(AudioInstanceData fmodEvent)
+    {
+        if (fmodEvent.mAudioSource != null)
+        {
+            fmodEvent.mAudioSource.Stop();
+        }
+        else
+        {
+            mSoundPool.stop(fmodEvent.mStreamID);
+            fmodEvent.mStreamID = 0;
+        }
+    }
+
+    void StartAudio(AudioInstanceData fmodEvent, bool oneShot, float volume)
+    {
+        if (fmodEvent.mAudioSource != null)
+        {
+            if (oneShot)
+            {
+                fmodEvent.mAudioSource.PlayOneShot(fmodEvent.mAudioSource.clip, volume);
+            }
+            else
+            {
+                fmodEvent.mAudioSource.volume = volume;
+                fmodEvent.mAudioSource.Play();
+            }
+        }
+        else
+        {
+            if (fmodEvent.mID == -1)
+            {
+                return;
+            }
+
+            float volume2 = fmodEvent.mVolume * volume *  100;
+            int streamID = mSoundPool.play(fmodEvent.mID, volume2, volume2, 0, fmodEvent.mLoop, 1.0f);
+            if (!oneShot)
+            {
+                fmodEvent.mStreamID = streamID;
+            }
+        }
+    }
+
+    private void SetAudioVolume(AudioInstanceData audioInstanceData, float p)
+    {
+        if (audioInstanceData.mAudioSource != null)
+        {
+            audioInstanceData.mAudioSource.volume = p;
+        }
+        else
+        {
+            if (audioInstanceData.mStreamID == 0)
+            {
+                return;
+            }
+            mSoundPool.setVolume(audioInstanceData.mStreamID, p * 100, p * 100);
+        }
+    }
+
+    /*public string GetFmodPath(AudioInstanceData fmodEvent)
+    {
+        FMOD.Studio.EventDescription ed;
+        string path;
+        fmodEvent.getDescription(out ed);
+        ed.getPath(out path);
+        return path;
+        return null;
+    }*/
+
+    /*public AudioInstanceData GetEventCopy(AudioInstanceData fmodEvent)
+    {
+        FMOD.Studio.EventDescription ev;
+        //fmodEvent.getDescription (out ev);
+
+        string path = "";
+        //ev.getPath (out path);
+
+        return new AudioInstanceData(FMOD_StudioSystem.instance.GetEvent(path));
+    }*/
 }

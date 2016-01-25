@@ -40,13 +40,6 @@ public class OptionsGUICanvas : GUICanvasBase
 		return mButtons;
 	}
 	
-	// toggle menu buttons
-	public void Deselect()
-	{
-		MainGameMenu.Instance.ResetAllMenusAndButtons ();
-		MainGameMenu.Instance.UpdateMenusAndButtons ();
-	}
-
 	// buttons
 	public GameObject OptionButtons()
 	{

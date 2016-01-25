@@ -97,8 +97,8 @@ public class InGame : MonoBehaviour
         mDeathMenu = deathMenuObj;
         mDeathMenu.SetActive(false);
 
-        fmodMusic = AudioManager.Instance.GetMusicEvent("AsteroidMusicPrototype/AsteroidMusicPrototyp");
-        fmodPerfect = AudioManager.Instance.GetSoundsEvent("PerfectDistance/PerfectDistance");
+        fmodMusic = AudioManager.Instance.GetMusicEvent("AsteroidLevelMusic/AsteroidMusicPrototype", false);
+        fmodPerfect = AudioManager.Instance.GetSoundsEvent("PerfectDistance/PerfectDistance1", true);
 
         mPerfectDistanceMid = GameObject.Instantiate(mPerfectDistanceMidPrefab);
 
@@ -182,7 +182,7 @@ public class InGame : MonoBehaviour
         {
             if (mPlayer.isDead())
             {
-                AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                AudioManager.Instance.StopMusic(fmodMusic);
             }
 
             if (mPlayer.transform.position.y < -GlobalVariables.Instance.WORLD_SHIFT_BACK_INTERVAL)
@@ -337,7 +337,7 @@ public class InGame : MonoBehaviour
             mSpawnerBase = null;
         }
 
-        AudioManager.Instance.StopMusic(fmodMusic, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        AudioManager.Instance.StopMusic(fmodMusic);
 
         mStartTime = -1;
     }
@@ -378,7 +378,7 @@ public class InGame : MonoBehaviour
         ActivateCorrectSpawner(mCurrentLevel);
         mSpawnerBase.LoadObjects();
 
-        mBgGen.StartSpawnSegments(0);
+        //mBgGen.StartSpawnSegments(0);
 
         mIntroPhase = true;
         mIntroPhaseT = 0;
