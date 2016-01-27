@@ -133,7 +133,7 @@ public class InGameGUICanvas : GUICanvasBase
     // toggle menu buttons
     public void Deselect()
     {
-		if (InGame.Instance.mDeathMenu.activeSelf) 
+		if (InGame.Instance.DeathMenu().IsOpen()) 
 		{
 			InGame.Instance.DeathMenu().Skip();
 		}

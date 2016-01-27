@@ -15,18 +15,24 @@ public class DeathMenu : MonoBehaviour
 	private TextMesh mDisText;
 	private TextMesh mTotalBoltsText;
 	private TextMesh mBoltsText;
-	private float mMulti;
-	private int mDis;
-	private int mTotalBolts;
-	private int mBolts;
+
+    private int mMultiT;
+	private int mDisT;
+	private int mTotalBoltsT;
+	private int mBoltsT;
+
 	private AudioInstanceData mDisDown;
 	private AudioInstanceData mCoinUp;
 	private AudioInstanceData fmodDeathMusic;
-	private bool runSound; 
+	private bool mRunSound; 
+
 	private int mDistance;
-	private int mBoxes;
+    private int mBoxes;
+    private int mBolts;
+
 	private ButtonManager[] mRestatButton = new ButtonManager[3];
     private ButtonManager[] mMenuButton = new ButtonManager[3];
+    private bool mOpen;
 
 	void Awake()
 	{
@@ -70,35 +76,64 @@ public class DeathMenu : MonoBehaviour
 
 	void OnEnable ()
 	{
-		mMulti = -1;
-		mDis = -1;
-		mTotalBolts = -1;
-		mBolts = -1;
+        mRunSound = false;
 		mCalcT = Time.time + mCalcDuration;
 		setBoxes();
 
+        // reset text values
+        mMultiT = -1;
+        mDisT = -1;
+        mTotalBoltsT = -1;
+        mBoltsT = -1;
 		UpdateDistanceText(0);
 		UpdateMultiplierText(0);
 		UpdateTotalBoltsText(0);
 		UpdateBoltsText(0);
 	}
 
-	public void Open(int distance, int bolts, int boxes)
-	{
-		mDistance = distance;
-		mBoxes = boxes;
-		mBolts = bolts;
+    void OnDisable()
+    {
+    }
+
+	public void Open(int distance, int bolts, int boxes, Vector3 playerPos)
+    {
+        if (mOpen)
+        {
+            Close();
+        }
+
+        Vector3 a = playerPos;
+        a.x = 0;
+        a.y = InGameCamera.Instance.transform.position.y + 3.5f;
+        a.z = transform.position.z;
+        transform.position = a;
+
+        mDistance = distance;
+        mBoxes = distance;
+        mBolts = bolts;
+
+        gameObject.SetActive(true);
 		setBoxes();
 		AudioManager.Instance.PlayMusic(fmodDeathMusic);
-		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(true);
+        InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(true);
+        mOpen = true;
+
+        UpdateBoltsText(mBolts);
 	}
 	
 	public void Close()
 	{
+        if (!mOpen)
+        {
+            return;
+        }
+
 		AudioManager.Instance.StopMusic(fmodDeathMusic);
 		AudioManager.Instance.StopSound(mCoinUp);
 		AudioManager.Instance.StopSound(mDisDown);
-		InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(false);
+        InGameGUICanvas.Instance.DeathMenuGUI().setEnableDeathMenu(false);
+        gameObject.SetActive(false);
+        mOpen = false;
 	}
 
 	public void Skip ()
@@ -106,81 +141,71 @@ public class DeathMenu : MonoBehaviour
 		mCalcT = 0;
 	}
 
-	void OnDisable()
-	{
-	}
-
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			mCalcT = Time.time - mCalcDuration + 0.8f;
-		}
-
 		float deltaT = 1f - ((mCalcT + 0.8f - Time.time) / mCalcDuration);
 		deltaT = Mathf.Clamp01(deltaT);
 
-		if ((!runSound) && (deltaT > 0) && (deltaT < 1))
+		if ((!mRunSound) && (deltaT > 0) && (deltaT < 1))
 		{
 			AudioManager.Instance.PlaySound(mCoinUp);
 			AudioManager.Instance.PlaySound(mDisDown);
-			runSound = true;
+			mRunSound = true;
 		}
-		else if (runSound && (deltaT >= 1))
+		else if (mRunSound && (deltaT >= 1))
 		{
 			AudioManager.Instance.StopSound(mCoinUp);
 			AudioManager.Instance.StopSound(mDisDown);
-			runSound = false;
+			mRunSound = false;
 		}
 
-        float multi = (int)(Mathf.Lerp(1, PlayerData.Instance.CalculateMultiplier(mDistance), deltaT) * 100f);
+        int multi = (int)(Mathf.Lerp(1, PlayerData.Instance.CalculateMultiplier(mDistance), deltaT) * 100f);
 		int dis = (int)Mathf.Lerp(mDistance, 0, deltaT);
 		int totalBolts = (int)Mathf.Lerp(mBolts, PlayerData.Instance.CalculateMultiplier(mDistance) * mBolts, deltaT);
 
 		UpdateDistanceText(dis);
 		UpdateMultiplierText(multi);
 		UpdateTotalBoltsText(totalBolts);
-		UpdateBoltsText(mBolts);
 	}
 
 	void UpdateTotalBoltsText(int totalBolts)
 	{
 		// avoid string allocations
-		if (mTotalBolts != totalBolts) 
+		if (mTotalBoltsT != totalBolts) 
 		{
-			mTotalBolts = totalBolts;
-			mTotalBoltsText.text = mTotalBolts.ToString();
+			mTotalBoltsT = totalBolts;
+			mTotalBoltsText.text = mTotalBoltsT.ToString();
 		}
 	}
 
-	void UpdateMultiplierText(float multi)
+	void UpdateMultiplierText(int multi)
 	{
 		// avoid string allocations
-		if (mMulti != multi) 
+		if (mMultiT != multi) 
 		{
-			mMulti = multi;
-			mMultiText.text = mMulti.ToString();
+			mMultiT = multi;
+			mMultiText.text = mMultiT.ToString();
 		}
 	}
 
 	void UpdateDistanceText(int dis)
 	{
 		// avoid string allocations
-		if (mDis != dis) 
+		if (mDisT != dis) 
 		{
-			mDis = dis;
-			mDisText.text = mDis.ToString();
+			mDisT = dis;
+			mDisText.text = mDisT.ToString();
 		}
 	}
 	
 	void UpdateBoltsText(int bolts)
 	{
 		// avoid string allocations
-		if (mBolts != bolts) 
+		if (mBoltsT != bolts) 
 		{
-			mBolts = bolts;
-			mBoltsText.text = mBolts.ToString();
+			mBoltsT = bolts;
+			mBoltsText.text = mBoltsT.ToString();
 		}
 	}
 
@@ -237,4 +262,9 @@ public class DeathMenu : MonoBehaviour
 		mBoxObj[id-1].SetActive(false);
 
 	}
+
+    public bool IsOpen()
+    {
+        return mOpen;
+    }
 }

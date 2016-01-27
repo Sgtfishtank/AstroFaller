@@ -35,7 +35,6 @@ public class DeatMenuGUI : GUICanvasBase
 	public void BackToMenu()
     {
         InGame.Instance.DeathMenu().Close();
-        InGame.Instance.mDeathMenu.SetActive(false);
 
         PlayerData.LoadScene(PlayerData.Scene.MAIN_MENU);
 	}
@@ -43,7 +42,6 @@ public class DeatMenuGUI : GUICanvasBase
 	public void restart()
 	{
 		InGame.Instance.DeathMenu().Close();
-		InGame.Instance.mDeathMenu.SetActive(false);
 
 		InGame.Instance.StartGame();
 	}
@@ -63,7 +61,7 @@ public class DeatMenuGUI : GUICanvasBase
 
 	public void perfectDistanceReward(int pos)
 	{
-		int box = InGame.Instance.Player().CollectedPerfectDistances();
+        int box = InGame.Instance.Player().CollectedScraps();
 		
 		int value = 0;
 		
@@ -105,7 +103,7 @@ public class DeatMenuGUI : GUICanvasBase
 			mRewardMenu.GetComponent<DeathmenuButtons>().disableSpecific(5);
 		}
 		mRewardMenu.GetComponent<DeathmenuButtons>().disableSpecific(pos);
-		InGame.Instance.mDeathMenu.GetComponent<DeathMenu>().removeBox(pos);
+		InGame.Instance.DeathMenu().removeBox(pos);
 		PlayerData.Instance.depositBolts(value);
 	}
 	
