@@ -61,6 +61,11 @@ public class ParticleManager : MonoBehaviour
 
 	public void reset()
 	{
+        if (mParticles == null)
+        {
+            return;
+        }
+
 		for (int i = 0; i < mParticles.Length; i++) 
 		{
 			mParticles[i].SetActive(false);
