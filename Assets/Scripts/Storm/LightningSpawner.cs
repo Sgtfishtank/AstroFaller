@@ -94,19 +94,19 @@ public class LightningSpawner : SpawnerBase
 	
 	public override void SpawnObject ()
     {
-		float mCd = GlobalVariables.Instance.ASTROID_SPAWN_SPAWNRATE;
+		float mCd = GlobalVariables.Instance.JELLYFISH_SPAWNRATE;
 		
 		Rigidbody playerRb = mPlayer.GetComponent<Rigidbody>();
 		
-		if((Time.time > (mLastSpawn + mCd)))
+		if (Time.time > (mLastSpawn + mCd))
 		{
-			mLastSpawn = Time.time + mCd;
-			int x = UnityEngine.Random.Range(0,2)*2-1;
-			float y = UnityEngine.Random.Range(-25,8);
+			mLastSpawn = Time.time;
+			float x = UnityEngine.Random.Range(-1.0f,1.0f);
+			float y = UnityEngine.Random.Range(-35,-25);
 			//int astroid = UnityEngine.Random.Range(0,3);
-			Quaternion angel = UnityEngine.Random.rotation;
+			Quaternion angel = Quaternion.identity;
 			
-			Vector3 pos = new Vector3(GlobalVariables.Instance.SPAWNOBJ_LELVEL_BOUNDS_X * x, mPlayer.transform.position.y + y , 0);
+			Vector3 pos = new Vector3(GlobalVariables.Instance.SPAWNOBJ_LELVEL_BOUNDS_X * x, mPlayer.transform.position.y + y, 0);
 			
 			//Spawn astroid
 			GameObject instace = PickFreeMissile();//Instantiate(mAstroidTypes[astroid], pos, angel) as GameObject;
@@ -119,13 +119,13 @@ public class LightningSpawner : SpawnerBase
 			instace.transform.rotation = angel;
 			
 			//add velocity
-			Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
+			//Vector3 randVel = new Vector3(UnityEngine.Random.Range(2,5)*(-x), y, 0);
 			
-			Vector3 targetVel = mPlayer.transform.position - instace.transform.position;
-			targetVel.y += playerRb.velocity.y;
+			//Vector3 targetVel = mPlayer.transform.position - instace.transform.position;
+			//targetVel.y += playerRb.velocity.y;
 			
-			Rigidbody rb = instace.GetComponent<Rigidbody>();
-			rb.velocity = Vector3.Lerp(targetVel, randVel, Random.value);
+			//Rigidbody rb = instace.GetComponent<Rigidbody>();
+			//rb.velocity = Vector3.Lerp(targetVel, randVel, Random.value);
 			
 			instace.SetActive(true);
 			

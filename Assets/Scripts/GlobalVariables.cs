@@ -14,6 +14,9 @@ public class GlobalVariables : MonoBehaviour
 	public int SPAWN_COLLISON_MAX_PARTICLES				= 3;
 	public int ASTROID_SPAWN_IMPACT_FACTOR				= 25;
 
+    /*----------------------------------------LightningSpawn----------------------------------*/
+    public float JELLYFISH_SPAWNRATE                      = 1;
+
 	/*----------------------------------------Player----------------------------------------*/
 
 	public float PLAYER_DASH_CD							 = 10f  ;
@@ -31,7 +34,9 @@ public class GlobalVariables : MonoBehaviour
 	public float PLAYER_HOVER_FAILED_FORCE				= 10;
 	public float PLAYER_HORIZONTAL_MOVESPEED_HOVER_FACTOR = 0.5f;
 	public float PLAYER_HOVER_FAILED_TIME				= 0.45f;
-	public float PLAYER_MINMAX_X						= 5;
+    public float PLAYER_MINMAX_X                        = 5;
+    public float PLAYER_MAX_Y                           = 0;
+    public float PLAYER_MIN_Y                           = -20;
 	public int   PLAYER_MAX_LIFE						= 3		;
 	public float PLAYER_MAX_AIR							= 10;
 	public float PLAYER_AIR_DRAIN						= 10;
@@ -174,22 +179,9 @@ public class GlobalVariables : MonoBehaviour
 	public string SHOCKWAVE_DESCRIPTION = "---";
 	public string SHOCKWAVE_LEVELS_UNIT = "---";
 
-    void Awake()
-	{
-    }
-
-	// Use this for initialization
-	void Start ()
-	{
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	}
-	
 	// sigleton
 	private static GlobalVariables instance = null;
+
 	public static GlobalVariables Instance
 	{
 		get
@@ -201,8 +193,22 @@ public class GlobalVariables : MonoBehaviour
 			}
 			return instance;
 		}
-	}
+    }
 
+    void Awake()
+    {
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
+	
 	public int DistanceCritera (string levelName)
 	{
 		switch (levelName) 

@@ -46,32 +46,44 @@ public class WarningArrow : MonoBehaviour
 		float minX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(-GlobalVariables.Instance.PLAYER_MINMAX_X, mPlayer.CenterPosition().y, mPlayer.CenterPosition().z)).x;
 		float maxX = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(GlobalVariables.Instance.PLAYER_MINMAX_X, mPlayer.CenterPosition().y, mPlayer.CenterPosition().z)).x;
 
+        float minY = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(mPlayer.CenterPosition().x, mPlayer.CenterPosition().y + GlobalVariables.Instance.PLAYER_MIN_Y, mPlayer.CenterPosition().z)).y;
+        float maxY = InGameCamera.Instance.Camera().WorldToScreenPoint(new Vector3(mPlayer.CenterPosition().x, mPlayer.CenterPosition().y + GlobalVariables.Instance.PLAYER_MAX_Y, mPlayer.CenterPosition().z)).y;
+
 		Vector3 a = InGameCamera.Instance.Camera().WorldToScreenPoint(mRb.position);
 		
 		a.z = 1;
-		
-		int offset = 0;
-		
-		if ((mRb.position.x < 0) && (a.x > (minX + offset)))
+
+        bool outOfBoundX = ((mRb.position.x < 0) && (a.x > minX)) || ((mRb.position.x > 0) && (a.x < maxX));
+        bool outOfBoundY = ((mRb.position.y < 0) && (a.y > minY)) || ((mRb.position.y > 0) && (a.y < maxY));
+
+		if ((outOfBoundX && outOfBoundY) || (mHideT < Time.time))
 		{
-			mWarning.SetActive(false);
+            mWarning.SetActive(false);
+            return;
 		}
-		else if ((mRb.position.x > 0) && (a.x < (maxX - offset)))
-		{
-			mWarning.SetActive(false);
-		}
-		else if (mHideT < Time.time)
-		{
-			mWarning.SetActive(false);
-		}
-		else if (mRb.position.x < 0)
-		{
-			a.x = (minX + offset);
-		}
-		else
-		{
-			a.x = (maxX - offset);
-		}
+
+        if (outOfBoundY)
+        {
+            if (mRb.position.x < 0)
+            {
+                a.x = minX;
+            }
+            else
+            {
+                a.x = maxX;
+            } 
+        }
+        else if (outOfBoundX)
+        {
+            if (mRb.position.y < 0)
+            {
+                a.y = (minY);
+            }
+            else
+            {
+                a.y = (maxY);
+            } 
+        }
 		
 		mWarning.transform.position = InGameCamera.Instance.Camera().ScreenToWorldPoint(a);
 	}
