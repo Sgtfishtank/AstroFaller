@@ -110,9 +110,9 @@ public class InGameCamera : MonoBehaviour
     private void UpdateBoxesText()
 	{
 		// avoid string allocations
-		if (mBoxes != InGame.Instance.Player().CollectedPerfectDistances()) 
+        if (mBoxes != InGame.Instance.Player().CollectedScraps()) 
 		{
-			mBoxes = InGame.Instance.Player().CollectedPerfectDistances();
+            mBoxes = InGame.Instance.Player().CollectedScraps();
 			if (mBoxes >= 1000)
 				mBoxesText.text = (mBoxes / 1000).ToString() + " K";
 			else

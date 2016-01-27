@@ -37,7 +37,9 @@ public class Player : MonoBehaviour
 	public int mLife;
 	public int mBoltsCollected;
 	public int mCrystalsCollected;
-	public int mPerfectDistanceCollected;
+    public int mPerfectDistanceCollected = 1;
+    public int mHighestPerfectDistanceCollected = 1;
+    public int mScrapCollected;
 
 	private ParticleManager mBoltParticleManager;
 	private ParticleManager mPickupTextManager;
@@ -51,7 +53,7 @@ public class Player : MonoBehaviour
 	private int mBurstsLeft;
 	private float mInvulnerableTime;
 	private float blendSpeed = 400f;
-	private float blendOne = 0;
+    private float blendOne = 0;
 
 	private AudioInstanceData mDownSwipeSound;
 	private AudioInstanceData mHurtHitSound;
@@ -126,7 +128,8 @@ public class Player : MonoBehaviour
 		mBurstsLeft = PlayerData.Instance.MaxBursts();
 		mBoltsCollected = 0;
 		mCrystalsCollected = 0;
-		mPerfectDistanceCollected = 0;
+		mPerfectDistanceCollected = 1;
+        mHighestPerfectDistanceCollected = 1;
 		mLife = PlayerData.Instance.MaxLife();
 		mStartYValue = CenterPosition().y;
 
@@ -233,8 +236,15 @@ public class Player : MonoBehaviour
 				mLife++;
 			}
 
-			UpdatePerfectDistance(true);
 			mPerfectDistanceCollected++;
+            if (mPerfectDistanceCollected > mHighestPerfectDistanceCollected)
+            {
+                mHighestPerfectDistanceCollected = mPerfectDistanceCollected;
+            }
+
+            SpawnText(transform.position, "x" + mPerfectDistanceCollected);
+
+            UpdatePerfectDistance(true);
 		}
 
 		if ((mMaxCurrentFallSpeed > mMaxFallSpeed && mDashTime < Time.time))
@@ -288,16 +298,12 @@ public class Player : MonoBehaviour
 
 			mBoltParticleManager.Spawn(col.transform.position);
 
-			int boltCollect = GlobalVariables.Instance.BOLT_VALUE;
-            if (isBursting())
-                boltCollect *= PlayerData.Instance.BurstMultiplier();
+            int boltCollect = GlobalVariables.Instance.BOLT_VALUE * mPerfectDistanceCollected;
 
-			GameObject textP = mPickupTextManager.Spawn(col.transform.position);
-			if (textP != null) 
-			{
-				textP.GetComponentsInChildren<TextMesh>(true)[0].text = "+" + boltCollect;
-				textP.GetComponent<ParticelCleanUp>().Activate(GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
-			}
+            if (isBursting())
+                boltCollect = boltCollect * PlayerData.Instance.BurstMultiplier();
+
+            SpawnText(col.transform.position, "+" + boltCollect);
 
 			mBoltsCollected += boltCollect;
 			col.gameObject.SetActive(false);
@@ -320,10 +326,22 @@ public class Player : MonoBehaviour
             }
 		}
 		else if(col.tag == "Enemy")
-		{
+        {
+            print("e");
+            UpdatePerfectDistance(false);
 			PlayerDamage(1);
 		}
 	}
+
+    private void SpawnText(Vector3 pos, string text)
+    {
+        GameObject textP = mPickupTextManager.Spawn(pos);
+        if (textP != null)
+        {
+            textP.GetComponentsInChildren<TextMesh>(true)[0].text = text;
+            textP.GetComponent<ParticelCleanUp>().Activate(GlobalVariables.Instance.BOLT_TEXT_SHOW_TIME);
+        }
+    }
 
 	void OnTriggerExit(Collider col)
 	{
@@ -352,6 +370,7 @@ public class Player : MonoBehaviour
 		{
             if (mLastDmgCollider != coll.collider)
             {
+                print("e2");
                 mLastDmgCollider = coll.collider;
                 //mLastDmgTime = Time.time + 3.0f;
                 //mLastDmgGetLife = PlayerData.Instance.RegenerateLifeAfterHit(); 
@@ -376,6 +395,12 @@ public class Player : MonoBehaviour
 
 	void UpdatePerfectDistance (bool triggerParticles)
 	{
+        // reset if got hit
+        if (!triggerParticles)
+        {
+            mPerfectDistanceCollected = 1;
+        }
+
 		mPerfectDistanceY = CenterPosition().y - GlobalVariables.Instance.PERFECT_DISTANCE_SIZE;
 		InGame.Instance.UpdatePerfectDistance(mPerfectDistanceY, triggerParticles);
 	}
@@ -384,7 +409,6 @@ public class Player : MonoBehaviour
 	{
 		if(coll.transform.tag == "Enemy" )
 		{
-			//PlayerDamage(1);
 		}
 	}
 
@@ -417,6 +441,11 @@ public class Player : MonoBehaviour
 	{
 		return mPerfectDistanceCollected;
 	}
+
+    public int CollectedScraps()
+    {
+        return mScrapCollected;
+    }
 	
 	public Vector3 CenterPosition()
 	{
@@ -479,17 +508,11 @@ public class Player : MonoBehaviour
 			mIsDead = true;
 			mRb.isKinematic = true;
 			mRb.velocity = new Vector2(0, 0);
-			InGame.Instance.PlayedDeath();
-			InGame.Instance.mDeathMenu.SetActive(true);
-			InGame.Instance.DeathMenu().Open(Distance(), mBoltsCollected, mPerfectDistanceCollected);
+
+			InGame.Instance.PlayerDied();
+			InGame.Instance.DeathMenu().Open(Distance(), mBoltsCollected, mScrapCollected, transform.position);
 			
 			mAS.StopSpawning();
-
-			Vector3 a = gameObject.transform.position;
-			a.x = 0;
-			a.y = InGameCamera.Instance.transform.position.y +3.5f;
-			a.z = InGame.Instance.mDeathMenu.transform.position.z;
-			InGame.Instance.mDeathMenu.transform.position = a;
 
             PlayerData.Instance.depositBolts((int)(PlayerData.Instance.CalculateMultiplier(Distance()) * mBoltsCollected));
             PlayerData.Instance.depositCrystals(colectedCrystals());
