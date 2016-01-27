@@ -327,4 +327,9 @@ public class MenuCamera : MonoBehaviour
     {
         return mCotrls.activeSelf;
     }
+
+    public void Skip()
+    {
+        mMovingT = 1;
+    }
 }

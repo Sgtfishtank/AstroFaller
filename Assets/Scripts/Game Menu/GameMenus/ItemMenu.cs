@@ -41,8 +41,8 @@ public class ItemMenu : GameMenu
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update ()
+    {
 		if ((mCurrentItem != null) && MenuCamera.Instance.PopupBuyMenu().IsOpen()) 
 		{
 			string description = mCurrentItem.BuyDescription ();
@@ -186,4 +186,7 @@ public class ItemMenu : GameMenu
 		
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
+    public override void Deselect()
+    {
+    }
 }

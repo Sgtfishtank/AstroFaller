@@ -22,8 +22,8 @@ public class WorldMapMenu : GameMenu
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start ()
+    {
 		CheckLevels();
 	}
 
@@ -47,7 +47,7 @@ public class WorldMapMenu : GameMenu
 		}
 		else 
 		{
-			if (Input.touchCount > 0)
+			if ((Input.touchCount > 0) && mFocused)
 			{
 				Touch touch = Input.touches[0];
 				//foreach (Touch touch in Input.touches)
@@ -66,7 +66,7 @@ public class WorldMapMenu : GameMenu
 					}
 				//}
 			}
-			else if ((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0))
+			else if (((Input.mouseScrollDelta.y > 0) || (Input.mouseScrollDelta.y < 0)) && mFocused)
 			{
 				mCurrentLevelFocusIndex -= Mathf.RoundToInt(Input.mouseScrollDelta.y);
 				mCurrentLevelFocusIndex = Mathf.Clamp (mCurrentLevelFocusIndex, 0, (mLevels.Length - 1));
@@ -74,11 +74,11 @@ public class WorldMapMenu : GameMenu
 				CloseLevels();
 				MainGameMenu.Instance.UpdateMenusAndButtons();
 			}
-			else if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(KeyCode.UpArrow) && mFocused)
 			{
 				ScrollLevels(GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * 1000 * Time.deltaTime);
 			}
-			else if (Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(KeyCode.DownArrow) && mFocused)
 			{
 				ScrollLevels(-GlobalVariables.Instance.WORLD_MAP_LEVELS_SCROLL_SPEED * 1000 * Time.deltaTime);
 			}
@@ -87,7 +87,7 @@ public class WorldMapMenu : GameMenu
 				mScrollValue = Mathf.Lerp(mScrollValue, mCurrentLevelFocusIndex * GlobalVariables.Instance.WORLD_MAP_LEVELS_SIZE, GlobalVariables.Instance.WORLD_MAP_LEVELS_SNAP_SPEED * Time.deltaTime);
 			}
 			
-			if (Input.GetKeyDown(KeyCode.U))
+			if (Input.GetKeyDown(KeyCode.U) && mFocused)
 			{
 				if (mLevels[mCurrentLevelFocusIndex].IsUnlocked()) 
 				{
@@ -289,4 +289,12 @@ public class WorldMapMenu : GameMenu
 		MenuGUICanvas.Instance.WorldMapMenu().ShowPlayLevelButton(false);
 		MenuCamera.Instance.StartLevelZoom ();
 	}
+    
+    public override void Deselect()
+    {
+        if (mPlayLevelPhase)
+	    {
+            MenuCamera.Instance.Skip();
+	    }
+    }
 }

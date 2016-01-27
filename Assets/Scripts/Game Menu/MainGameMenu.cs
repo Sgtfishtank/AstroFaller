@@ -363,4 +363,18 @@ public class MainGameMenu : MonoBehaviour
 		
 		UpdateMenusAndButtons();
 	}
+
+    public void Deselect()
+    {
+        PlayerData.Instance.mShowControls = false;
+        MenuCamera.Instance.ShowControls(false);
+        if (mMenuChangePhase)
+        {
+            MenuCamera.Instance.Skip();
+        }
+        else
+        {
+            mCurrentGameMenu.Deselect();
+        }
+    }
 }

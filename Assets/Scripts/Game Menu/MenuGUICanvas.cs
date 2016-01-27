@@ -169,8 +169,7 @@ public class MenuGUICanvas : GUICanvasBase
     public void Deselect()
     {
         MainGameMenu.Instance.ResetAllMenusAndButtons();
-        PlayerData.Instance.mShowControls = false;
-        MenuCamera.Instance.ShowControls(false);
+        MainGameMenu.Instance.Deselect();
         MainGameMenu.Instance.UpdateMenusAndButtons();
     }
 

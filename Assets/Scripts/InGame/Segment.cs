@@ -46,7 +46,8 @@ public class Segment : MonoBehaviour
 
 		for (int i = 0; i < mRigidbodys.Length; i++) 
 		{
-			mRigidbodys[i].velocity = Vector3.zero;
+            mRigidbodys[i].velocity = Vector3.zero;
+            mRigidbodys[i].angularVelocity = Vector3.zero;
 		}
 	}
 	

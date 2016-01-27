@@ -29,8 +29,8 @@ public class PerksMenu : GameMenu
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update ()
+    {
 		if (MenuCamera.Instance.PopupBuyMenu().IsOpen ()) 
 		{
 			string description = mCurrentPerk.BuyDescription ();
@@ -160,4 +160,7 @@ public class PerksMenu : GameMenu
 		MainGameMenu.Instance.UpdateMenusAndButtons();
 	}
 
+    public override void Deselect()
+    {
+    }
 }

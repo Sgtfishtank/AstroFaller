@@ -11,8 +11,8 @@ public class CrystalShopMenu : GameMenu
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update ()
+    {
 	}
 	
 	public override void Focus()
@@ -41,4 +41,8 @@ public class CrystalShopMenu : GameMenu
 	public override void BuyWithCrystals()
 	{
 	}
+
+    public override void Deselect()
+    {
+    }
 }

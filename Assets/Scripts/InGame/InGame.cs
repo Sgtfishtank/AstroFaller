@@ -41,7 +41,7 @@ public class InGame : MonoBehaviour
 
     private Player mPlayer;
     public SpawnerBase mSpawnerBase;
-    public GameObject mDeathMenu;
+    private GameObject mDeathMenu;
     private Level mCurrentLevel;
 
     public float mUsualShiftkingRailgun = 0;
@@ -235,7 +235,7 @@ public class InGame : MonoBehaviour
         mPerfectDistanceMid.transform.position = new Vector3(0, yValue, 0);
     }
 
-    public void PlayedDeath()
+    public void PlayerDied()
     {
         mWorldGen.StopSpawnSegments();
         mBgGen.StopSpawnSegments();

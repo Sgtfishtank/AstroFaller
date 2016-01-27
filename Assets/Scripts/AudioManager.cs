@@ -461,7 +461,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        StartAudio(fmodEvent, true, mSoundsLevel * mMasterLevel);
+        StartAudio(fmodEvent, playOnce, mSoundsLevel * mMasterLevel);
     }
 
 	public void StopSound(AudioInstanceData fmodEvent)
